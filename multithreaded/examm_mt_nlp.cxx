@@ -23,8 +23,8 @@ using std::vector;
 
 #include "rnn/examm.hxx"
 
+#include"word_series/word_series.hxx"
 #include "time_series/time_series.hxx"
-
 
 mutex examm_mutex;
 
@@ -69,44 +69,48 @@ void examm_thread(int id) {
 }
 
 void get_individual_inputs(string str, vector<string>& tokens) {
-   string word = "";
-   for (auto x : str) {
-       if (x == ',') {
-           tokens.push_back(word);
-           word = "";
-       }else
-           word = word + x;
-   }
-   tokens.push_back(word);
+    string word = "";
+    for (auto x : str) {
+        if (x == ',') {
+            tokens.push_back(word);
+            word = "";
+        } else {
+            word = word + x;
+        }
+    }
+    tokens.push_back(word);
 }
 
-int main(int argc, char** argv) {
-    arguments = vector<string>(argv, argv + argc);
 
-    Log::initialize(arguments);
+int main(int argc, char  **argv)
+{
+	vector<string> arguments = vector<string>(argv, argv + argc);
+
+	Log::initialize(arguments);
     Log::set_id("main");
 
     int number_threads;
     get_argument(arguments, "--number_threads", true, number_threads);
 
-    int32_t time_offset = 1;
-    get_argument(arguments, "--time_offset", true, time_offset);
+    int32_t word_offset = 1;
+    get_argument(arguments,"--word_offset",true,word_offset);
 
-    TimeSeriesSets* time_series_sets = TimeSeriesSets::generate_from_arguments(arguments);
-    vector<string> inputs_removed_tokens;
-    vector<string> outputs_removed_tokens;
 
-    time_series_sets->export_training_series(time_offset, training_inputs, training_outputs);
-    time_series_sets->export_test_series(time_offset, validation_inputs, validation_outputs);
+	Corpus* corpus_sets = Corpus::generate_from_arguments(arguments);
 
-    Log::info("exported time series.\n");
+	corpus_sets->export_training_series(word_offset,training_inputs,training_outputs);
+	corpus_sets->export_test_series(word_offset,validation_inputs,validation_outputs);
 
-    int number_inputs = time_series_sets->get_number_inputs();
-    int number_outputs = time_series_sets->get_number_outputs();
+	Log::info("exported word series.\n");
+    
+	int number_inputs = corpus_sets->get_number_inputs();
+    int number_outputs = corpus_sets->get_number_outputs();
 
-    Log::info("number_inputs: %d, number_outputs: %d\n", number_inputs, number_outputs);
+    Log::info("The size of the input is :: %d,%d,%d \n",training_inputs.size(),training_inputs[0].size(),training_inputs[0][0].size());
 
-    int32_t population_size;
+	Log::info("number_inputs: %d, number_outputs: %d\n", number_inputs, number_outputs);
+
+	int32_t population_size;
     get_argument(arguments, "--population_size", true, population_size);
 
     int32_t number_islands;
@@ -175,7 +179,7 @@ int main(int argc, char** argv) {
 
         bool epigenetic_weights = argument_exists(arguments, "--epigenetic_weights");
 
-        seed_genome->transfer_to(time_series_sets->get_input_parameter_names(), time_series_sets->get_output_parameter_names(), transfer_learning_version, epigenetic_weights, min_recurrent_depth, max_recurrent_depth);
+        seed_genome->transfer_to(corpus_sets->get_input_parameter_names(), corpus_sets->get_output_parameter_names(), transfer_learning_version, epigenetic_weights, min_recurrent_depth, max_recurrent_depth);
     }
 
     bool start_filled = false;
@@ -186,13 +190,13 @@ int main(int argc, char** argv) {
     examm = new EXAMM(population_size, number_islands, max_genomes, extinction_event_generation_number, islands_to_exterminate, island_ranking_method,
             repopulation_method, repopulation_mutations,
             repeat_extinction, speciation_method,
-            time_series_sets->get_input_parameter_names(),
-            time_series_sets->get_output_parameter_names(),
-            time_series_sets->get_normalize_type(),
-            time_series_sets->get_normalize_mins(),
-            time_series_sets->get_normalize_maxs(),
-            time_series_sets->get_normalize_avgs(),
-            time_series_sets->get_normalize_std_devs(),
+            corpus_sets->get_input_parameter_names(),
+            corpus_sets->get_output_parameter_names(),
+            corpus_sets->get_normalize_type(),
+            corpus_sets->get_normalize_mins(),
+            corpus_sets->get_normalize_maxs(),
+            corpus_sets->get_normalize_avgs(),
+            corpus_sets->get_normalize_std_devs(),
             bp_iterations, learning_rate,
             use_high_threshold, high_threshold,
             use_low_threshold, low_threshold,
