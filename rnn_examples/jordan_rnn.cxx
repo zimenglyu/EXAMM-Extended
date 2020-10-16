@@ -39,33 +39,6 @@ RNN* rnn;
 bool using_dropout;
 double dropout_probability;
 
-double objective_function(const vector<double> &parameters) {
-    rnn->set_weights(parameters);
-
-    double error = 0.0;
-
-    for (uint32_t i = 0; i < training_inputs.size(); i++) {
-        error += rnn->prediction_mae(training_inputs[i], training_outputs[i], false, true, 0.0);
-    }
-
-    return -error;
-}
-
-double test_objective_function(const vector<double> &parameters) {
-    rnn->set_weights(parameters);
-
-    double total_error = 0.0;
-
-    for (uint32_t i = 0; i < test_inputs.size(); i++) {
-        double error = rnn->prediction_mse(test_inputs[i], test_outputs[i], false, true, 0.0);
-        total_error += error;
-
-        Log::info("output for series[%d]: %lf\n", i, error);
-    }
-
-    return -total_error;
-}
-
 
 int main(int argc, char **argv) {
     vector<string> arguments = vector<string>(argv, argv + argc);
@@ -84,56 +57,86 @@ int main(int argc, char **argv) {
     int number_inputs = time_series_sets->get_number_inputs();
     int number_outputs = time_series_sets->get_number_outputs();
 
-    string rnn_type;
-    get_argument(arguments, "--rnn_type", true, rnn_type);
+    int32_t number_hidden_layers;
+    get_argument(arguments, "--number_hidden_layers", true, number_hidden_layers);
+
+    int32_t number_hidden_nodes;
+    get_argument(arguments, "--number_hidden_nodes", true, number_hidden_nodes);
+
+    int32_t max_input_lags;
+    get_argument(arguments, "--max_input_lags", true, max_input_lags);
 
     int32_t max_recurrent_depth;
     get_argument(arguments, "--max_recurrent_depth", true, max_recurrent_depth);
 
-    string weight_initialize_string = "random";
+    string weight_initialize_string = "xavier";
     get_argument(arguments, "--weight_initialize", false, weight_initialize_string);
     WeightType weight_initialize;
     weight_initialize = get_enum_from_string(weight_initialize_string);
 
+    string output_filename;
+    get_argument(arguments, "--output_filename", true, output_filename);
+
     vector<string> input_parameter_names = time_series_sets->get_input_parameter_names();
     vector<string> output_parameter_names = time_series_sets->get_output_parameter_names();
 
-    RNN_Genome *genome;
-    if (rnn_type == "one_layer_lstm") {
-        genome = create_lstm(input_parameter_names, 1, number_inputs, output_parameter_names, max_recurrent_depth, weight_initialize);
+    Log::info("creating jordan neural network with inputs: %d, hidden: %dx%d, outputs: %d, max input lags: %d, max recurrent depth: %d\n", input_parameter_names.size(), number_hidden_layers, number_hidden_nodes, output_parameter_names.size(), max_input_lags, max_recurrent_depth);
+    vector<RNN_Node_Interface*> rnn_nodes;
+    vector<RNN_Node_Interface*> output_layer;
+    vector< vector<RNN_Node_Interface*> > layer_nodes(2 + number_hidden_layers);
+    vector<RNN_Edge*> rnn_edges;
+    vector<RNN_Recurrent_Edge*> recurrent_edges;
 
-    } else if (rnn_type == "two_layer_lstm") {
-        genome = create_lstm(input_parameter_names, 1, number_inputs, output_parameter_names, max_recurrent_depth, weight_initialize);
+    int node_innovation_count = 0;
+    int edge_innovation_count = 0;
+    int current_layer = 0;
 
-    } else if (rnn_type == "one_layer_gru") {
-        genome = create_gru(input_parameter_names, 1, number_inputs, output_parameter_names, max_recurrent_depth, weight_initialize);
-
-    } else if (rnn_type == "two_layer_gru") {
-        genome = create_gru(input_parameter_names, 1, number_inputs, output_parameter_names, max_recurrent_depth, weight_initialize);
-
-    } else if (rnn_type == "one_layer_ff") {
-        genome = create_ff(input_parameter_names, 1, number_inputs, output_parameter_names, max_recurrent_depth, weight_initialize, WeightType::NONE, WeightType::NONE);
-
-    } else if (rnn_type == "two_layer_ff") {
-        genome = create_ff(input_parameter_names, 1, number_inputs, output_parameter_names, max_recurrent_depth, weight_initialize, WeightType::NONE, WeightType::NONE);
-
-    } else if (rnn_type == "jordan") {
-        genome = create_jordan(input_parameter_names, 1, number_inputs, output_parameter_names, max_recurrent_depth, weight_initialize);
-
-    } else if (rnn_type == "elman") {
-        genome = create_elman(input_parameter_names, 1, number_inputs, output_parameter_names, max_recurrent_depth, weight_initialize);
-
-    } else {
-        Log::fatal("ERROR: incorrect rnn type\n");
-        Log::fatal("Possibilities are:\n");
-        Log::fatal("    one_layer_lstm\n");
-        Log::fatal("    two_layer_lstm\n");
-        Log::fatal("    one_layer_gru\n");
-        Log::fatal("    two_layer_gru\n");
-        Log::fatal("    one_layer_ff\n");
-        Log::fatal("    two_layer_ff\n");
-        exit(1);
+    for (int32_t i = 0; i < input_parameter_names.size(); i++) {
+        RNN_Node *node = new RNN_Node(++node_innovation_count, INPUT_LAYER, current_layer, SIMPLE_NODE, input_parameter_names[i]);
+        rnn_nodes.push_back(node);
+        layer_nodes[current_layer].push_back(node);
     }
+    current_layer++;
+
+    for (int32_t i = 0; i < number_hidden_layers; i++) {
+        for (int32_t j = 0; j < number_hidden_nodes; j++) {
+            RNN_Node *node = new RNN_Node(++node_innovation_count, HIDDEN_LAYER, current_layer, JORDAN_NODE);
+            rnn_nodes.push_back(node);
+            layer_nodes[current_layer].push_back(node);
+
+            for (uint32_t k = 0; k < layer_nodes[current_layer - 1].size(); k++) {
+                rnn_edges.push_back(new RNN_Edge(++edge_innovation_count, layer_nodes[current_layer - 1][k], node));
+                for (uint32_t d = 1; d <= max_input_lags; d++) {
+                    recurrent_edges.push_back(new RNN_Recurrent_Edge(++edge_innovation_count, d, layer_nodes[current_layer - 1][k], node));
+                 }
+            }
+        }
+        current_layer++;
+    }
+
+    for (int32_t i = 0; i < output_parameter_names.size(); i++) {
+        RNN_Node *output_node = new RNN_Node(++node_innovation_count, OUTPUT_LAYER, current_layer, SIMPLE_NODE, output_parameter_names[i]);
+        output_layer.push_back(output_node);
+
+        rnn_nodes.push_back(output_node);
+
+        for (uint32_t k = 0; k < layer_nodes[current_layer - 1].size(); k++) {
+            rnn_edges.push_back(new RNN_Edge(++edge_innovation_count, layer_nodes[current_layer - 1][k], output_node));
+        }
+    }
+
+    //connect the output node with recurrent edges to each hidden node
+    for (uint32_t k = 0; k < output_layer.size(); k++) {
+        for (int32_t i = 0; i < number_hidden_layers; i++) {
+            for (int32_t j = 0; j < number_hidden_nodes; j++) {
+                for (int32_t d = 1; d <= max_recurrent_depth; d++) {
+                    recurrent_edges.push_back(new RNN_Recurrent_Edge(++edge_innovation_count, d, output_layer[k], layer_nodes[i + 1][j]));
+                }
+            }
+        }
+    }
+
+    RNN_Genome *genome = new RNN_Genome(rnn_nodes, rnn_edges, recurrent_edges, weight_initialize, WeightType::NONE, WeightType::NONE);
 
     genome->set_parameter_names(time_series_sets->get_input_parameter_names(), time_series_sets->get_output_parameter_names());
     genome->set_normalize_bounds(time_series_sets->get_normalize_type(), time_series_sets->get_normalize_mins(), time_series_sets->get_normalize_maxs(), time_series_sets->get_normalize_avgs(), time_series_sets->get_normalize_std_devs());
@@ -148,9 +151,6 @@ int main(int argc, char **argv) {
 
     vector<double> best_parameters;
 
-    string search_type;
-    get_argument(arguments, "--search_type", true, search_type);
-
     using_dropout = false;
 
     genome->initialize_randomly();
@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
     get_argument(arguments, "--bp_iterations", true, bp_iterations);
     genome->set_bp_iterations(bp_iterations);
 
-    double learning_rate = 0.001;
+    double learning_rate = 0.0001;
     get_argument(arguments, "--learning_rate", false, learning_rate);
 
     genome->set_learning_rate(learning_rate);
@@ -181,6 +181,8 @@ int main(int argc, char **argv) {
     } else {
         genome->backpropagate(training_inputs, training_outputs, test_inputs, test_outputs);
     }
+
+    genome->write_to_file(output_filename);
 
     genome->get_weights(best_parameters);
     Log::info("best test MSE: %lf\n", genome->get_fitness());
