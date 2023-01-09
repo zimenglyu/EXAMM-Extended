@@ -28,380 +28,187 @@ using std::string;
 using std::to_string;
 
 #include "examm.hxx"
-#include "rnn_genome.hxx"
-#include "generate_nn.hxx"
+#include "rnn/rnn_genome.hxx"
+#include "rnn/generate_nn.hxx"
 #include "speciation_strategy.hxx"
 #include "island_speciation_strategy.hxx"
 #include "neat_speciation_strategy.hxx"
 
-//INFO: ADDED BY ABDELRAHMAN TO USE FOR TRANSFER LEARNING
-#include "rnn.hxx"
-#include "rnn_node.hxx"
-#include "lstm_node.hxx"
-#include "gru_node.hxx"
-#include "delta_node.hxx"
-#include "ugrnn_node.hxx"
-#include "mgu_node.hxx"
+#include "rnn/rnn.hxx"
+#include "rnn/rnn_node.hxx"
+#include "rnn/lstm_node.hxx"
+#include "rnn/gru_node.hxx"
+#include "rnn/delta_node.hxx"
+#include "rnn/ugrnn_node.hxx"
+#include "rnn/mgu_node.hxx"
 
 #include "common/files.hxx"
 #include "common/log.hxx"
 
 
 EXAMM::~EXAMM() {
-    RNN_Genome *genome;
-    for (int32_t i = 0; i < (int32_t)genomes.size(); i++) {
-        while (genomes[i].size() > 0) {
-            genome = genomes[i].back();
-            genomes[i].pop_back();
-            delete genome;
-        }
-    }
+    delete weight_rules;
+    delete genome_property;
 }
 
 EXAMM::EXAMM(
-        int32_t _population_size,
+        int32_t _island_size,
         int32_t _number_islands,
         int32_t _max_genomes,
-        int32_t _extinction_event_generation_number,
-        int32_t islands_to_exterminate,
-        string _island_ranking_method,
-        string _repopulation_method,
-        int32_t _num_mutations,
-        bool _repeat_extinction,
-        int32_t _epochs_acc_freq,
-        string _speciation_method,
-        double _species_threshold,
-        double _fitness_threshold,
-        double _neat_c1,
-        double _neat_c2,
-        double _neat_c3,
-        const vector<string> &_input_parameter_names,
-        const vector<string> &_output_parameter_names,
-        string _normalize_type,
-        const map<string,double> &_normalize_mins,
-        const map<string,double> &_normalize_maxs,
-        const map<string,double> &_normalize_avgs,
-        const map<string,double> &_normalize_std_devs,
-        WeightType _weight_initialize,
-        WeightType _weight_inheritance,
-        WeightType _mutated_component_weight,
-        int32_t _bp_iterations,
-        double _learning_rate,
-        bool _use_high_threshold,
-        double _high_threshold,
-        bool _use_low_threshold,
-        double _low_threshold,
-        bool _use_dropout,
-        double _dropout_probability,
-        int32_t _min_recurrent_depth,
-        int32_t _max_recurrent_depth,
-        string _output_directory,
-        RNN_Genome *seed_genome,
-        bool _start_filled) :
-                        population_size(_population_size),
+        SpeciationStrategy *_speciation_strategy,
+        WeightRules *_weight_rules,
+        GenomeProperty *_genome_property,
+        string _output_directory) :
+                        island_size(_island_size),
                         number_islands(_number_islands),
                         max_genomes(_max_genomes),
-                        extinction_event_generation_number(_extinction_event_generation_number),
-                        island_ranking_method(_island_ranking_method),
-                        speciation_method(_speciation_method),
-                        repopulation_method(_repopulation_method),
-                        num_mutations(_num_mutations),
-                        repeat_extinction(_repeat_extinction),
-                        epochs_acc_freq(_epochs_acc_freq),
-                        species_threshold(_species_threshold),
-                        fitness_threshold(_fitness_threshold),
-                        neat_c1(_neat_c1),
-                        neat_c2(_neat_c2),
-                        neat_c3(_neat_c3),
-                        bp_iterations(_bp_iterations),
-                        learning_rate(_learning_rate),
-                        use_high_threshold(_use_high_threshold),
-                        high_threshold(_high_threshold),
-                        use_low_threshold(_use_low_threshold),
-                        low_threshold(_low_threshold),
-                        use_dropout(_use_dropout),
-                        dropout_probability(_dropout_probability),
-                        output_directory(_output_directory),
-                        normalize_type(_normalize_type),
-                        weight_initialize(_weight_initialize),
-                        weight_inheritance(_weight_inheritance),
-                        mutated_component_weight(_mutated_component_weight),
-                        start_filled(_start_filled) {
-    input_parameter_names = _input_parameter_names;
-    output_parameter_names = _output_parameter_names;
-    normalize_mins = _normalize_mins;
-    normalize_maxs = _normalize_maxs;
-    normalize_avgs = _normalize_avgs;
-    normalize_std_devs = _normalize_std_devs;
+                        speciation_strategy(_speciation_strategy),
+                        weight_rules(_weight_rules),
+                        genome_property(_genome_property),
+                        output_directory(_output_directory) {
 
     total_bp_epochs = 0;
-
     edge_innovation_count = 0;
     node_innovation_count = 0;
-
-    number_inputs = (int32_t)_input_parameter_names.size();
-    number_outputs = (int32_t)_output_parameter_names.size();
-
-    //update to now have islands of genomes
-    genomes = vector< vector<RNN_Genome*> >(number_islands);
+    generate_op_log = false;
 
     int32_t seed = std::chrono::system_clock::now().time_since_epoch().count();
     generator = minstd_rand0(seed);
     rng_0_1 = uniform_real_distribution<double>(0.0, 1.0);
-
-    //rng_crossover_weight = uniform_real_distribution<double>(0.0, 0.0);
-    //rng_crossover_weight = uniform_real_distribution<double>(-0.10, 0.1);
     rng_crossover_weight = uniform_real_distribution<double>(-0.5, 1.5);
-    //rng_crossover_weight = uniform_real_distribution<double>(0.45, 0.55);
-
-    min_recurrent_depth = _min_recurrent_depth;
-    max_recurrent_depth = _max_recurrent_depth;
-
-    epigenetic_weights = true;
-
-    more_fit_crossover_rate = 1.00;
-    less_fit_crossover_rate = 0.50;
-    //more_fit_crossover_rate = 0.75;
-    //less_fit_crossover_rate = 0.25;
-
-    clone_rate = 1.0;
-
-    add_edge_rate = 1.0;
-    //add_recurrent_edge_rate = 3.0;
-    add_recurrent_edge_rate = 1.0;
-    enable_edge_rate = 1.0;
-    //disable_edge_rate = 3.0;
-    disable_edge_rate = 1.0;
-    //split_edge_rate = 1.0;
-    split_edge_rate = 0.0;
-
-    possible_node_types.clear();
-    possible_node_types.push_back(SIMPLE_NODE);
-    possible_node_types.push_back(JORDAN_NODE);
-    possible_node_types.push_back(ELMAN_NODE);
-    possible_node_types.push_back(UGRNN_NODE);
-    possible_node_types.push_back(MGU_NODE);
-    possible_node_types.push_back(GRU_NODE);
-    possible_node_types.push_back(LSTM_NODE);
-    possible_node_types.push_back(ENARC_NODE);
-    possible_node_types.push_back(DELTA_NODE);
-
-    bool node_ops = true;
-    if (node_ops) {
-        add_node_rate = 1.0;
-        enable_node_rate = 1.0;
-        //disable_node_rate = 3.0;
-        disable_node_rate = 1.0;
-        split_node_rate = 1.0;
-        merge_node_rate = 1.0;
-
-    } else {
-        add_node_rate = 0.0;
-        enable_node_rate = 0.0;
-        disable_node_rate = 0.0;
-        split_node_rate = 0.0;
-        merge_node_rate = 0.0;
-    }
 
     check_weight_initialize_validity();
+    set_evolution_hyper_parameters();
+    initialize_seed_genome();
+    //make sure we don't duplicate node or edge innovation numbers
 
-    Log::info("weight initialize: %s\n", WEIGHT_TYPES_STRING[weight_initialize].c_str());
-    Log::info("weight inheritance: %s \n", WEIGHT_TYPES_STRING[weight_inheritance].c_str());
-    Log::info("mutated component weight: %s\n", WEIGHT_TYPES_STRING[mutated_component_weight].c_str());
+    function<void (int32_t, RNN_Genome*)> mutate_function =
+    [=](int32_t max_mutations, RNN_Genome *genome) {
+        this->mutate(max_mutations, genome);
+    };
 
-    Log::info("Speciation method is: \"%s\" (Default is the island-based speciation strategy).\n", speciation_method.c_str());
-    Log::info("Number of mutations is set to %d\n", num_mutations);
-    Log::info("Repeat extinction is set to %s\n", repeat_extinction? "true":"false");
-    if (speciation_method.compare("island") == 0 || speciation_method.compare("") == 0) {
-        //generate a minimal feed foward network as the seed genome
+    Log::info("Finished initializing, now start EXAMM evolution\n");
 
-        bool seed_genome_was_minimal = false;
-        if (seed_genome == NULL) {
-            seed_genome_was_minimal = true;
-            seed_genome = create_ff(input_parameter_names, 0, 0, output_parameter_names, 0, weight_initialize, weight_inheritance, mutated_component_weight);
-            seed_genome->initialize_randomly();
-        } //otherwise the seed genome was passed into EXAMM
-
-        //make sure we don't duplicate node or edge innovation numbers
-        edge_innovation_count = seed_genome->get_max_edge_innovation_count() + 1;
-        node_innovation_count = seed_genome->get_max_node_innovation_count() + 1;
-
-        seed_genome->set_generated_by("initial");
-
-        //insert a copy of it into the population so
-        //additional requests can mutate it
-
-        seed_genome->best_validation_mse = EXAMM_MAX_DOUBLE;
-
-        seed_genome->best_validation_mse = EXAMM_MAX_DOUBLE;
-        seed_genome->best_validation_mae = EXAMM_MAX_DOUBLE;
-        //seed_genome->best_parameters.clear();
-
-        double mutation_rate = 0.70, intra_island_co_rate = 0.20, inter_island_co_rate = 0.10;
-
-        if (number_islands == 1) {
-            inter_island_co_rate = 0.0;
-            intra_island_co_rate = 0.30;
-        }
-
-        // Only difference here is that the apply_stir_mutations lambda is passed if the island is supposed to start filled.
-        if (start_filled) {
-            // Only used if start_filled is enabled
-            function<void (RNN_Genome *)> apply_stir_mutations = [this](RNN_Genome *genome) {
-                RNN_Genome *copy = genome->copy();
-                this->mutate(num_mutations, copy);
-                return copy;
-            };
-
-            speciation_strategy = new IslandSpeciationStrategy(
-                    number_islands, population_size, mutation_rate, intra_island_co_rate, inter_island_co_rate,
-                    seed_genome, island_ranking_method, repopulation_method, extinction_event_generation_number, num_mutations, islands_to_exterminate, seed_genome_was_minimal, apply_stir_mutations);
-        } else {
-            speciation_strategy = new IslandSpeciationStrategy(
-                    number_islands, population_size, mutation_rate, intra_island_co_rate, inter_island_co_rate,
-                    seed_genome, island_ranking_method, repopulation_method, extinction_event_generation_number, num_mutations, islands_to_exterminate, max_genomes, repeat_extinction, seed_genome_was_minimal);
-        }
-    } else if (speciation_method.compare("neat") == 0) {
-
-        if (seed_genome == NULL) {
-            seed_genome = create_ff(input_parameter_names, 0, 0, output_parameter_names, 0, weight_initialize, weight_inheritance, mutated_component_weight);
-            seed_genome->initialize_randomly();
-        } //otherwise the seed genome was passed into EXAMM
-
-        //make sure we don't duplicate node or edge innovation numbers
-        edge_innovation_count = seed_genome->get_max_edge_innovation_count() + 1;
-        node_innovation_count = seed_genome->get_max_node_innovation_count() + 1;
-
-        seed_genome->set_generated_by("initial");
-
-        //insert a copy of it into the population so
-        //additional requests can mutate it
-
-        seed_genome->best_validation_mse = EXAMM_MAX_DOUBLE;
-        seed_genome->best_validation_mae = EXAMM_MAX_DOUBLE;
-        //seed_genome->best_parameters.clear();
-
-        double mutation_rate = 0.70, intra_island_co_rate = 0.20, inter_island_co_rate = 0.10;
-
-        if (number_islands == 1) {
-            inter_island_co_rate = 0.0;
-            intra_island_co_rate = 0.30;
-        }
-        // no transfer learning for NEAT
-        speciation_strategy = new NeatSpeciationStrategy(mutation_rate, intra_island_co_rate, inter_island_co_rate, seed_genome, species_threshold, fitness_threshold, neat_c1, neat_c2, neat_c3, generator);
-
-    }
-
-    if (output_directory != "") {
-        mkpath(output_directory.c_str(), 0777);
-        log_file = new ofstream(output_directory + "/" + "fitness_log.csv");
-        (*log_file) << "Inserted Genomes, Total BP Epochs, Time, Best Val. MAE, Best Val. MSE, Enabled Nodes, Enabled Edges, Enabled Rec. Edges";
-        //memory_log << "Inserted Genomes, Total BP Epochs, Time, Best Val. MAE, Best Val. MSE, Enabled Nodes, Enabled Edges, Enabled Rec. Edges";
-
-        (*log_file) << speciation_strategy->get_strategy_information_headers();
-        //(memory_log) << speciation_strategy->get_strategy_information_headers();
-
-        (*log_file) << endl;
-        //memory_log << endl;
-
-        op_log_file = new ofstream(output_directory + "/op_log.csv");
-
-        op_log_ordering = {
-            "genomes",
-            "crossover",
-            "island_crossover",
-            "clone",
-            "add_edge",
-            "add_recurrent_edge",
-            "enable_edge",
-            "disable_edge",
-            "enable_node",
-            "disable_node",
-        };
-
-        // To get data about these ops without respect to node type,
-        // you'll have to calculate the sum, e.g. sum split_node(x) for all node types x
-        // to get information about split_node as a whole.
-        vector<string> ops_with_node_type = {
-            "add_node",
-            "split_node",
-            "merge_node",
-            "split_edge"
-        };
-
-        for (int32_t i = 0; i < (int32_t)ops_with_node_type.size(); i++) {
-            string op = ops_with_node_type[i];
-            for (int32_t j = 0; j < (int32_t)possible_node_types.size(); j++)
-                op_log_ordering.push_back(op + "(" + NODE_TYPES[possible_node_types[j]] + ")");
-        }
-
-        for (int32_t i = 0; i < (int32_t)op_log_ordering.size(); i++) {
-            string op = op_log_ordering[i];
-            (*op_log_file) << op;
-            (*op_log_file) << " Generated, ";
-            (*op_log_file) << op;
-            (*op_log_file) << " Inserted, ";
-
-            inserted_counts[op] = 0;
-            generated_counts[op] = 0;
-        }
-
-        map<string, int32_t>::iterator it;
-
-        (*op_log_file) << endl;
-
-    } else {
-        log_file = NULL;
-        op_log_file = NULL;
-    }
-
+    speciation_strategy->initialize_population(mutate_function);
+    generate_log();
     startClock = std::chrono::system_clock::now();
 }
 
 void EXAMM::print() {
-    if (Log::at_level(Log::INFO)) {
+    if (Log::at_level(Log::TRACE)) {
         speciation_strategy->print();
+    }
+}
+
+void EXAMM::generate_log() {
+    if (output_directory != "") {
+        Log::info("Generating fitness log\n");
+        mkpath(output_directory.c_str(), 0777);
+        log_file = new ofstream(output_directory + "/" + "fitness_log.csv");
+        (*log_file) << "Inserted Genomes, Total BP Epochs, Time, Best Val. MAE, Best Val. MSE, Enabled Nodes, Enabled Edges, Enabled Rec. Edges";
+        (*log_file) << speciation_strategy->get_strategy_information_headers();
+        (*log_file) << endl;
+
+        if (generate_op_log) {
+            op_log_file = new ofstream(output_directory + "/op_log.csv");
+            op_log_ordering = {
+                "genomes",
+                "crossover",
+                "island_crossover",
+                "clone",
+                "add_edge",
+                "add_recurrent_edge",
+                "enable_edge",
+                "disable_edge",
+                "enable_node",
+                "disable_node",
+            };
+            // To get data about these ops without respect to node type,
+            // you'll have to calculate the sum, e.g. sum split_node(x) for all node types x
+            // to get information about split_node as a whole.
+            vector<string> ops_with_node_type = {
+                "add_node",
+                "split_node",
+                "merge_node",
+                "split_edge"
+            };
+            for (int32_t i = 0; i < (int32_t)ops_with_node_type.size(); i++) {
+                string op = ops_with_node_type[i];
+                for (int32_t j = 0; j < (int32_t)possible_node_types.size(); j++)
+                    op_log_ordering.push_back(op + "(" + NODE_TYPES[possible_node_types[j]] + ")");
+            }
+            for (int32_t i = 0; i < (int32_t)op_log_ordering.size(); i++) {
+                string op = op_log_ordering[i];
+                (*op_log_file) << op;
+                (*op_log_file) << " Generated, ";
+                (*op_log_file) << op;
+                (*op_log_file) << " Inserted, ";
+                inserted_counts[op] = 0;
+                generated_counts[op] = 0;
+            }
+            (*op_log_file) << endl;
+        }
+    } else {
+        log_file = NULL;
+        op_log_file = NULL;
+    }
+}
+
+void EXAMM::update_op_log_statistics(RNN_Genome *genome, int32_t insert_position) {
+    // Name of the operator
+    const map<string, int32_t> *generated_by_map = genome->get_generated_by_map();
+    for (auto it = generated_by_map->begin(); it != generated_by_map->end(); it++) {
+        string generated_by = it->first;
+        if (generated_counts.count(generated_by) > 0) {
+            generated_counts["genomes"] += 1;
+            // Add one to the number of genomes generated by this operator
+            generated_counts[generated_by] += 1;
+            // If it was inserted add one to the number of genomes generated AND inserted by this operator
+            if (insert_position >= 0) {
+                inserted_counts["genomes"] += 1;
+                inserted_counts[generated_by] += 1;
+            }
+        } 
     }
 }
 
 void EXAMM::update_log() {
     if (log_file != NULL) {
-
         //make sure the log file is still good
         if (!log_file->good()) {
             log_file->close();
             delete log_file;
-
             string output_file = output_directory + "/fitness_log.csv";
             log_file = new ofstream(output_file, std::ios_base::app);
-
             if (!log_file->is_open()) {
                 Log::error("could not open EXAMM output log: '%s'\n", output_file.c_str());
                 exit(1);
             }
         }
 
-        if (!op_log_file->good()) {
-            op_log_file->close();
-            delete op_log_file;
-
-            string output_file = output_directory + "/op_log.csv";
-            op_log_file = new ofstream(output_file, std::ios_base::app);
-
-            if (!op_log_file->is_open()) {
-                Log::error("could not open EXAMM output log: '%s'\n", output_file.c_str());
-                exit(1);
+        if (generate_op_log) {
+            if (!op_log_file->good()) {
+                op_log_file->close();
+                delete op_log_file;
+                string output_file = output_directory + "/op_log.csv";
+                op_log_file = new ofstream(output_file, std::ios_base::app);
+                if (!op_log_file->is_open()) {
+                    Log::error("could not open EXAMM output log: '%s'\n", output_file.c_str());
+                    exit(1);
+                }
             }
+            for (int32_t i = 0; i < (int32_t)op_log_ordering.size(); i++) {
+                string op = op_log_ordering[i];
+                (*op_log_file) << generated_counts[op] << ", " << inserted_counts[op]  << ", ";
+            }
+            (*op_log_file) << endl;
         }
-
         RNN_Genome *best_genome = get_best_genome();
         if (best_genome == NULL) {
             best_genome = speciation_strategy->get_global_best_genome();
         }
-
         std::chrono::time_point<std::chrono::system_clock> currentClock = std::chrono::system_clock::now();
         long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(currentClock - startClock).count();
-
         (*log_file) << speciation_strategy->get_evaluated_genomes()
             << "," << total_bp_epochs
             << "," << milliseconds
@@ -412,35 +219,14 @@ void EXAMM::update_log() {
             << "," << best_genome->get_enabled_recurrent_edge_count()
             << speciation_strategy->get_strategy_information_values()
             << endl;
-
-        /*
-        memory_log << speciation_strategy->get_evaluated_genomes()
-            << "," << total_bp_epochs
-            << "," << milliseconds
-            << "," << best_genome->best_validation_mae
-            << "," << best_genome->best_validation_mse
-            << "," << best_genome->get_enabled_node_count()
-            << "," << best_genome->get_enabled_edge_count()
-            << "," << best_genome->get_enabled_recurrent_edge_count()
-            << speciation_strategy->get_strategy_information_values()
-            << endl;
-        */
-
-        for (int32_t i = 0; i < (int32_t)op_log_ordering.size(); i++) {
-            string op = op_log_ordering[i];
-            (*op_log_file) << generated_counts[op] << ", " << inserted_counts[op]  << ", ";
-        }
-
-        (*op_log_file) << endl;
-
     }
 }
 
-void EXAMM::write_memory_log(string filename) {
-    ofstream log_file(filename);
-    log_file << memory_log.str();
-    log_file.close();
-}
+// void EXAMM::write_memory_log(string filename) {
+//     ofstream log_file(filename);
+//     log_file << memory_log.str();
+//     log_file.close();
+// }
 
 void EXAMM::set_possible_node_types(vector<string> possible_node_type_strings) {
     possible_node_types.clear();
@@ -487,9 +273,6 @@ RNN_Genome* EXAMM::get_worst_genome() {
 //this will insert a COPY, original needs to be deleted
 bool EXAMM::insert_genome(RNN_Genome* genome) {
     total_bp_epochs += genome->get_bp_iterations();
-
-    // Log::info("genomes evaluated: %10d , attempting to insert: %s\n", (speciation_strategy->get_evaluated_genomes() + 1), parse_fitness(genome->get_fitness()).c_str());
-
     if (!genome->sanity_check()) {
         Log::error("genome failed sanity check on insert!\n");
         exit(1);
@@ -497,45 +280,20 @@ bool EXAMM::insert_genome(RNN_Genome* genome) {
 
     //updates EXAMM's mapping of which genomes have been generated by what
     genome->update_generation_map(generated_from_map);
-
     int32_t insert_position = speciation_strategy->insert_genome(genome);
     //write this genome to disk if it was a new best found genome
     if (insert_position == 0) {
-        genome->normalize_type = normalize_type;
+        // genome->normalize_type = normalize_type;
         genome->write_graphviz(output_directory + "/rnn_genome_" + to_string(genome->get_generation_id()) + ".gv");
         genome->write_to_file(output_directory + "/rnn_genome_" + to_string(genome->get_generation_id()) + ".bin");
     }
-
-    // Name of the operator
-    const map<string, int32_t> *generated_by_map = genome->get_generated_by_map();
-
-    for (auto it = generated_by_map->begin(); it != generated_by_map->end(); it++) {
-        string generated_by = it->first;
-
-        if (generated_counts.count(generated_by) > 0) {
-            generated_counts["genomes"] += 1;
-
-            // Add one to the number of genomes generated by this operator
-            generated_counts[generated_by] += 1;
-
-            // If it was inserted add one to the number of genomes generated AND inserted by this operator
-            if (insert_position >= 0) {
-                inserted_counts["genomes"] += 1;
-                inserted_counts[generated_by] += 1;
-            }
-        } else {
-            if (generated_by != "initial")
-                Log::error("unrecognized generated_by string '%s'\n", generated_by.c_str());
-        }
-    }
-
     speciation_strategy->print();
+    update_op_log_statistics(genome, insert_position);
     update_log();
-
     return insert_position >= 0;
 }
 
-RNN_Genome* EXAMM::generate_genome(int32_t seed_genome_stirs) {
+RNN_Genome* EXAMM::generate_genome() {
     if (speciation_strategy->get_evaluated_genomes() > max_genomes) return NULL;
 
     function<void (int32_t, RNN_Genome*)> mutate_function =
@@ -548,18 +306,10 @@ RNN_Genome* EXAMM::generate_genome(int32_t seed_genome_stirs) {
             return this->crossover(parent1, parent2);
         };
 
-    RNN_Genome *genome = speciation_strategy->generate_genome(rng_0_1, generator, mutate_function, crossover_function, seed_genome_stirs);
+    RNN_Genome *genome = speciation_strategy->generate_genome(rng_0_1, generator, mutate_function, crossover_function);
 
-    genome->set_parameter_names(input_parameter_names, output_parameter_names);
-    genome->set_normalize_bounds(normalize_type, normalize_mins, normalize_maxs, normalize_avgs, normalize_std_devs);
-    genome->set_bp_iterations(bp_iterations, epochs_acc_freq);
-    genome->set_learning_rate(learning_rate);
-
-    if (use_high_threshold) genome->enable_high_threshold(high_threshold);
-    if (use_low_threshold) genome->enable_low_threshold(low_threshold);
-    if (use_dropout) genome->enable_dropout(dropout_probability);
-
-    if (!epigenetic_weights) genome->initialize_randomly();
+    genome_property->set_genome_properties(genome);
+    // if (!epigenetic_weights) genome->initialize_randomly();
 
     //this is just a sanity check, can most likely comment out (checking to see
     //if all the paramemters are sane)
@@ -583,7 +333,6 @@ void EXAMM::mutate(int32_t max_mutations, RNN_Genome *g) {
     double mu, sigma;
 
     //g->write_graphviz("rnn_genome_premutate_" + to_string(g->get_generation_id()) + ".gv");
-    Log::info("generating new genome by mutation.\n");
 
     g->get_mu_sigma(g->best_parameters, mu, sigma);
     g->clear_generated_by();
@@ -628,7 +377,7 @@ void EXAMM::mutate(int32_t max_mutations, RNN_Genome *g) {
         rng -= add_edge_rate;
 
         if (rng < add_recurrent_edge_rate) {
-            uniform_int_distribution<int32_t> dist = get_recurrent_depth_dist();
+            uniform_int_distribution<int32_t> dist = genome_property->get_recurrent_depth_dist();
             modified = g->add_recurrent_edge(mu, sigma, dist, edge_innovation_count);
             Log::debug("\tadding recurrent edge, modified: %d\n", modified);
             if (modified) g->set_generated_by("add_recurrent_edge");
@@ -653,7 +402,7 @@ void EXAMM::mutate(int32_t max_mutations, RNN_Genome *g) {
         rng -= disable_edge_rate;
 
         if (rng < split_edge_rate) {
-            uniform_int_distribution<int32_t> dist = get_recurrent_depth_dist();
+            uniform_int_distribution<int32_t> dist = genome_property->get_recurrent_depth_dist();
             modified = g->split_edge(mu, sigma, new_node_type, dist, edge_innovation_count, node_innovation_count);
             Log::debug("\tsplitting edge, modified: %d\n", modified);
             if (modified) g->set_generated_by("split_edge(" + node_type_str + ")");
@@ -662,7 +411,7 @@ void EXAMM::mutate(int32_t max_mutations, RNN_Genome *g) {
         rng -= split_edge_rate;
 
         if (rng < add_node_rate) {
-            uniform_int_distribution<int32_t> dist = get_recurrent_depth_dist();
+            uniform_int_distribution<int32_t> dist = genome_property->get_recurrent_depth_dist();
             modified = g->add_node(mu, sigma, new_node_type, dist, edge_innovation_count, node_innovation_count);
             Log::debug("\tadding node, modified: %d\n", modified);
             if (modified) g->set_generated_by("add_node(" + node_type_str + ")");
@@ -687,7 +436,7 @@ void EXAMM::mutate(int32_t max_mutations, RNN_Genome *g) {
         rng -= disable_node_rate;
 
         if (rng < split_node_rate) {
-            uniform_int_distribution<int32_t> dist = get_recurrent_depth_dist();
+            uniform_int_distribution<int32_t> dist = genome_property->get_recurrent_depth_dist();
             modified = g->split_node(mu, sigma, new_node_type, dist, edge_innovation_count, node_innovation_count);
             Log::debug("\tsplitting node, modified: %d\n", modified);
             if (modified) g->set_generated_by("split_node(" + node_type_str + ")");
@@ -696,7 +445,7 @@ void EXAMM::mutate(int32_t max_mutations, RNN_Genome *g) {
         rng -= split_node_rate;
 
         if (rng < merge_node_rate) {
-            uniform_int_distribution<int32_t> dist = get_recurrent_depth_dist();
+            uniform_int_distribution<int32_t> dist = genome_property->get_recurrent_depth_dist();
             modified = g->merge_node(mu, sigma, new_node_type, dist, edge_innovation_count, node_innovation_count);
             Log::debug("\tmerging node, modified: %d\n", modified);
             if (modified) g->set_generated_by("merge_node(" + node_type_str + ")");
@@ -1066,9 +815,10 @@ RNN_Genome* EXAMM::crossover(RNN_Genome *p1, RNN_Genome *p2) {
     sort(child_edges.begin(), child_edges.end(), sort_RNN_Edges_by_depth());
     sort(child_recurrent_edges.begin(), child_recurrent_edges.end(), sort_RNN_Recurrent_Edges_by_depth());
 
-    RNN_Genome *child = new RNN_Genome(child_nodes, child_edges, child_recurrent_edges, weight_initialize, weight_inheritance, mutated_component_weight);
-    child->set_parameter_names(input_parameter_names, output_parameter_names);
-    child->set_normalize_bounds(normalize_type, normalize_mins, normalize_maxs, normalize_avgs, normalize_std_devs);
+    RNN_Genome *child = new RNN_Genome(child_nodes, child_edges, child_recurrent_edges, weight_rules);
+    genome_property->set_genome_properties(child);
+    // child->set_parameter_names(input_parameter_names, output_parameter_names);
+    // child->set_normalize_bounds(normalize_type, normalize_mins, normalize_maxs, normalize_avgs, normalize_std_devs);
 
 
     if (p1->get_group_id() == p2->get_group_id()) {
@@ -1082,6 +832,8 @@ RNN_Genome* EXAMM::crossover(RNN_Genome *p1, RNN_Genome *p2) {
     vector<double> new_parameters;
 
     // if weight_inheritance is same, all the weights of the child genome would be initialized as weight_initialize method
+    WeightType weight_initialize = weight_rules->get_weight_initialize_method();
+    WeightType weight_inheritance = weight_rules->get_weight_inheritance_method();
     if (weight_inheritance == weight_initialize) {
         Log::debug("weight inheritance at crossover method is %s, setting weights to %s randomly \n", WEIGHT_TYPES_STRING[weight_inheritance].c_str(), WEIGHT_TYPES_STRING[weight_inheritance].c_str());
         child->initialize_randomly();
@@ -1112,11 +864,15 @@ RNN_Genome* EXAMM::crossover(RNN_Genome *p1, RNN_Genome *p2) {
 }
 
 
-uniform_int_distribution<int32_t> EXAMM::get_recurrent_depth_dist() {
-    return uniform_int_distribution<int32_t>(this->min_recurrent_depth, this->max_recurrent_depth);
-}
+// uniform_int_distribution<int32_t> EXAMM::get_recurrent_depth_dist() {
+//     return uniform_int_distribution<int32_t>(this->min_recurrent_depth, this->max_recurrent_depth);
+// }
 
 void EXAMM::check_weight_initialize_validity() {
+    WeightType weight_initialize = weight_rules->get_weight_initialize_method();
+    WeightType weight_inheritance = weight_rules->get_weight_inheritance_method();
+    WeightType mutated_component_weight = weight_rules->get_mutated_components_weight_method();
+
     if (weight_initialize < 0) {
         Log::fatal("Weight initalization is set to NONE, this should not happen! \n");
         exit(1);
@@ -1142,4 +898,45 @@ void EXAMM::check_weight_initialize_validity() {
         exit(1);
     }
 
+}
+
+void EXAMM::initialize_seed_genome() {
+    RNN_Genome *seed_genome = speciation_strategy->get_seed_genome();
+    edge_innovation_count = seed_genome->get_max_edge_innovation_count() + 1;
+    node_innovation_count = seed_genome->get_max_node_innovation_count() + 1;
+    
+    seed_genome->set_generated_by("initial");
+    seed_genome->best_validation_mse = EXAMM_MAX_DOUBLE;
+    seed_genome->best_validation_mse = EXAMM_MAX_DOUBLE;
+    seed_genome->best_validation_mae = EXAMM_MAX_DOUBLE;
+    seed_genome->best_parameters.clear();
+}
+
+void EXAMM::set_evolution_hyper_parameters() {
+    more_fit_crossover_rate = 1.00;
+    less_fit_crossover_rate = 0.50;
+
+    clone_rate = 1.0;
+    add_edge_rate = 1.0;
+    add_recurrent_edge_rate = 1.0;
+    enable_edge_rate = 1.0;
+    disable_edge_rate = 1.0;
+    split_edge_rate = 0.0;
+
+    bool node_ops = true;
+    if (node_ops) {
+        add_node_rate = 1.0;
+        enable_node_rate = 1.0;
+        //disable_node_rate = 3.0;
+        disable_node_rate = 1.0;
+        split_node_rate = 1.0;
+        merge_node_rate = 1.0;
+
+    } else {
+        add_node_rate = 0.0;
+        enable_node_rate = 0.0;
+        disable_node_rate = 0.0;
+        split_node_rate = 0.0;
+        merge_node_rate = 0.0;
+    }
 }
