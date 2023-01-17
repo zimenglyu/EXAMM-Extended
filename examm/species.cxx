@@ -14,7 +14,7 @@ using std::string;
 using std::to_string;
 
 #include "species.hxx"
-#include "rnn_genome.hxx"
+#include "rnn/rnn_genome.hxx"
 
 #include "common/log.hxx"
         // Species(int32_t id, double fitness_th);

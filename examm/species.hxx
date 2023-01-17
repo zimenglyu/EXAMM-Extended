@@ -17,7 +17,7 @@ using std::string;
 
 #include <vector>
 
-#include "rnn_genome.hxx"
+#include "rnn/rnn_genome.hxx"
 
 
 class Species {
