@@ -3,26 +3,26 @@
 using std::vector;
 
 #include "common/log.hxx"
-#include "sin_node.hxx"
+#include "tanh_node.hxx"
 
-SIN_Node::SIN_Node(int32_t _innovation_number, int32_t _layer_type, double _depth)
-    : RNN_Node(_innovation_number, _layer_type, _depth, SIN_NODE) {
-    Log::debug("created node: %d, layer type: %d, node type: SIN_NODE\n", innovation_number, layer_type);
+TANH_Node::TANH_Node(int32_t _innovation_number, int32_t _layer_type, double _depth)
+    : RNN_Node(_innovation_number, _layer_type, _depth, TANH_NODE) {
+    Log::debug("created node: %d, layer type: %d, node type: TANH_NODE\n", innovation_number, layer_type);
 }
 
-SIN_Node::~SIN_Node() {
+TANH_Node::~TANH_Node() {
 }
 
-double SIN_Node::activation_function(double input) {
-    return sin(input);
+double TANH_Node::activation_function(double input) {
+    return tanh(input);
 }
 
-double SIN_Node::derivative_function(double input) {
-    return cos(input);
+double TANH_Node::derivative_function(double input) {
+    return 1 - (tanh(input) * tanh(input));
 }
 
-RNN_Node_Interface* SIN_Node::copy() const {
-    SIN_Node* n = new SIN_Node(innovation_number, layer_type, depth);
+RNN_Node_Interface* TANH_Node::copy() const {
+    TANH_Node* n = new TANH_Node(innovation_number, layer_type, depth);
     // copy RNN_Node values
     n->bias = bias;
     n->d_bias = d_bias;
