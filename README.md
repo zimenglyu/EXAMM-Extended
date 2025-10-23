@@ -1,14 +1,28 @@
 ![EXAMM Architecture](images/examm.png)
 
+> **Note:** This is an extended repository based on the original [EXAMM/EXACT project](https://github.com/travisdesell/exact). As one of the main contributors to the original project, I am extending EXAMM here for future research purposes.
+
 # Table of Contents
 
-1. [EXAMM and EXA-GP Overview](#examm-and-exa-gp)
-2. [Installation and Setup](#installation-and-setup)
-3. [Quickstart](#quickstart)
-4. [Managing Datasets](#managing-datasets)
-5. [Running EXAMM and EXA-GP](#running-examm-and-exa-gp)
-6. [Tracking and Managing Evolved Networks](#tracking-and-managing-evolved-networks)
-7. [Using Evolved Neural Networks for Inference](#using-evolved-neural-networks-for-inference)
+- [Table of Contents](#table-of-contents)
+- [EXAMM and EXA-GP Overview](#examm-and-exa-gp-overview)
+- [Installation and Setup](#installation-and-setup)
+  - [OSX and Linux Setup](#osx-and-linux-setup)
+  - [Building](#building)
+- [Quickstart](#quickstart)
+  - [Multithreaded Version](#multithreaded-version)
+  - [MPI Version](#mpi-version)
+- [Managing Datasets](#managing-datasets)
+- [Running EXAMM and EXA-GP](#running-examm-and-exa-gp)
+  - [Evolution Strategy Hyperparameters](#evolution-strategy-hyperparameters)
+    - [Island Speciation](#island-speciation)
+    - [NEAT Speciation](#neat-speciation)
+  - [Weight Initialization](#weight-initialization)
+  - [Training Hyperparameters](#training-hyperparameters)
+    - [Training Optimizers](#training-optimizers)
+  - [Tracking and Managing Evolved Networks](#tracking-and-managing-evolved-networks)
+  - [Using Evolved Neural Networks for Inference](#using-evolved-neural-networks-for-inference)
+- [Archived: EXACT Project](#archived-exact-project)
 
 
 # EXAMM and EXA-GP Overview
@@ -48,22 +62,6 @@ brew install libpng
 brew install clang-format
 ```
 
-## Cluster Setup
-The following is for internal use on RIT's high performance computing cluster, however if your own computing cluster utilizes [Spack](https://spack.io) you may find this useful.
-
-```bash
-# GCC (9.3)
-spack load gcc/lhqcen5
-
-# CMake
-spack load cmake/pbddesj
-
-# OpenMPI
-spack load openmpi/xcunp5q
-
-# libtiff
-spack load libtiff/gnxev37
-```
 
 ## Building
 After the above libraries have been installed and/or loaded, compiling EXAMM/EXA-GP should be as simple doing the following within your root EXAMM directory.
