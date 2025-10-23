@@ -1,6 +1,6 @@
-![EXAMM Architecture](images/examm.png)
-
 > **Note:** This is an extended repository based on the original [EXAMM/EXACT project](https://github.com/travisdesell/exact). As one of the main contributors to the original project, I am extending EXAMM here for future research purposes.
+
+![EXAMM Architecture](images/examm.png)
 
 # Table of Contents
 
