@@ -28,6 +28,7 @@ using std::string;
 typedef struct stat Stat;
 
 #include "files.hxx"
+#include <cstdint>
 
 string get_file_as_string(string file_path) noexcept(false) {
     // read the entire contents of the file into a string
