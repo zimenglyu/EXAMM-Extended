@@ -1322,7 +1322,7 @@ void RNN_Genome::write_predictions(
 
     for (int32_t i = 0; i < (int32_t) inputs.size(); i++) {
         string filename = input_filenames[i];
-        Log::info("input filename[%5d]: '%s'\n", i, filename.c_str());
+        Log::debug("input filename[%5d]: '%s'\n", i, filename.c_str());
 
         int32_t last_dot_pos = filename.find_last_of(".");
         string extension = filename.substr(last_dot_pos);
@@ -1331,7 +1331,7 @@ void RNN_Genome::write_predictions(
         string output_filename = prefix + "_predictions" + extension;
         output_filename = output_directory + "/" + output_filename.substr(output_filename.find_last_of("/") + 1);
 
-        Log::info("output filename: '%s'\n", output_filename.c_str());
+        Log::debug("output filename: '%s'\n", output_filename.c_str());
 
         rnn->write_predictions(
             output_filename, input_parameter_names, output_parameter_names, inputs[i], outputs[i], time_series_sets,

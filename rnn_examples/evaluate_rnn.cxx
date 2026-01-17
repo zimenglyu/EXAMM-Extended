@@ -65,13 +65,28 @@ int main(int argc, char** argv) {
 
     time_series_sets->export_test_series(time_offset, testing_inputs, testing_outputs);
 
+    // Count total rows loaded for testing
+    int32_t total_rows = 0;
+    for (int32_t i = 0; i < (int32_t) testing_inputs.size(); i++) {
+        if (testing_inputs[i].size() > 0) {
+            total_rows += testing_inputs[i][0].size();
+        }
+    }
+    Log::info("loaded %d rows for testing.\n", total_rows);
+
     vector<double> best_parameters = genome->get_best_parameters();
+    
+    // Measure inference time
+    auto inference_start = std::chrono::system_clock::now();
     Log::info("MSE: %lf\n", genome->get_mse(best_parameters, testing_inputs, testing_outputs));
     Log::info("MAE: %lf\n", genome->get_mae(best_parameters, testing_inputs, testing_outputs));
     genome->write_predictions(
         output_directory, testing_filenames, best_parameters, testing_inputs, testing_outputs, time_series_sets
     );
-
+    auto inference_end = std::chrono::system_clock::now();
+    
+    double inference_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(inference_end - inference_start).count() / 1000.0;
+    Log::info("inference time: %.3f seconds.\n", inference_seconds);
     if (Log::at_level(Log::DEBUG)) {
         int32_t length;
         char* byte_array;
