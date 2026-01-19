@@ -75,18 +75,46 @@ int main(int argc, char** argv) {
     Log::info("loaded %d rows for testing.\n", total_rows);
 
     vector<double> best_parameters = genome->get_best_parameters();
+    Log::info("Parameter count: %zu\n", best_parameters.size());
     
-    // Measure inference time
-    auto inference_start = std::chrono::system_clock::now();
+    // Model Latency: End-to-end from input ready → prediction output
+    // (includes inference + lightweight preprocessing + output formatting)
+    auto model_latency_start = std::chrono::high_resolution_clock::now();
+    
+    // Inference Time: Model computation only (matrix ops, RNN steps, forward pass)
+    // Excludes: data loading, preprocessing, disk I/O
+    auto inference_start = std::chrono::high_resolution_clock::now();
     Log::info("MSE: %lf\n", genome->get_mse(best_parameters, testing_inputs, testing_outputs));
     Log::info("MAE: %lf\n", genome->get_mae(best_parameters, testing_inputs, testing_outputs));
+    auto inference_end = std::chrono::high_resolution_clock::now();
+    
+    // Output formatting (part of model latency)
     genome->write_predictions(
         output_directory, testing_filenames, best_parameters, testing_inputs, testing_outputs, time_series_sets
     );
-    auto inference_end = std::chrono::system_clock::now();
+    auto model_latency_end = std::chrono::high_resolution_clock::now();
     
-    double inference_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(inference_end - inference_start).count() / 1000.0;
-    Log::info("inference time: %.3f seconds.\n", inference_seconds);
+    // Calculate Inference Time (narrow, technical - model computation only)
+    auto inference_duration = std::chrono::duration_cast<std::chrono::microseconds>(inference_end - inference_start);
+    double inference_seconds = inference_duration.count() / 1000000.0;
+    double inference_milliseconds = inference_seconds * 1000.0;
+    
+    // Calculate per-data-point latency
+    double per_data_point_ms = (total_rows > 0) ? (inference_milliseconds / total_rows) : 0.0;
+    double per_data_point_us = (total_rows > 0) ? (inference_duration.count() / (double)total_rows) : 0.0;
+    
+    Log::info("Inference time (entire dataset): %.3f seconds (%.1f ms)\n", inference_seconds, inference_milliseconds);
+    Log::info("  Per data point: %.3f ms (%.1f μs)\n", per_data_point_ms, per_data_point_us);
+    Log::info("  Throughput: %.1f data points/second\n", (total_rows > 0) ? (total_rows / inference_seconds) : 0.0);
+    
+    // Calculate Model Latency (end-to-end: input ready → prediction output)
+    auto model_latency_duration = std::chrono::duration_cast<std::chrono::microseconds>(model_latency_end - model_latency_start);
+    double model_latency_seconds = model_latency_duration.count() / 1000000.0;
+    double model_latency_ms = model_latency_seconds * 1000.0;
+    double per_data_point_model_latency_ms = (total_rows > 0) ? (model_latency_ms / total_rows) : 0.0;
+    
+    Log::info("Model latency (entire dataset): %.3f seconds (%.1f ms)\n", model_latency_seconds, model_latency_ms);
+    Log::info("  Per data point: %.3f ms\n", per_data_point_model_latency_ms);
     if (Log::at_level(Log::DEBUG)) {
         int32_t length;
         char* byte_array;
