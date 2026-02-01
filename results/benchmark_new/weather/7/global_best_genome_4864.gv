@@ -1,0 +1,108 @@
+digraph RNN {
+labelloc="t";
+label="Genome Fitness: 0.0620295% MAE";
+
+	graph [pad="0.01", nodesep="0.05", ranksep="0.9"];
+	{
+		rank = source;
+		node2 [shape=box,color=green,label="input 2\ndepth 0\np"];
+		node21 [shape=box,color=green,label="input 21\ndepth 0\nT"];
+		node20 [shape=box,color=green,label="input 20\ndepth 0\nTpot"];
+		node19 [shape=box,color=green,label="input 19\ndepth 0\nTdew"];
+		node18 [shape=box,color=green,label="input 18\ndepth 0\nrh"];
+		node17 [shape=box,color=green,label="input 17\ndepth 0\nVpmax"];
+		node16 [shape=box,color=green,label="input 16\ndepth 0\nVpact"];
+		node15 [shape=box,color=green,label="input 15\ndepth 0\nVpdef"];
+		node14 [shape=box,color=green,label="input 14\ndepth 0\nsh"];
+		node13 [shape=box,color=green,label="input 13\ndepth 0\nH2OC"];
+		node12 [shape=box,color=green,label="input 12\ndepth 0\nrho"];
+		node11 [shape=box,color=green,label="input 11\ndepth 0\nwv"];
+		node10 [shape=box,color=green,label="input 10\ndepth 0\nmax_wv"];
+		node9 [shape=box,color=green,label="input 9\ndepth 0\nwd"];
+		node8 [shape=box,color=green,label="input 8\ndepth 0\nrain"];
+		node7 [shape=box,color=green,label="input 7\ndepth 0\nraining"];
+		node6 [shape=box,color=green,label="input 6\ndepth 0\nSWDR"];
+		node5 [shape=box,color=green,label="input 5\ndepth 0\nPAR"];
+		node4 [shape=box,color=green,label="input 4\ndepth 0\nmax_PAR"];
+		node3 [shape=box,color=green,label="input 3\ndepth 0\nTlog"];
+		node1 [shape=box,color=green,label="input 1\ndepth 0\nOT"];
+	}
+
+	{
+		rank = sink;
+		node22 [shape=box,color=blue,label="output 22\ndepth 1\nOT"];
+	}
+
+	node2 -> node21 -> node20 -> node19 -> node18 -> node17 -> node16 -> node15 -> node14 -> node13 -> node12 -> node11 -> node10 -> node9 -> node8 -> node7 -> node6 -> node5 -> node4 -> node3 -> node1 [style=invis];
+
+
+		node103 [shape=box,color=black,label="LSTM node #103\ndepth 0.0605659"];
+		node175 [shape=box,color=black,label="simple node #175\ndepth 0.230791"];
+		node89 [shape=box,color=black,label="LSTM node #89\ndepth 0.388445"];
+		node352 [shape=box,color=black,label="GRU node #352\ndepth 0.518144"];
+		node431 [shape=box,color=black,label="UGRNN node #431\ndepth 0.601856"];
+
+	node1 -> node22 [color="#f2f0ef"]; /* weight: 0.013608 */
+	node2 -> node22 [color="#f1efed"]; /* weight: 0.0367593 */
+	node3 -> node22 [color="#f0ece8"]; /* weight: 0.0723216 */
+	node4 -> node22 [color="#eaedf1"]; /* weight: -0.0931468 */
+	node5 -> node22 [color="#eee2db"]; /* weight: 0.182351 */
+	node6 -> node22 [color="#e8cfc0"]; /* weight: 0.407072 */
+	node7 -> node22 [color="#ebd8cd"]; /* weight: 0.301523 */
+	node8 -> node22 [color="#e3e8f0"]; /* weight: -0.173535 */
+	node9 -> node22 [color="#d3dbee"]; /* weight: -0.35794 */
+	node10 -> node22 [color="#f0f0f2"]; /* weight: -0.0404227 */
+	node11 -> node22 [color="#f1f2f2"]; /* weight: -0.021429 */
+	node12 -> node22 [color="#e5c4b2"]; /* weight: 0.52968 */
+	node13 -> node22 [color="#a2b0e5"]; /* weight: -0.958246 */
+	node14 -> node22 [color="#ead6cb"]; /* weight: 0.318048 */
+	node15 -> node22 [color="#f2f2f1"]; /* weight: -0.00475663 */
+	node16 -> node22 [color="#ced7ed"]; /* weight: -0.407306 */
+	node17 -> node22 [color="#ecdbd1"]; /* weight: 0.275649 */
+	node18 -> node22 [color="#e0e5f0"]; /* weight: -0.199174 */
+	node19 -> node22 [color="#f1f2f2"]; /* weight: -0.0240142 */
+	node20 -> node22 [color="#ecdcd3"]; /* weight: 0.253496 */
+	node21 -> node22 [color="#b10127"]; /* weight: 2.2729 */
+	node5 -> node89 [color="#e0b09a"]; /* weight: 0.770119 */
+	node14 -> node89 [color="#f1f2f2"]; /* weight: -0.0230351 */
+	node18 -> node89 [color="#acb9e7"]; /* weight: -0.828292 */
+	node19 -> node89 [color="#e9d0c2"]; /* weight: 0.392277 */
+	node8 -> node103 [color="#bfcaea"]; /* weight: -0.590725 */
+	node12 -> node103 [color="#c9d3ec"]; /* weight: -0.453927 */
+	node13 -> node103 [color="#d48a71"]; /* weight: 1.19116 */
+	node17 -> node103 [color="#ebd9cf"]; /* weight: 0.277816 */
+	node21 -> node175 [color="#d8977e"]; /* weight: 1.05589 */
+	node13 -> node175 [color="#c96752"]; /* weight: 1.56816 */
+	node16 -> node175 [color="#e4c0ad"]; /* weight: 0.584884 */
+	node20 -> node175 [color="#929fe0"]; /* weight: -1.20632 */
+	node3 -> node89 [color="#d5dcee"]; /* weight: -0.331391 */
+	node21 -> node352 [color="#cd725b"]; /* weight: 1.46961 */
+	node10 -> node352 [color="#8894dd"]; /* weight: -1.34232 */
+	node12 -> node352 [color="#5548c1"]; /* weight: -2.355 */
+	node14 -> node352 [color="#ebd9cf"]; /* weight: 0.285236 */
+	node9 -> node431 [color="#da9d85"]; /* weight: 0.987565 */
+	node10 -> node431 [color="#ce775f"]; /* weight: 1.41546 */
+	node12 -> node431 [color="#d18168"]; /* weight: 1.29654 */
+	node18 -> node431 [color="#7c86d9"]; /* weight: -1.54763 */
+	node1 -> node352 [color="#bac6ea"]; /* weight: -0.64016 */
+	node103 -> node89 [color="#d48a71"]; /* weight: 1.19458 */
+	node103 -> node22 [color="#efe9e4"]; /* weight: 0.103511 */
+	node175 -> node89 [color="#584ec4"]; /* weight: -2.28387 */
+	node175 -> node22 [color="#e1b59f"]; /* weight: 0.711343 */
+	node89 -> node22 [color="#c9d3ec"]; /* weight: -0.468674 */
+	node352 -> node22 [color="#eddfd7"]; /* weight: 0.208835 */
+
+	node16 -> node22 [color="#e7eaf1",style=dotted]; /* weight: -0.00918711, recurrent_depth: 7 */
+	node20 -> node22 [color="#e2e6f0",style=dotted]; /* weight: -0.0139977, recurrent_depth: 6 */
+	node3 -> node22 [color="#5548c1",style=dotted]; /* weight: -0.174795, recurrent_depth: 7 */
+	node2 -> node89 [color="#b10127",style=dotted]; /* weight: 0.496559, recurrent_depth: 7 */
+	node5 -> node22 [color="#848fdc",style=dotted]; /* weight: -0.105411, recurrent_depth: 7 */
+	node20 -> node89 [color="#625fcb",style=dotted]; /* weight: -0.152933, recurrent_depth: 10 */
+	node3 -> node175 [color="#f0ece8",style=dotted]; /* weight: 0.0139682, recurrent_depth: 9 */
+	node4 -> node431 [color="#ecdbd1",style=dotted]; /* weight: 0.0565525, recurrent_depth: 6 */
+	node21 -> node103 [color="#f0ece8",style=dotted]; /* weight: 0.0152816, recurrent_depth: 9 */
+	node89 -> node103 [color="#e4c0ad",style=dotted]; /* weight: 0.127856, recurrent_depth: 3 */
+	node352 -> node431 [color="#5e5ac8",style=dotted]; /* weight: -0.159464, recurrent_depth: 2 */
+	node431 -> node22 [color="#e9d2c4",style=dotted]; /* weight: 0.0811372, recurrent_depth: 9 */
+
+}

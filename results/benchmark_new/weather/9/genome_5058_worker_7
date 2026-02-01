@@ -1,0 +1,12 @@
+[INFO    genome_5058_worker_7 ] initial validation_mse: 0.000088, best validation mse: 0.000088
+[INFO    genome_5058_worker_7 ] iteration    0, mse: 0.0013333555, v_mse: 0.0000147465, bv_mse: 0.0000147465, avg_norm: 0.0716334733
+[INFO    genome_5058_worker_7 ] iteration    1, mse: 0.0013315273, v_mse: 0.0000123784, bv_mse: 0.0000123784, avg_norm: 0.0765324866
+[INFO    genome_5058_worker_7 ] iteration    2, mse: 0.0013343493, v_mse: 0.0000150061, bv_mse: 0.0000123784, avg_norm: 0.0804322165
+[INFO    genome_5058_worker_7 ] iteration    3, mse: 0.0013432360, v_mse: 0.0000185709, bv_mse: 0.0000123784, avg_norm: 0.0882820213
+[INFO    genome_5058_worker_7 ] iteration    4, mse: 0.0013704374, v_mse: 0.0000437040, bv_mse: 0.0000123784, avg_norm: 0.0885667545
+[INFO    genome_5058_worker_7 ] iteration    5, mse: 0.0014584607, v_mse: 0.0001406497, bv_mse: 0.0000123784, avg_norm: 0.0955887321
+[INFO    genome_5058_worker_7 ] iteration    6, mse: 0.0015943463, v_mse: 0.0003194706, bv_mse: 0.0000123784, avg_norm: 0.1045164029
+[INFO    genome_5058_worker_7 ] iteration    7, mse: 0.0016067736, v_mse: 0.0003342316, bv_mse: 0.0000123784, avg_norm: 0.1167149869
+[INFO    genome_5058_worker_7 ] iteration    8, mse: 0.0015850193, v_mse: 0.0003002094, bv_mse: 0.0000123784, avg_norm: 0.1137715063
+[INFO    genome_5058_worker_7 ] iteration    9, mse: 0.0015891827, v_mse: 0.0003051822, bv_mse: 0.0000123784, avg_norm: 0.1050280319
+[INFO    genome_5058_worker_7 ] backpropagation completed, getting mu/sigma

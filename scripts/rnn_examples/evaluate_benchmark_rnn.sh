@@ -5,16 +5,29 @@
 # written from parsed output after each run finishes).
 # Usage: from repo root, run:
 #   sh scripts/rnn_examples/evaluate_benchmark_rnn.sh
-# Requires: build/rnn_examples/evaluate_rnn and renamed genomes
-# (run scripts/rnn_examples/rename_benchmark_genomes.sh once first).
+# Requires: build/rnn_examples/evaluate_rnn and genome .bin files in RESULTS_DIR.
+#
+# Optional env overrides (paths relative to REPO_ROOT or absolute):
+#   RESULTS_DIR   directory containing <dataset>/<run>/global_best_genome_<run>.bin or global_best_genome_*.bin (default: results/benchmark_new)
+#   EVAL_OUT_DIR  where to write evaluation outputs (default: results/benchmark_eval_minmax)
+# Example: evaluate two-layer LSTM genomes from random_two_layer_lstm_1_0.sh:
+#   RESULTS_DIR=results/benchmark_two_layer_lstm EVAL_OUT_DIR=results/benchmark_two_layer_lstm_eval sh scripts/rnn_examples/evaluate_benchmark_rnn.sh
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 BUILD_DIR="$REPO_ROOT/build"
-RESULTS_DIR="$REPO_ROOT/results/benchmark_new"
+RESULTS_DIR="${RESULTS_DIR:-$REPO_ROOT/results/benchmark_new}"
+case "$RESULTS_DIR" in
+    /*) ;;
+    *) RESULTS_DIR="$REPO_ROOT/$RESULTS_DIR" ;;
+esac
 BENCHMARKS_DIR="$REPO_ROOT/datasets/benchmarks"
-EVAL_OUT_DIR="$REPO_ROOT/results/benchmark_eval_minmax"
-CSV_FILE="$EVAL_OUT_DIR/benchmark_results_minmax.csv"
+EVAL_OUT_DIR="${EVAL_OUT_DIR:-$REPO_ROOT/results/benchmark_eval_minmax}"
+case "$EVAL_OUT_DIR" in
+    /*) ;;
+    *) EVAL_OUT_DIR="$REPO_ROOT/$EVAL_OUT_DIR" ;;
+esac
+CSV_FILE="${CSV_FILE:-$EVAL_OUT_DIR/benchmark_results_minmax.csv}"
 TMP_OUT="/tmp/evaluate_rnn_out_$$"
 
 cd "$BUILD_DIR" || exit 1
@@ -31,10 +44,12 @@ eval_test_file() {
         exchange_rate) echo "../datasets/benchmarks/exchange_rate/exchange_rate_test_minmax.csv" ;;
         illness) echo "../datasets/benchmarks/illness/illness_test_minmax.csv" ;;
         weather) echo "../datasets/benchmarks/weather/weather_test_minmax.csv" ;;
+        electricity) echo "../datasets/benchmarks/electricity/electricity_test_minmax.csv" ;;
         *) echo "" ;;
     esac
 }
 
+# Datasets from ETTh (ETTh1) through weather for inference; each uses its test_minmax.csv
 for dataset in ETTh1 ETTm1 exchange_rate illness weather; do
     test_file=$(eval_test_file "$dataset")
     if [ -z "$test_file" ]; then
@@ -46,9 +61,19 @@ for dataset in ETTh1 ETTm1 exchange_rate illness weather; do
         continue
     fi
     for i in 0 1 2 3 4 5 6 7 8 9; do
-        genome_path="$RESULTS_DIR/$dataset/$i/global_best_genome_$i.bin"
+        run_dir="$RESULTS_DIR/$dataset/$i/"
+        genome_path="$run_dir/global_best_genome_$i.bin"
         if [ ! -f "$genome_path" ]; then
-            echo "[$dataset run=$i] SKIP (genome not found: $genome_path)"
+            # Fallback: use the single global_best_genome_*.bin in this run dir (e.g. weather uses genome-id naming)
+            genome_path=""
+            for bin in "$run_dir"global_best_genome_*.bin; do
+                [ -f "$bin" ] || continue
+                genome_path="$bin"
+                break
+            done
+        fi
+        if [ -z "$genome_path" ] || [ ! -f "$genome_path" ]; then
+            echo "[$dataset run=$i] SKIP (genome not found in $run_dir)"
             continue
         fi
         out_dir="$EVAL_OUT_DIR/$dataset/$i"
