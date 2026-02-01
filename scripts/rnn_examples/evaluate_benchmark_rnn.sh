@@ -23,13 +23,14 @@ printf "%s\n" "dataset,run,MSE,MAE,parameter_count,inference_ms,throughput" > "$
 
 # dataset_name -> path to test file (relative to build/)
 # ETT-small subdatasets live under datasets/benchmarks/ETT-small/
+# Using *_test_standard.csv (standardized test data)
 eval_test_file() {
     case "$1" in
-        ETTh1)  echo "../datasets/benchmarks/ETT-small/ETTh1_test_raw.csv" ;;
-        ETTm1)  echo "../datasets/benchmarks/ETT-small/ETTm1_test_raw.csv" ;;
-        exchange_rate) echo "../datasets/benchmarks/exchange_rate/exchange_rate_test_raw.csv" ;;
-        illness) echo "../datasets/benchmarks/illness/illness_test_raw.csv" ;;
-        weather) echo "../datasets/benchmarks/weather/weather_test_raw.csv" ;;
+        ETTh1)  echo "../datasets/benchmarks/ETT-small/ETTh1_test_standard.csv" ;;
+        ETTm1)  echo "../datasets/benchmarks/ETT-small/ETTm1_test_standard.csv" ;;
+        exchange_rate) echo "../datasets/benchmarks/exchange_rate/exchange_rate_test_standard.csv" ;;
+        illness) echo "../datasets/benchmarks/illness/illness_test_standard.csv" ;;
+        weather) echo "../datasets/benchmarks/weather/weather_test_standard.csv" ;;
         *) echo "" ;;
     esac
 }
