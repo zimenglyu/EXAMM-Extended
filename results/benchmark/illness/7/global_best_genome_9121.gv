@@ -1,0 +1,103 @@
+digraph RNN {
+labelloc="t";
+label="Genome Fitness: 49.7014% MAE";
+
+	graph [pad="0.01", nodesep="0.05", ranksep="0.9"];
+	{
+		rank = source;
+		node1 [shape=box,color=green,label="input 1\ndepth 0\nWEIGHTED_ILI"];
+		node2 [shape=box,color=green,label="input 2\ndepth 0\nUNWEIGHTED_ILI"];
+		node3 [shape=box,color=green,label="input 3\ndepth 0\nAGE_0-4"];
+		node4 [shape=box,color=green,label="input 4\ndepth 0\nAGE_5-24"];
+		node6 [shape=box,color=green,label="input 6\ndepth 0\nNUM_OF_PROVIDERS"];
+		node7 [shape=box,color=green,label="input 7\ndepth 0\nOT"];
+	}
+
+	{
+		rank = sink;
+		node8 [shape=box,color=blue,label="output 8\ndepth 1\nOT"];
+	}
+
+	node1 -> node2 -> node3 -> node4 -> node6 -> node7 [style=invis];
+
+
+		node702 [shape=box,color=black,label="LSTM node #702\ndepth 0.044599"];
+		node546 [shape=box,color=black,label="delta node #546\ndepth 0.114561"];
+		node532 [shape=box,color=black,label="LSTM node #532\ndepth 0.199121"];
+		node35 [shape=box,color=black,label="GRU node #35\ndepth 0.383408"];
+		node87 [shape=box,color=black,label="GRU node #87\ndepth 0.753825"];
+		node59 [shape=box,color=black,label="UGRNN node #59\ndepth 0.875337"];
+		node75 [shape=box,color=black,label="GRU node #75\ndepth 0.951818"];
+		node588 [shape=box,color=black,label="GRU node #588\ndepth 0.95473"];
+
+	node1 -> node8 [color="#e5e9f0"]; /* weight: -0.130839 */
+	node2 -> node8 [color="#d5dcee"]; /* weight: -0.281919 */
+	node3 -> node8 [color="#cd725b"]; /* weight: 1.16442 */
+	node4 -> node8 [color="#e4c1af"]; /* weight: 0.460838 */
+	node6 -> node8 [color="#deaa93"]; /* weight: 0.665422 */
+	node7 -> node8 [color="#d4896f"]; /* weight: 0.96354 */
+	node4 -> node35 [color="#dda891"]; /* weight: 0.677053 */
+	node6 -> node35 [color="#c45747"]; /* weight: 1.37304 */
+	node7 -> node35 [color="#c55948"]; /* weight: 1.36736 */
+	node4 -> node59 [color="#efe9e4"]; /* weight: 0.0816111 */
+	node1 -> node75 [color="#d4896f"]; /* weight: 0.969726 */
+	node2 -> node75 [color="#e0b39e"]; /* weight: 0.586468 */
+	node3 -> node75 [color="#e2b9a5"]; /* weight: 0.521729 */
+	node7 -> node75 [color="#c5cfeb"]; /* weight: -0.444008 */
+	node1 -> node87 [color="#e0e5f0"]; /* weight: -0.169621 */
+	node2 -> node87 [color="#e5c4b2"]; /* weight: 0.425671 */
+	node3 -> node87 [color="#b10127"]; /* weight: 1.80932 */
+	node1 -> node532 [color="#cc7059"]; /* weight: 1.18009 */
+	node7 -> node532 [color="#dba188"]; /* weight: 0.755747 */
+	node1 -> node546 [color="#d18168"]; /* weight: 1.04052 */
+	node4 -> node546 [color="#ced7ed"]; /* weight: -0.346683 */
+	node6 -> node546 [color="#a4b1e5"]; /* weight: -0.794383 */
+	node1 -> node588 [color="#adbbe7"]; /* weight: -0.694691 */
+	node3 -> node588 [color="#c8d2ec"]; /* weight: -0.413571 */
+	node4 -> node588 [color="#dca58d"]; /* weight: 0.706285 */
+	node1 -> node702 [color="#767dd6"]; /* weight: -1.40963 */
+	node2 -> node702 [color="#e8cdbe"]; /* weight: 0.338552 */
+	node3 -> node702 [color="#efe9e4"]; /* weight: 0.0872924 */
+	node4 -> node702 [color="#b10127"]; /* weight: 1.80578 */
+	node7 -> node546 [color="#ecdbd1"]; /* weight: 0.209537 */
+	node4 -> node532 [color="#ecdbd1"]; /* weight: 0.209537 */
+	node702 -> node35 [color="#d68f76"]; /* weight: 0.910451 */
+	node702 -> node87 [color="#bd4039"]; /* weight: 1.55279 */
+	node702 -> node59 [color="#cf7a62"]; /* weight: 1.09621 */
+	node546 -> node59 [color="#cbd5ec"]; /* weight: -0.383337 */
+	node532 -> node35 [color="#ebd8cd"]; /* weight: 0.236704 */
+	node532 -> node75 [color="#c9d3ec"]; /* weight: -0.385429 */
+	node532 -> node8 [color="#5548c1"]; /* weight: -2.00151 */
+	node532 -> node588 [color="#ecdcd3"]; /* weight: 0.195246 */
+	node35 -> node8 [color="#d99980"]; /* weight: 0.82439 */
+	node35 -> node59 [color="#e5c3b0"]; /* weight: 0.43889 */
+	node35 -> node87 [color="#8692dd"]; /* weight: -1.17693 */
+	node87 -> node75 [color="#efe7e2"]; /* weight: 0.0973247 */
+	node87 -> node59 [color="#ecdbd1"]; /* weight: 0.209537 */
+	node59 -> node8 [color="#b7c4e9"]; /* weight: -0.585829 */
+	node75 -> node8 [color="#95a3e1"]; /* weight: -0.970013 */
+	node75 -> node588 [color="#edded5"]; /* weight: 0.182734 */
+	node588 -> node8 [color="#eee4dd"]; /* weight: 0.123724 */
+
+	node1 -> node59 [color="#7d87d9",style=dotted]; /* weight: -0.807529, recurrent_depth: 3 */
+	node2 -> node59 [color="#d3876e",style=dotted]; /* weight: 0.399395, recurrent_depth: 7 */
+	node7 -> node8 [color="#e0b39e",style=dotted]; /* weight: 0.237902, recurrent_depth: 1 */
+	node7 -> node546 [color="#5548c1",style=dotted]; /* weight: -1.23899, recurrent_depth: 3 */
+	node7 -> node59 [color="#e4beab",style=dotted]; /* weight: 0.196619, recurrent_depth: 3 */
+	node4 -> node702 [color="#e4c0ad",style=dotted]; /* weight: 0.194024, recurrent_depth: 7 */
+	node2 -> node59 [color="#e2b8a3",style=dotted]; /* weight: 0.223799, recurrent_depth: 1 */
+	node702 -> node75 [color="#d8977e",style=dotted]; /* weight: 0.343819, recurrent_depth: 2 */
+	node702 -> node35 [color="#e4beab",style=dotted]; /* weight: 0.198342, recurrent_depth: 9 */
+	node702 -> node35 [color="#e3bba7",style=dotted]; /* weight: 0.208754, recurrent_depth: 2 */
+	node35 -> node702 [color="#e3bba7",style=dotted]; /* weight: 0.208754, recurrent_depth: 7 */
+	node35 -> node702 [color="#e3bba7",style=dotted]; /* weight: 0.208754, recurrent_depth: 3 */
+	node87 -> node8 [color="#bd423a",style=dotted]; /* weight: 0.628703, recurrent_depth: 5 */
+	node87 -> node588 [color="#b10127",style=dotted]; /* weight: 0.741366, recurrent_depth: 2 */
+	node59 -> node87 [color="#e7c9b8",style=dotted]; /* weight: 0.154317, recurrent_depth: 8 */
+	node75 -> node532 [color="#e3bba7",style=dotted]; /* weight: 0.209537, recurrent_depth: 4 */
+	node75 -> node532 [color="#e3bba7",style=dotted]; /* weight: 0.209537, recurrent_depth: 6 */
+	node588 -> node35 [color="#e3bba7",style=dotted]; /* weight: 0.208754, recurrent_depth: 10 */
+	node8 -> node8 [color="#e6c7b6",style=dotted]; /* weight: 0.164571, recurrent_depth: 9 */
+	node8 -> node35 [color="#e1b59f",style=dotted]; /* weight: 0.234809, recurrent_depth: 5 */
+
+}

@@ -1,0 +1,8 @@
+[INFO    genome_9062_worker_6 ] initial validation_mse: 0.321165, best validation mse: 0.321165
+[INFO    genome_9062_worker_6 ] iteration    0, mse: 0.2397738859, v_mse: 0.3222843183, bv_mse: 0.3211653242, avg_norm: 151.0643259753
+[INFO    genome_9062_worker_6 ] iteration    1, mse: 0.2310098404, v_mse: 0.3261336722, bv_mse: 0.3211653242, avg_norm: 318.8902897506
+[INFO    genome_9062_worker_6 ] iteration    2, mse: 0.2280611284, v_mse: 0.3335160152, bv_mse: 0.3211653242, avg_norm: 275.0738921788
+[INFO    genome_9062_worker_6 ] iteration    3, mse: 0.2261376656, v_mse: 0.3491593380, bv_mse: 0.3211653242, avg_norm: 198.9631737548
+[INFO    genome_9062_worker_6 ] iteration    4, mse: 0.2265212794, v_mse: 0.3631935820, bv_mse: 0.3211653242, avg_norm: 155.4699821792
+[INFO    genome_9062_worker_6 ] iteration    5, mse: 0.2286305944, v_mse: 0.4091136287, bv_mse: 0.3211653242, avg_norm: 558.7691622341
+[INFO    genome_9062_worker_6 ] iteration    6, mse: 0.2298572845, v_mse: 0.4110122516, bv_mse: 0.3211653242, avg_norm: 169.1359589637

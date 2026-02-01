@@ -1,0 +1,12 @@
+[INFO    genome_11102_worker_7] initial validation_mse: 0.321312, best validation mse: 0.321312
+[INFO    genome_11102_worker_7] iteration    0, mse: 2.0007569447, v_mse: 0.3214193362, bv_mse: 0.3213124048, avg_norm: 39.5953987147
+[INFO    genome_11102_worker_7] iteration    1, mse: 1.9989324700, v_mse: 0.3242796422, bv_mse: 0.3213124048, avg_norm: 1188.1612506857
+[INFO    genome_11102_worker_7] iteration    2, mse: 1.9817313785, v_mse: 0.3525694570, bv_mse: 0.3213124048, avg_norm: 347534.0199298761
+[INFO    genome_11102_worker_7] iteration    3, mse: 1.7726343684, v_mse: 0.8155612206, bv_mse: 0.3213124048, avg_norm: 9699.9035287193
+[INFO    genome_11102_worker_7] iteration    4, mse: 1.3056033221, v_mse: 2.2099046444, bv_mse: 0.3213124048, avg_norm: 52890.6567780751
+[INFO    genome_11102_worker_7] iteration    5, mse: 0.9846327439, v_mse: 3.2710529612, bv_mse: 0.3213124048, avg_norm: 71665.3729667699
+[INFO    genome_11102_worker_7] iteration    6, mse: 0.8743541811, v_mse: 3.7379537567, bv_mse: 0.3213124048, avg_norm: 60468.8409428159
+[INFO    genome_11102_worker_7] iteration    7, mse: 0.8112944559, v_mse: 3.9137374774, bv_mse: 0.3213124048, avg_norm: 14063.0197318116
+[INFO    genome_11102_worker_7] iteration    8, mse: 0.7688248153, v_mse: 3.9567499002, bv_mse: 0.3213124048, avg_norm: 302360.6404138495
+[INFO    genome_11102_worker_7] iteration    9, mse: 0.8067676269, v_mse: 3.5180613749, bv_mse: 0.3213124048, avg_norm: 24102.1064915434
+[INFO    genome_11102_worker_7] backpropagation completed, getting mu/sigma
