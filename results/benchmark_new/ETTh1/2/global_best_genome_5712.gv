@@ -1,0 +1,47 @@
+digraph RNN {
+labelloc="t";
+label="Genome Fitness: 50.3131% MAE";
+
+	graph [pad="0.01", nodesep="0.05", ranksep="0.9"];
+	{
+		rank = source;
+		node7 [shape=box,color=green,label="input 7\ndepth 0\nHUFL"];
+		node1 [shape=box,color=green,label="input 1\ndepth 0\nHULL"];
+		node2 [shape=box,color=green,label="input 2\ndepth 0\nMUFL"];
+		node3 [shape=box,color=green,label="input 3\ndepth 0\nMULL"];
+		node5 [shape=box,color=green,label="input 5\ndepth 0\nLULL"];
+		node6 [shape=box,color=green,label="input 6\ndepth 0\nOT"];
+	}
+
+	{
+		rank = sink;
+		node8 [shape=box,color=blue,label="output 8\ndepth 1\nOT"];
+	}
+
+	node7 -> node1 -> node2 -> node3 -> node5 -> node6 [style=invis];
+
+
+		node484 [shape=box,color=black,label="GRU node #484\ndepth 0.432187"];
+		node39 [shape=box,color=black,label="GRU node #39\ndepth 0.5"];
+		node2068 [shape=box,color=black,label="simple node #2068\ndepth 0.623172"];
+
+	node1 -> node8 [color="#747bd5"]; /* weight: -3.07161 */
+	node2 -> node8 [color="#b10127"]; /* weight: 10 */
+	node3 -> node8 [color="#5548c1"]; /* weight: -4.2482 */
+	node5 -> node8 [color="#d8977e"]; /* weight: 4.63097 */
+	node6 -> node8 [color="#a4b1e5"]; /* weight: -1.69309 */
+	node7 -> node8 [color="#b10127"]; /* weight: 10 */
+	node1 -> node39 [color="#bcc8ea"]; /* weight: -1.14943 */
+	node1 -> node484 [color="#d68f76"]; /* weight: 5.00742 */
+	node7 -> node484 [color="#e6c6b4"]; /* weight: 2.30347 */
+	node2 -> node2068 [color="#e2b9a5"]; /* weight: 2.88435 */
+	node6 -> node2068 [color="#e7ccbc"]; /* weight: 1.94648 */
+	node484 -> node8 [color="#dfad96"]; /* weight: 3.52503 */
+	node484 -> node2068 [color="#ede1d9"]; /* weight: 0.859636 */
+	node39 -> node8 [color="#acb9e7"]; /* weight: -1.50881 */
+	node2068 -> node8 [color="#e8cfc0"]; /* weight: 1.78964 */
+
+	node5 -> node484 [color="#b10127",style=dotted]; /* weight: 0.377319, recurrent_depth: 8 */
+	node8 -> node484 [color="#b10127",style=dotted]; /* weight: 0.377319, recurrent_depth: 4 */
+
+}

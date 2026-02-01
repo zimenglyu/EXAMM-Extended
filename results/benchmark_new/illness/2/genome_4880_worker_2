@@ -1,0 +1,12 @@
+[INFO    genome_4880_worker_2 ] initial validation_mse: 0.873837, best validation mse: 0.873837
+[INFO    genome_4880_worker_2 ] iteration    0, mse: 0.2885911680, v_mse: 0.7899933378, bv_mse: 0.7899933378, avg_norm: 9.8717511612
+[INFO    genome_4880_worker_2 ] iteration    1, mse: 0.2373671993, v_mse: 0.7073103016, bv_mse: 0.7073103016, avg_norm: 7.1457525646
+[INFO    genome_4880_worker_2 ] iteration    2, mse: 0.2099407349, v_mse: 0.6434573646, bv_mse: 0.6434573646, avg_norm: 4.6955456262
+[INFO    genome_4880_worker_2 ] iteration    3, mse: 0.1941196709, v_mse: 0.5705602569, bv_mse: 0.5705602569, avg_norm: 3.3949900488
+[INFO    genome_4880_worker_2 ] iteration    4, mse: 0.1858148881, v_mse: 0.5396067020, bv_mse: 0.5396067020, avg_norm: 2.6516402449
+[INFO    genome_4880_worker_2 ] iteration    5, mse: 0.1805815188, v_mse: 0.5256124206, bv_mse: 0.5256124206, avg_norm: 2.5282950285
+[INFO    genome_4880_worker_2 ] iteration    6, mse: 0.1777456857, v_mse: 0.5198948641, bv_mse: 0.5198948641, avg_norm: 2.4021875837
+[INFO    genome_4880_worker_2 ] iteration    7, mse: 0.1752135937, v_mse: 0.5155920324, bv_mse: 0.5155920324, avg_norm: 2.4809955907
+[INFO    genome_4880_worker_2 ] iteration    8, mse: 0.1735896950, v_mse: 0.5132787474, bv_mse: 0.5132787474, avg_norm: 2.5093283721
+[INFO    genome_4880_worker_2 ] iteration    9, mse: 0.1722492139, v_mse: 0.5116003199, bv_mse: 0.5116003199, avg_norm: 2.5679524789
+[INFO    genome_4880_worker_2 ] backpropagation completed, getting mu/sigma

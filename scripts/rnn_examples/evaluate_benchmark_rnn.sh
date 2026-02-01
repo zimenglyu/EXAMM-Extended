@@ -11,10 +11,10 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 BUILD_DIR="$REPO_ROOT/build"
-RESULTS_DIR="$REPO_ROOT/results/benchmark"
+RESULTS_DIR="$REPO_ROOT/results/benchmark_new"
 BENCHMARKS_DIR="$REPO_ROOT/datasets/benchmarks"
-EVAL_OUT_DIR="$REPO_ROOT/results/benchmark_eval"
-CSV_FILE="$EVAL_OUT_DIR/benchmark_results.csv"
+EVAL_OUT_DIR="$REPO_ROOT/results/benchmark_eval_minmax"
+CSV_FILE="$EVAL_OUT_DIR/benchmark_results_minmax.csv"
 TMP_OUT="/tmp/evaluate_rnn_out_$$"
 
 cd "$BUILD_DIR" || exit 1
@@ -23,14 +23,14 @@ printf "%s\n" "dataset,run,MSE,MAE,parameter_count,inference_ms,throughput" > "$
 
 # dataset_name -> path to test file (relative to build/)
 # ETT-small subdatasets live under datasets/benchmarks/ETT-small/
-# Using *_test_standard.csv (standardized test data)
+# Using *_test_minmax.csv (minmax-scaled test data)
 eval_test_file() {
     case "$1" in
-        ETTh1)  echo "../datasets/benchmarks/ETT-small/ETTh1_test_standard.csv" ;;
-        ETTm1)  echo "../datasets/benchmarks/ETT-small/ETTm1_test_standard.csv" ;;
-        exchange_rate) echo "../datasets/benchmarks/exchange_rate/exchange_rate_test_standard.csv" ;;
-        illness) echo "../datasets/benchmarks/illness/illness_test_standard.csv" ;;
-        weather) echo "../datasets/benchmarks/weather/weather_test_standard.csv" ;;
+        ETTh1)  echo "../datasets/benchmarks/ETT-small/ETTh1_test_minmax.csv" ;;
+        ETTm1)  echo "../datasets/benchmarks/ETT-small/ETTm1_test_minmax.csv" ;;
+        exchange_rate) echo "../datasets/benchmarks/exchange_rate/exchange_rate_test_minmax.csv" ;;
+        illness) echo "../datasets/benchmarks/illness/illness_test_minmax.csv" ;;
+        weather) echo "../datasets/benchmarks/weather/weather_test_minmax.csv" ;;
         *) echo "" ;;
     esac
 }

@@ -1,0 +1,4 @@
+[INFO    genome_5218_worker_4 ] initial validation_mse: 0.321298, best validation mse: 0.321298
+[INFO    genome_5218_worker_4 ] iteration    0, mse: 1.8188407636, v_mse: 0.3212980425, bv_mse: 0.3212980422, avg_norm: 34607963.7522483543
+[INFO    genome_5218_worker_4 ] iteration    1, mse: 1.7306371320, v_mse: 0.3212980428, bv_mse: 0.3212980422, avg_norm: 3205091930.4650993347
+[INFO    genome_5218_worker_4 ] iteration    2, mse: 1.6189966401, v_mse: 0.3212986082, bv_mse: 0.3212980422, avg_norm: 13280013.5718991365
