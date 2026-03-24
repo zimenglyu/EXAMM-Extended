@@ -148,6 +148,7 @@ class NeatSpeciationStrategy : public SpeciationStrategy {
     void initialize_population(function<void(int32_t, RNN_Genome*)>& mutate);
     RNN_Genome* get_seed_genome();
     void save_entire_population(string output_path);
+    void apply_homeostasis(double downscale_factor);  // SHY: stub for NEAT (no-op)
 };
 
 #endif

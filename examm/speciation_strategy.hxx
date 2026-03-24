@@ -92,6 +92,13 @@ class SpeciationStrategy {
     virtual void initialize_population(function<void(int32_t, RNN_Genome*)>& mutate) = 0;
     virtual RNN_Genome* get_seed_genome() = 0;
     virtual void save_entire_population(string output_path) = 0;
+
+    /**
+     * Applies SHY weight homeostasis: multiplies best_parameters of all genomes by downscale_factor.
+     * Called every K genome evaluations to prevent weight magnitude drift.
+     * \param downscale_factor is s ∈ (0, 1). Genomes with empty best_parameters are skipped.
+     */
+    virtual void apply_homeostasis(double downscale_factor) = 0;
 };
 
 #endif

@@ -886,6 +886,18 @@ void RNN_Genome::set_best_parameters(vector<double> parameters) {
     best_parameters = parameters;
 }
 
+void RNN_Genome::apply_homeostasis(double downscale_factor) {
+    // Multiplicative downscaling of best_parameters in-place.
+    // This is the SHY operator: w* <- s * w* for all weights.
+    // Preserves relative weight structure (strong weights remain strong vs weak),
+    // but prevents unchecked magnitude growth from Lamarckian inheritance.
+    // We do NOT scale initial_parameters — those are the pre-training snapshot
+    // and will be overwritten when this genome is selected as a parent.
+    for (size_t i = 0; i < best_parameters.size(); i++) {
+        best_parameters[i] *= downscale_factor;
+    }
+}
+
 vector<double> RNN_Genome::get_initial_parameters() const {
     return initial_parameters;
 }

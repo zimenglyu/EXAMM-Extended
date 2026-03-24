@@ -1,6 +1,9 @@
 #include <algorithm>
 using std::sort;
 
+#include <cmath>
+#include <climits>
+
 #include <chrono>
 #include <cstring>
 #include <functional>
@@ -45,11 +48,18 @@ using std::to_string;
 EXAMM::~EXAMM() {
     delete weight_rules;
     delete genome_property;
+    if (weight_stats_log_file != NULL) {
+        weight_stats_log_file->close();
+        delete weight_stats_log_file;
+        weight_stats_log_file = NULL;
+    }
 }
 
 EXAMM::EXAMM(
     int32_t _island_size, int32_t _number_islands, int32_t _max_genomes, SpeciationStrategy* _speciation_strategy,
-    WeightRules* _weight_rules, GenomeProperty* _genome_property, string _output_directory, string _save_genome_option
+    WeightRules* _weight_rules, GenomeProperty* _genome_property, string _output_directory, string _save_genome_option,
+    int32_t _homeostasis_interval, double _homeostasis_factor, double _homeostasis_adaptive_target,
+    int32_t _rng_seed
 )
     : island_size(_island_size),
       number_islands(_number_islands),
@@ -64,7 +74,18 @@ EXAMM::EXAMM(
     node_innovation_count = 0;
     generate_op_log = false;
 
-    int32_t seed = std::chrono::system_clock::now().time_since_epoch().count();
+    // SHY Homeostasis initialization
+    homeostasis_interval = _homeostasis_interval;
+    homeostasis_factor = _homeostasis_factor;
+    homeostasis_adaptive_target = _homeostasis_adaptive_target;
+    next_homeostasis_at = (homeostasis_interval > 0) ? homeostasis_interval : INT32_MAX;
+    next_weight_log_at = 100;  // Log weight stats every 100 evaluations
+
+    // Weight stats log (always open, records stats for baseline too)
+    weight_stats_log_file = NULL;
+
+    int32_t seed = (_rng_seed >= 0) ? _rng_seed
+                                   : (int32_t) std::chrono::system_clock::now().time_since_epoch().count();
     generator = minstd_rand0(seed);
     rng_0_1 = uniform_real_distribution<double>(0.0, 1.0);
     rng_crossover_weight = uniform_real_distribution<double>(-0.5, 1.5);
@@ -82,6 +103,20 @@ EXAMM::EXAMM(
 
     speciation_strategy->initialize_population(mutate_function);
     generate_log();
+
+    // Open weight stats log after output_directory is established
+    if (output_directory.size() > 0) {
+        weight_stats_log_file = new ofstream(output_directory + "/weight_stats_log.csv");
+        if (weight_stats_log_file->is_open()) {
+            (*weight_stats_log_file)
+                << "Evaluated_Genomes,Homeostasis_Applied,Mean_Abs_Weight,Max_Abs_Weight,Std_Weight,Best_Fitness"
+                << endl;
+        } else {
+            delete weight_stats_log_file;
+            weight_stats_log_file = NULL;
+        }
+    }
+
     startClock = std::chrono::system_clock::now();
 }
 
@@ -150,6 +185,88 @@ void EXAMM::update_op_log_statistics(RNN_Genome* genome, int32_t insert_position
             }
         }
     }
+}
+
+void EXAMM::apply_homeostasis_to_population() {
+    Log::info(
+        "SHY: firing homeostasis at evaluated_genomes=%d (interval=%d, factor=%.4f)\n",
+        speciation_strategy->get_evaluated_genomes(), homeostasis_interval, homeostasis_factor
+    );
+    speciation_strategy->apply_homeostasis(homeostasis_factor);
+    // Schedule next event
+    next_homeostasis_at = speciation_strategy->get_evaluated_genomes() + homeostasis_interval;
+}
+
+void EXAMM::apply_adaptive_homeostasis(double target_mean_weight) {
+    // Compute current mean |w| via global best genome as proxy
+    RNN_Genome* best = speciation_strategy->get_global_best_genome();
+    if (best == NULL) return;
+    const vector<double>& params = best->get_best_parameters();
+    if (params.empty()) return;
+
+    double sum_abs = 0.0;
+    for (double w : params) sum_abs += std::abs(w);
+    double current_mean = sum_abs / (double) params.size();
+
+    if (current_mean <= target_mean_weight) {
+        Log::info(
+            "SHY-Adaptive: mean |w| = %.6f <= target %.6f, skipping\n",
+            current_mean, target_mean_weight
+        );
+        next_homeostasis_at = speciation_strategy->get_evaluated_genomes() + homeostasis_interval;
+        return;
+    }
+
+    // Compute adaptive s: s = clip(target / current, 0.80, 0.99)
+    double s = target_mean_weight / current_mean;
+    if (s < 0.80) s = 0.80;
+    if (s > 0.99) s = 0.99;
+
+    Log::info(
+        "SHY-Adaptive: mean |w| = %.6f > target %.6f, applying s=%.4f\n",
+        current_mean, target_mean_weight, s
+    );
+    speciation_strategy->apply_homeostasis(s);
+    next_homeostasis_at = speciation_strategy->get_evaluated_genomes() + homeostasis_interval;
+}
+
+void EXAMM::log_weight_stats() {
+    if (weight_stats_log_file == NULL) return;
+    if (!weight_stats_log_file->good()) return;
+
+    // Compute mean/max/std of |best_parameters| for the current global best genome
+    RNN_Genome* best = speciation_strategy->get_global_best_genome();
+    if (best == NULL) return;
+    const vector<double>& params = best->get_best_parameters();
+    if (params.empty()) return;
+
+    double sum = 0.0, sum_sq = 0.0, max_abs = 0.0;
+    for (double w : params) {
+        double aw = std::abs(w);
+        sum += aw;
+        sum_sq += aw * aw;
+        if (aw > max_abs) max_abs = aw;
+    }
+    double n = (double) params.size();
+    double mean_abs = sum / n;
+    double variance = (sum_sq / n) - (mean_abs * mean_abs);
+    double std_abs = (variance > 0.0) ? std::sqrt(variance) : 0.0;
+
+    bool homeostasis_just_fired = (
+        homeostasis_interval > 0 &&
+        speciation_strategy->get_evaluated_genomes() >= (next_homeostasis_at - homeostasis_interval) &&
+        speciation_strategy->get_evaluated_genomes() < next_homeostasis_at
+    );
+
+    (*weight_stats_log_file)
+        << speciation_strategy->get_evaluated_genomes() << ","
+        << (homeostasis_just_fired ? 1 : 0) << ","
+        << std::fixed << std::setprecision(8)
+        << mean_abs << "," << max_abs << "," << std_abs << ","
+        << best->get_fitness()
+        << endl;
+
+    next_weight_log_at = speciation_strategy->get_evaluated_genomes() + 100;
 }
 
 void EXAMM::update_log() {
@@ -261,6 +378,23 @@ bool EXAMM::insert_genome(RNN_Genome* genome) {
 
     update_op_log_statistics(genome, insert_position);
     update_log();
+
+    // SHY homeostasis trigger
+    if (homeostasis_interval > 0 &&
+        speciation_strategy->get_evaluated_genomes() >= next_homeostasis_at) {
+        if (homeostasis_adaptive_target > 0.0) {
+            apply_adaptive_homeostasis(homeostasis_adaptive_target);
+        } else {
+            apply_homeostasis_to_population();
+        }
+    }
+
+    // Periodic weight stats logging (always, even for baseline)
+    if (weight_stats_log_file != NULL &&
+        speciation_strategy->get_evaluated_genomes() >= next_weight_log_at) {
+        log_weight_stats();
+    }
+
     return insert_position >= 0;
 }
 

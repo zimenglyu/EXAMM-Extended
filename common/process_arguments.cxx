@@ -55,9 +55,40 @@ EXAMM* generate_examm_from_arguments(
 
     SpeciationStrategy* speciation_strategy = generate_speciation_strategy_from_arguments(arguments, seed_genome);
 
+    // RNG seed for reproducibility (optional — defaults to time-based)
+    int32_t rng_seed = -1;
+    get_argument(arguments, "--seed", false, rng_seed);
+    if (rng_seed >= 0) {
+        Log::info("RNG seed set to %d\n", rng_seed);
+    }
+
+    // SHY homeostasis arguments (optional — defaults to disabled)
+    int32_t homeostasis_interval = -1;
+    get_argument(arguments, "--homeostasis_interval", false, homeostasis_interval);
+    double homeostasis_factor = 1.0;
+    get_argument(arguments, "--homeostasis_factor", false, homeostasis_factor);
+    double homeostasis_adaptive_target = -1.0;
+    get_argument(arguments, "--homeostasis_adaptive_target", false, homeostasis_adaptive_target);
+
+    if (homeostasis_interval > 0) {
+        if (homeostasis_adaptive_target > 0.0) {
+            Log::info(
+                "SHY Homeostasis enabled (adaptive): interval K=%d, target mean |w|=%.4f\n",
+                homeostasis_interval, homeostasis_adaptive_target
+            );
+        } else {
+            Log::info(
+                "SHY Homeostasis enabled: interval K=%d, factor s=%.4f\n",
+                homeostasis_interval, homeostasis_factor
+            );
+        }
+    } else {
+        Log::info("SHY Homeostasis disabled (baseline mode)\n");
+    }
+
     EXAMM* examm = new EXAMM(
         island_size, number_islands, max_genomes, speciation_strategy, weight_rules, genome_property, output_directory,
-        save_genome_option
+        save_genome_option, homeostasis_interval, homeostasis_factor, homeostasis_adaptive_target, rng_seed
     );
     if (possible_node_types.size() > 0) {
         examm->set_possible_node_types(possible_node_types);

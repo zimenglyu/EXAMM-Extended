@@ -563,3 +563,9 @@ void NeatSpeciationStrategy::initialize_population(function<void(int32_t, RNN_Ge
 
 void NeatSpeciationStrategy::save_entire_population(string output_path) {
 }
+
+void NeatSpeciationStrategy::apply_homeostasis(double downscale_factor) {
+    // SHY homeostasis stub for NeatSpeciationStrategy.
+    // NEAT is not used in the PPSN 2026 SHY experiments — this is a no-op placeholder.
+    Log::info("SHY Homeostasis: NeatSpeciationStrategy apply_homeostasis called (no-op)\n");
+}

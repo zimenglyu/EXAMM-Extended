@@ -79,11 +79,22 @@ class EXAMM {
     string genome_file_name;
     string save_genome_option;
 
+    // SHY Weight Homeostasis fields
+    int32_t homeostasis_interval;      // K: apply every K genome evaluations. -1 = disabled.
+    double homeostasis_factor;          // s: multiplicative downscale factor in (0, 1). 1.0 = disabled.
+    double homeostasis_adaptive_target; // > 0 = adaptive mode; target mean |w|. -1 = fixed mode.
+    int32_t next_homeostasis_at;        // trigger at this evaluated_genomes count
+    ofstream* weight_stats_log_file;    // logs mean/max weight stats periodically
+    int32_t next_weight_log_at;         // trigger weight logging at this count
+
    public:
     EXAMM(
         int32_t _island_size, int32_t _number_islands, int32_t _max_genomes, SpeciationStrategy* _speciation_strategy,
         WeightRules* _weight_rules, GenomeProperty* _genome_property, string _output_directory,
-        string _save_genome_option
+        string _save_genome_option,
+        int32_t _homeostasis_interval = -1, double _homeostasis_factor = 1.0,
+        double _homeostasis_adaptive_target = -1.0,
+        int32_t _rng_seed = -1
     );
 
     ~EXAMM();
@@ -123,6 +134,10 @@ class EXAMM {
     void save_genome(RNN_Genome* genome, string genome_name);
 
     string get_output_directory() const;
+
+    void apply_homeostasis_to_population();
+    void apply_adaptive_homeostasis(double target_mean_weight);
+    void log_weight_stats();
 
     void check_weight_initialize_validity();
     void generate_log();

@@ -1,3 +1,5 @@
+#include <cmath>
+#include <cstdint>
 #include <functional>
 using std::function;
 
@@ -590,4 +592,36 @@ void IslandSpeciationStrategy::save_entire_population(string output_path) {
     for (int32_t i = 0; i < (int32_t) islands.size(); i++) {
         islands[i]->save_population(output_path);
     }
+}
+
+void IslandSpeciationStrategy::apply_homeostasis(double downscale_factor) {
+    // Apply SHY homeostasis to all genomes in all islands.
+    // Skips genomes with empty best_parameters (e.g., not yet trained).
+    int32_t total_scaled = 0;
+    double sum_abs_weight = 0.0;
+    int32_t total_weights = 0;
+
+    for (int32_t i = 0; i < (int32_t) islands.size(); i++) {
+        vector<RNN_Genome*> island_genomes = islands[i]->get_genomes();
+        for (RNN_Genome* g : island_genomes) {
+            if (g == NULL) continue;
+            const vector<double>& params = g->get_best_parameters();
+            if (params.empty()) continue;
+
+            // Accumulate weight stats BEFORE applying homeostasis
+            for (double w : params) {
+                sum_abs_weight += std::abs(w);
+                total_weights++;
+            }
+
+            g->apply_homeostasis(downscale_factor);
+            total_scaled++;
+        }
+    }
+
+    double mean_abs_weight = (total_weights > 0) ? (sum_abs_weight / total_weights) : 0.0;
+    Log::info(
+        "SHY Homeostasis: scaled %d genomes with factor %.4f, mean |w| before = %.6f\n",
+        total_scaled, downscale_factor, mean_abs_weight
+    );
 }

@@ -191,6 +191,7 @@ class RNN_Genome {
     vector<double> get_initial_parameters() const;
     void set_best_parameters(vector<double> parameters);     // INFO: ADDED BY ABDELRAHMAN TO USE FOR TRANSFER LEARNING
     void set_initial_parameters(vector<double> parameters);  // INFO: ADDED BY ABDELRAHMAN TO USE FOR TRANSFER LEARNING
+    void apply_homeostasis(double downscale_factor);          // SHY: multiplicative weight downscaling
 
     void get_analytic_gradient(
         vector<RNN*>& rnns, const vector<double>& parameters, const vector<vector<vector<double> > >& inputs,

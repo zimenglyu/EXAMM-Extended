@@ -233,6 +233,7 @@ class IslandSpeciationStrategy : public SpeciationStrategy {
     void repopulate();
 
     void save_entire_population(string output_path);
+    void apply_homeostasis(double downscale_factor);  // SHY: scale all genome best_parameters
 };
 
 #endif
