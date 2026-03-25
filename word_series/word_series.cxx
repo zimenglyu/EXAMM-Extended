@@ -514,12 +514,12 @@ Corpus* Corpus::generate_from_arguments(const vector<string>& arguments) {
     cs->word_index.clear();
     cs->vocab.clear();
 
-    if (argument_exists(arguments, "--training_filenames") && argument_exists(arguments, "--test_filenames")) {
+    if (argument_exists(arguments, "--training_filenames") && argument_exists(arguments, "--validation_filenames")) {
         vector<string> training_filenames;
         get_argument_vector(arguments, "--training_filenames", true, training_filenames);
 
         vector<string> test_filenames;
-        get_argument_vector(arguments, "--test_filenames", true, test_filenames);
+        get_argument_vector(arguments, "--validation_filenames", true, test_filenames);
 
         int current = 0;
         for (int i = 0; i < training_filenames.size(); i++) {
@@ -536,7 +536,7 @@ Corpus* Corpus::generate_from_arguments(const vector<string>& arguments) {
 
     } else {
         Log::fatal(
-            "Could not find the '--filenames' or the '--training_filenames' and '--test_filenames' command line "
+            "Could not find the '--filenames' or the '--training_filenames' and '--validation_filenames' command line "
             "arguments.  Usage instructions:\n"
         );
         // help_message();

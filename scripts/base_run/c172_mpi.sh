@@ -17,8 +17,8 @@ echo "Running base EXAMM code with c172 dataset, results will be saved to: "$exp
 echo "###-------------------###"
 
 mpirun -np 4 ./mpi/examm_mpi \
---training_filenames ../datasets/2019_ngafid_transfer/c172_file_[1-9].csv \
---test_filenames ../datasets/2019_ngafid_transfer/c172_file_1[0-2].csv \
+--training_filenames ../datasets/2019_ngafid_transfer/c172_file_[1-8].csv \
+--validation_filenames ../datasets/2019_ngafid_transfer/c172_file_9.csv ../datasets/2019_ngafid_transfer/c172_file_10.csv \
 --time_offset 1 \
 --input_parameter_names $INPUT_PARAMETERS \
 --output_parameter_names $OUTPUT_PARAMETERS \

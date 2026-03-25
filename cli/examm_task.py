@@ -16,7 +16,7 @@ class ExammTask(ConfigToArg):
     ALL_NODE_TYPES = [ 'simple', 'UGRNN', 'MGU', 'GRU', 'delta', 'LSTM' , 'ENARC' ]
     CONFIG_OPTIONS = {
             "training_files":       lambda self, x: ['--training_filenames'] + ExammTask.glob_to_all(x),
-            "test_files":           lambda self, x: ['--test_filenames'] + ExammTask.glob_to_all(x),
+            "test_files":           lambda self, x: ['--validation_filenames'] + ExammTask.glob_to_all(x),
             "time_offset":          lambda self, x: ['--time_offset', str(x)],
             "input_parameters":     lambda self, x: ['--input_parameter_names'] + list(map(str, x)),
             "output_parameters":    lambda self, x: ['--output_parameter_names'] + list(map(str, x)),
