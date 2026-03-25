@@ -6,6 +6,7 @@
 GenomeProperty::GenomeProperty() {
     bp_iterations = 10;
     dropout_probability = 0.0;
+    weight_decay = 0.0;
     min_recurrent_depth = 1;
     max_recurrent_depth = 10;
 }
@@ -13,6 +14,7 @@ GenomeProperty::GenomeProperty() {
 void GenomeProperty::generate_genome_property_from_arguments(const vector<string>& arguments) {
     get_argument(arguments, "--bp_iterations", true, bp_iterations);
     use_dropout = get_argument(arguments, "--dropout_probability", false, dropout_probability);
+    get_argument(arguments, "--weight_decay", false, weight_decay);
 
     get_argument(arguments, "--min_recurrent_depth", false, min_recurrent_depth);
     get_argument(arguments, "--max_recurrent_depth", false, max_recurrent_depth);
@@ -21,6 +23,11 @@ void GenomeProperty::generate_genome_property_from_arguments(const vector<string
     Log::info(
         "Use dropout is set to %s, dropout probability is %f\n", use_dropout ? "True" : "False", dropout_probability
     );
+    if (weight_decay > 0.0) {
+        Log::info("L2 weight decay enabled: lambda=%.6f\n", weight_decay);
+    } else {
+        Log::info("L2 weight decay disabled (lambda=0.0)\n");
+    }
     Log::info("Min recurrent depth is %d, max recurrent depth is %d\n", min_recurrent_depth, max_recurrent_depth);
 }
 
@@ -29,6 +36,7 @@ void GenomeProperty::set_genome_properties(RNN_Genome* genome) {
     if (use_dropout) {
         genome->enable_dropout(dropout_probability);
     }
+    genome->set_weight_decay(weight_decay);
     genome->normalize_type = normalize_type;
     genome->set_parameter_names(input_parameter_names, output_parameter_names);
     genome->set_normalize_bounds(normalize_type, normalize_mins, normalize_maxs, normalize_avgs, normalize_std_devs);

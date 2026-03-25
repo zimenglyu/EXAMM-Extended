@@ -46,6 +46,8 @@ class RNN_Genome {
     bool use_dropout;
     double dropout_probability;
 
+    double weight_decay;  // L2 weight decay coefficient (0.0 = disabled)
+
     string structural_hash;
 
     string log_filename;
@@ -148,6 +150,9 @@ class RNN_Genome {
 
     void set_bp_iterations(int32_t _bp_iterations);
     int32_t get_bp_iterations();
+
+    void set_weight_decay(double _weight_decay);
+    double get_weight_decay() const;
 
     // Turns on / off stochastic operations. If it is off, any stochastic values will be "frozen" in place.
     void set_stochastic(bool stochastic);

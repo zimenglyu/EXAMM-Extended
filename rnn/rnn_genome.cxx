@@ -125,6 +125,7 @@ RNN_Genome::RNN_Genome(
 
     use_dropout = false;
     dropout_probability = 0.5;
+    weight_decay = 0.0;
 
     log_filename = "";
 
@@ -185,6 +186,7 @@ RNN_Genome* RNN_Genome::copy() {
 
     other->use_dropout = use_dropout;
     other->dropout_probability = dropout_probability;
+    other->weight_decay = weight_decay;
 
     other->log_filename = log_filename;
 
@@ -494,6 +496,14 @@ void RNN_Genome::disable_dropout() {
 
 void RNN_Genome::enable_dropout(double _dropout_probability) {
     dropout_probability = _dropout_probability;
+}
+
+void RNN_Genome::set_weight_decay(double _weight_decay) {
+    weight_decay = _weight_decay;
+}
+
+double RNN_Genome::get_weight_decay() const {
+    return weight_decay;
 }
 
 void RNN_Genome::set_log_filename(string _log_filename) {
@@ -1065,6 +1075,12 @@ void RNN_Genome::backpropagate(
         }
         weight_update_method->norm_gradients(analytic_gradient, norm);
         weight_update_method->update_weights(parameters, velocity, prev_velocity, analytic_gradient, iteration);
+        if (weight_decay > 0.0) {
+            double decay_factor = 1.0 - weight_decay;
+            for (int32_t i = 0; i < (int32_t) parameters.size(); i++) {
+                parameters[i] *= decay_factor;
+            }
+        }
         Log::info(
             "iteration %10d, mse: %10lf, v_mse: %10lf, bv_mse: %10lf, norm: %lf", iteration, mse, validation_mse,
             best_validation_mse, norm
@@ -1088,6 +1104,10 @@ void RNN_Genome::backpropagate_stochastic(
 ) {
     int32_t n_parameters = this->get_number_weights();
     int32_t n_series = (int32_t) inputs.size();
+
+    if (weight_decay > 0.0) {
+        Log::info("weight_decay active: lambda=%.6f (applied each mini-batch update)\n", weight_decay);
+    }
 
     vector<double> parameters = initial_parameters;
     vector<double> velocity(n_parameters, 0.0);
@@ -1164,6 +1184,12 @@ void RNN_Genome::backpropagate_stochastic(
             avg_norm += norm;
             weight_update_method->norm_gradients(analytic_gradient, norm);
             weight_update_method->update_weights(parameters, velocity, prev_velocity, analytic_gradient, iteration);
+            if (weight_decay > 0.0) {
+                double decay_factor = 1.0 - weight_decay;
+                for (int32_t i = 0; i < (int32_t) parameters.size(); i++) {
+                    parameters[i] *= decay_factor;
+                }
+            }
         }
         this->set_weights(parameters);
         double training_mse = get_mse(parameters, inputs, outputs);

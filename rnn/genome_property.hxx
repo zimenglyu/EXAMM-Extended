@@ -15,6 +15,7 @@ class GenomeProperty {
     int32_t bp_iterations;
     bool use_dropout;
     double dropout_probability;
+    double weight_decay;
     int32_t min_recurrent_depth;
     int32_t max_recurrent_depth;
 
