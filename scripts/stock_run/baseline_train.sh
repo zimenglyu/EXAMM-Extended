@@ -94,6 +94,7 @@ for S in $TICKERS; do
             --islands_to_exterminate 1 \
             --repopulation_method bestGenome \
             --output_directory "$OUT" \
+            --save_genome_option none \
             --std_message_level INFO \
             --file_message_level NONE > "$OUT/train.log" 2>&1
 
