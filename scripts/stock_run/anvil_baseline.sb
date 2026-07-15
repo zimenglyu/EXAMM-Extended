@@ -1,0 +1,47 @@
+#!/bin/bash -l
+# NOTE the -l flag!
+#
+# stock baseline as a job array: 500 jobs, one per stock/run (50 x 10)
+# each job calls baseline_train.sh, which has all the examm settings
+# should be ~700-1000 core hours total (8 cores x ~10-15 min per job)
+#
+# submit from the repo root:
+#   mkdir -p slurm_logs
+#   sbatch --array=0 scripts/stock_run/anvil_baseline.sb    (test 1 job first)
+#   sbatch scripts/stock_run/anvil_baseline.sb              (all 500)
+#
+# safe to resubmit, finished runs are skipped
+
+#SBATCH --account=cis251123
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+#SBATCH --ntasks=8
+#SBATCH --cpus-per-task=1
+#SBATCH --time=00:45:00
+#SBATCH --job-name=examm_baseline
+#SBATCH --array=0-499
+#SBATCH --output=slurm_logs/%A_%a.out
+#SBATCH --error=slurm_logs/%A_%a.err
+
+# to get emails, remove one of the "#" signs below
+##SBATCH --mail-user=jchang1@ucvts.org
+##SBATCH --mail-type=FAIL
+
+module --force purge
+module load gcc/11.2.0 openmpi/4.1.6
+
+cd "$SLURM_SUBMIT_DIR"
+
+# job index picks the stock and run: index/10 = stock, index%10+1 = run
+TICKERS=($(ls datasets/701515_split | sed -E 's/_(train|val|test)\.csv$//' | sort -u | grep -v combined_predictors))
+
+if [ ${#TICKERS[@]} -ne 50 ]; then
+    echo "ERROR: expected 50 tickers, found ${#TICKERS[@]}" >&2
+    exit 1
+fi
+
+S=${TICKERS[$((SLURM_ARRAY_TASK_ID / 10))]}
+R=$((SLURM_ARRAY_TASK_ID % 10 + 1))
+
+echo "job $SLURM_ARRAY_TASK_ID -> $S run $R"
+ONLY_RUN=$R MPI_LAUNCH="srun --kill-on-bad-exit" sh scripts/stock_run/baseline_train.sh "$S"
