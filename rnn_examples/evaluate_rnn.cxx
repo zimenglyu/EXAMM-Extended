@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
     INA219Sampler ina219_sampler;
     bool ina219_active = false;
     if (use_ina219) {
-        if (ina219.open(ina219_device.c_str()) && ina219.configure()) {
+        if (ina219.open_device(ina219_device.c_str()) && ina219.configure()) {
             ina219_active = true;
             Log::info("INA219 power monitor enabled on %s\n", ina219_device.c_str());
         } else {
@@ -146,7 +146,7 @@ int main(int argc, char** argv) {
             Log::info("  Energy per data point: %.6f mJ\n",
                 (total_rows > 0) ? (power_stats.energy_mj / total_rows) : 0.0);
         }
-        ina219.close();
+        ina219.close_device();
     }
     
     // Calculate Model Latency (end-to-end: input ready → prediction output)

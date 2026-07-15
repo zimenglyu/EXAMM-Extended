@@ -52,16 +52,16 @@ class INA219 {
 
     INA219() : i2c_fd_(-1) {}
 
-    ~INA219() { close(); }
+    ~INA219() { close_device(); }
 
-    bool open(const char* dev = "/dev/i2c-1") {
+    bool open_device(const char* dev = "/dev/i2c-1") {
 #ifdef __linux__
-        i2c_fd_ = open(dev, O_RDWR);
+        i2c_fd_ = ::open(dev, O_RDWR);
         if (i2c_fd_ < 0) {
             return false;
         }
         if (ioctl(i2c_fd_, I2C_SLAVE, INA219_ADDR) < 0) {
-            close();
+            close_device();
             return false;
         }
         return true;
@@ -89,7 +89,7 @@ class INA219 {
 #endif
     }
 
-    bool read(INA219Reading& reading) {
+    bool read_reading(INA219Reading& reading) {
 #ifdef __linux__
         int16_t raw_bus, raw_shunt, raw_current, raw_power;
         if (!read_reg16(REG_BUS_V, raw_bus)) {
@@ -116,7 +116,7 @@ class INA219 {
 #endif
     }
 
-    void close() {
+    void close_device() {
 #ifdef __linux__
         if (i2c_fd_ >= 0) {
             ::close(i2c_fd_);
@@ -136,15 +136,15 @@ class INA219 {
         buf[0] = reg;
         buf[1] = (value >> 8) & 0xFF;
         buf[2] = value & 0xFF;
-        return write(i2c_fd_, buf, 3) == 3;
+        return ::write(i2c_fd_, buf, 3) == 3;
     }
 
     bool read_reg16(uint8_t reg, int16_t& value) {
-        if (write(i2c_fd_, &reg, 1) != 1) {
+        if (::write(i2c_fd_, &reg, 1) != 1) {
             return false;
         }
         uint8_t buf[2];
-        if (read(i2c_fd_, buf, 2) != 2) {
+        if (::read(i2c_fd_, buf, 2) != 2) {
             return false;
         }
         value = (int16_t) ((buf[0] << 8) | buf[1]);
@@ -247,7 +247,7 @@ class INA219Sampler {
     void sample_loop() {
         while (running_) {
             INA219Reading reading;
-            if (sensor_->read(reading)) {
+            if (sensor_->read_reading(reading)) {
                 std::lock_guard<std::mutex> lock(readings_mutex_);
                 readings_.push_back(reading);
             }
