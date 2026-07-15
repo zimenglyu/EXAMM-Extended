@@ -20,6 +20,7 @@ do
     ./rnn_examples/evaluate_rnn \
     --testing_filenames ../datasets/2018_coal/burner_11.csv \
     --time_offset 1 \
+    --ina219
     --genome_file $genome_name \
     --input_parameter_names $INPUT_PARAMETERS \
     --output_parameter_names $OUTPUT_PARAMETERS \
@@ -27,4 +28,5 @@ do
     --output_directory $out_dir \
     --std_message_level INFO \
     --file_message_level INFO
+    # Add --ina219 on Raspberry Pi to log voltage/current/power during inference
 done

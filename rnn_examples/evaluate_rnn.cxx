@@ -18,6 +18,7 @@ using std::thread;
 using std::vector;
 
 #include "common/arguments.hxx"
+#include "common/ina219.hxx"
 #include "common/log.hxx"
 #include "rnn/rnn_genome.hxx"
 #include "time_series/time_series.hxx"
@@ -76,17 +77,39 @@ int main(int argc, char** argv) {
 
     vector<double> best_parameters = genome->get_best_parameters();
     Log::info("Parameter count: %zu\n", best_parameters.size());
-    
+
+    bool use_ina219 = argument_exists(arguments, "--ina219");
+    string ina219_device = "/dev/i2c-1";
+    get_argument(arguments, "--ina219_device", false, ina219_device);
+
+    INA219 ina219;
+    INA219Sampler ina219_sampler;
+    bool ina219_active = false;
+    if (use_ina219) {
+        if (ina219.open(ina219_device.c_str()) && ina219.configure()) {
+            ina219_active = true;
+            Log::info("INA219 power monitor enabled on %s\n", ina219_device.c_str());
+        } else {
+            Log::warning("INA219 requested but could not open %s — continuing without power monitoring\n", ina219_device.c_str());
+        }
+    }
+
     // Model Latency: End-to-end from input ready → prediction output
     // (includes inference + lightweight preprocessing + output formatting)
     auto model_latency_start = std::chrono::high_resolution_clock::now();
-    
+
     // Inference Time: Model computation only (matrix ops, RNN steps, forward pass)
     // Excludes: data loading, preprocessing, disk I/O
     auto inference_start = std::chrono::high_resolution_clock::now();
+    if (ina219_active) {
+        ina219_sampler.start(&ina219);
+    }
     Log::info("MSE: %lf\n", genome->get_mse(best_parameters, testing_inputs, testing_outputs));
     Log::info("MAE: %lf\n", genome->get_mae(best_parameters, testing_inputs, testing_outputs));
     auto inference_end = std::chrono::high_resolution_clock::now();
+    if (ina219_active) {
+        ina219_sampler.stop();
+    }
     
     // Output formatting (part of model latency)
     genome->write_predictions(
@@ -106,6 +129,25 @@ int main(int argc, char** argv) {
     Log::info("Inference time (entire dataset): %.3f seconds (%.1f ms)\n", inference_seconds, inference_milliseconds);
     Log::info("  Per data point: %.3f ms (%.1f μs)\n", per_data_point_ms, per_data_point_us);
     Log::info("  Throughput: %.1f data points/second\n", (total_rows > 0) ? (total_rows / inference_seconds) : 0.0);
+
+    if (ina219_active) {
+        INA219Stats power_stats = ina219_sampler.get_stats();
+        Log::info("INA219 power (during inference, %d samples):\n", power_stats.sample_count);
+        Log::info("  Bus voltage:  avg %.3f V  (min %.3f, max %.3f)\n",
+            power_stats.bus_voltage_v_avg, power_stats.bus_voltage_v_min, power_stats.bus_voltage_v_max);
+        Log::info("  Shunt voltage: avg %.3f mV\n", power_stats.shunt_voltage_mv_avg);
+        Log::info("  Current:      avg %.3f mA  (min %.3f, max %.3f)\n",
+            power_stats.current_ma_avg, power_stats.current_ma_min, power_stats.current_ma_max);
+        Log::info("  Power:        avg %.3f mW  (min %.3f, max %.3f)\n",
+            power_stats.power_mw_avg, power_stats.power_mw_min, power_stats.power_mw_max);
+        Log::info("  Energy:       %.3f mJ\n", power_stats.energy_mj);
+        if (inference_seconds > 0.0) {
+            Log::info("  Avg power per data point: %.3f mW\n", power_stats.power_mw_avg);
+            Log::info("  Energy per data point: %.6f mJ\n",
+                (total_rows > 0) ? (power_stats.energy_mj / total_rows) : 0.0);
+        }
+        ina219.close();
+    }
     
     // Calculate Model Latency (end-to-end: input ready → prediction output)
     auto model_latency_duration = std::chrono::duration_cast<std::chrono::microseconds>(model_latency_end - model_latency_start);
