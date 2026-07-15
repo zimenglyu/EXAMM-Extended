@@ -95,7 +95,7 @@ for S in $TICKERS; do
             --repopulation_method bestGenome \
             --output_directory "$OUT" \
             --std_message_level INFO \
-            --file_message_level INFO > "$OUT/train.log" 2>&1
+            --file_message_level NONE > "$OUT/train.log" 2>&1
 
         if [ $? -eq 0 ]; then
             touch "$OUT/.done"
