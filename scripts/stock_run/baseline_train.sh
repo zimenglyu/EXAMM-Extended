@@ -99,8 +99,15 @@ for S in $TICKERS; do
             --file_message_level NONE > "$OUT/train.log" 2>&1
 
         if [ $? -eq 0 ]; then
-            touch "$OUT/.done"
-            echo "[$S run $RUN/$RUNS] finished $(date '+%Y-%m-%d %H:%M:%S')"
+            # verify the saved global best actually reproduces its recorded validation
+            # MSE before marking the run done -- guards against any genome-serialization
+            # corruption (we got burned: see the depth-sort tie bug in rnn_node_interface.hxx)
+            if sh "$REPO/scripts/stock_run/verify_genome.sh" "$OUT" "$DATA/${S}_val.csv" >> "$OUT/train.log" 2>&1; then
+                touch "$OUT/.done"
+                echo "[$S run $RUN/$RUNS] finished + genome verified $(date '+%Y-%m-%d %H:%M:%S')"
+            else
+                echo "$(date '+%Y-%m-%d %H:%M:%S') $S run_$RUN SAVED GENOME FAILED VERIFICATION, see $OUT/train.log" | tee -a "$FAIL_LOG" >&2
+            fi
         else
             echo "$(date '+%Y-%m-%d %H:%M:%S') $S run_$RUN failed, see $OUT/train.log" | tee -a "$FAIL_LOG" >&2
         fi

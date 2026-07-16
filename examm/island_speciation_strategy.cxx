@@ -224,6 +224,12 @@ void IslandSpeciationStrategy::repopulate() {
         if (evaluated_genomes > 1 && evaluated_genomes % extinction_event_generation_number == 0
             && max_genomes - evaluated_genomes >= extinction_event_generation_number) {
             if (island_ranking_method.compare("EraseWorst") == 0 || island_ranking_method.compare("") == 0) {
+                // ORIGINAL semantics preserved: unconditionally track the current
+                // population best at extinction time (even if a better genome existed
+                // earlier). Only the memory leak is fixed (delete before overwrite).
+                // Note: this can save a "global best" that is worse than the best
+                // genome ever found -- upstream behavior, kept for comparability.
+                delete global_best_genome;
                 global_best_genome = get_best_genome()->copy();
                 vector<int32_t> rank = rank_islands();
                 for (int32_t i = 0; i < islands_to_exterminate; i++) {
