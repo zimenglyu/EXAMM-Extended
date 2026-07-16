@@ -26,7 +26,7 @@
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
 BEST_DIR=${1:-$REPO/test_output/baseline_best}
 INDEX=${2:-$BEST_DIR/index_corrected.csv}
-DATA=$REPO/datasets/701515_split
+DATA=${DATA:-$REPO/datasets/701515_split}   # env-overridable (e.g. walk-forward splits)
 BIN=$REPO/build/rnn_examples/evaluate_rnn
 PRED_DIR=$BEST_DIR/predictions
 MANIFEST=$PRED_DIR/MANIFEST.csv

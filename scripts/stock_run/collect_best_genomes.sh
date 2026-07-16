@@ -14,7 +14,7 @@
 # Runs without .done, or completed runs missing a genome, are warned and skipped.
 
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
-BASE_OUT=$REPO/test_output/baseline
+BASE_OUT=${BASE_OUT:-$REPO/test_output/baseline}   # env-overridable (e.g. pilot runs)
 DEST=${1:-$REPO/test_output/baseline_best}
 
 if [ ! -d "$BASE_OUT" ]; then
