@@ -172,7 +172,19 @@ struct sort_RNN_Nodes_by_innovation {
 
 struct sort_RNN_Nodes_by_depth {
     bool operator()(RNN_Node_Interface* n1, RNN_Node_Interface* n2) {
-        return n1->get_depth() < n2->get_depth();
+        if (n1->get_depth() < n2->get_depth()) {
+            return true;
+        } else if (n1->get_depth() == n2->get_depth()) {
+            // tie-break on the (unique) innovation number so equal-depth nodes have
+            // a total order. Without this, std::sort (not stable) permutes equal-depth
+            // nodes when a genome is copied — but best_parameters stays in the OLD
+            // node order, silently corrupting the weights of every saved global-best
+            // genome with >16 nodes (libstdc++ switches from insertion sort to
+            // quicksort partitioning above 16 elements).
+            return n1->get_innovation_number() < n2->get_innovation_number();
+        } else {
+            return false;
+        }
     }
 };
 

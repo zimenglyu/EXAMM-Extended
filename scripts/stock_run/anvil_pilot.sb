@@ -1,0 +1,53 @@
+#!/bin/bash -l
+# NOTE the -l flag!
+#
+# walk-forward pilot as a job array: 100 jobs, one per stock/run (10 x 10)
+# each job calls pilot_train.sh (same EXAMM settings + binary as the baseline;
+# corrupted saves are filtered afterwards by sweep_verify.py, same protocol)
+#
+# BEFORE submitting, build the splits once:
+#   python3 scripts/stock_run/build_walkforward_splits.py \
+#       --cutoff 2021-12-31 --val-year 2022 --test-year 2023 \
+#       --out datasets/walkforward/pilot_2023 \
+#       --tickers AKAM ATO CAG COO DECK HBAN JBHT NTRS PKG TRV
+#
+# submit from the repo root:
+#   mkdir -p slurm_logs
+#   sbatch --array=0 scripts/stock_run/anvil_pilot.sb    (test 1 job first)
+#   sbatch scripts/stock_run/anvil_pilot.sb              (all 100)
+#
+# safe to resubmit, finished runs are skipped
+
+#SBATCH --account=cis251123
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+#SBATCH --ntasks=8
+#SBATCH --cpus-per-task=1
+#SBATCH --time=01:15:00
+#SBATCH --job-name=examm_pilot
+#SBATCH --array=0-99
+#SBATCH --output=slurm_logs/pilot_%A_%a.out
+#SBATCH --error=slurm_logs/pilot_%A_%a.err
+
+module --force purge
+module load gcc/11.2.0 openmpi/4.1.6
+
+cd "$SLURM_SUBMIT_DIR"
+
+DATA_DIR=datasets/walkforward/pilot_2023
+
+# job index picks the stock and run: index/10 = stock, index%10+1 = run
+TICKERS=($(ls "$DATA_DIR" | sed -E 's/_(train|val|test)\.csv$//' | sort -u))
+
+if [ ${#TICKERS[@]} -ne 10 ]; then
+    echo "ERROR: expected 10 pilot tickers in $DATA_DIR, found ${#TICKERS[@]} -- run build_walkforward_splits.py first" >&2
+    exit 1
+fi
+
+S=${TICKERS[$((SLURM_ARRAY_TASK_ID / 10))]}
+R=$((SLURM_ARRAY_TASK_ID % 10 + 1))
+
+echo "job $SLURM_ARRAY_TASK_ID -> $S run $R"
+DATA="$SLURM_SUBMIT_DIR/$DATA_DIR" BASE_OUT="$SLURM_SUBMIT_DIR/test_output/pilot_2023" \
+    ONLY_RUN=$R MPI_LAUNCH="srun --kill-on-bad-exit" \
+    sh scripts/stock_run/pilot_train.sh "$S"

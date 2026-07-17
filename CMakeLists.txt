@@ -99,6 +99,10 @@ ELSE (COMPILE_CLIENT STREQUAL "YES")
     IF (TIFF_FOUND)
         add_definitions( -D_HAS_TIFF_ )
         include_directories(${TIFF_INCLUDE_DIR})
+    ELSE (TIFF_FOUND)
+        # no TIFF on this system (e.g. clusters) -- only the image/CNN tools
+        # need it, so just link nothing instead of "TIFF_LIBRARY-NOTFOUND"
+        set(TIFF_LIBRARIES "")
     ENDIF (TIFF_FOUND)
 ENDIF (COMPILE_CLIENT STREQUAL "YES")
 

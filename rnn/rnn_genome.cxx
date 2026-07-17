@@ -1946,11 +1946,11 @@ bool RNN_Genome::add_edge(double mu, double sigma, int32_t& edge_innovation_coun
         }
     }
 
-    /*
+    
         if (reachable_nodes.size() == 0) {
             return false;
         }
-    */
+    
     Log::info("\treachable_nodes.size(): %d\n", reachable_nodes.size());
 
     int32_t position = rng_0_1(generator) * reachable_nodes.size();
