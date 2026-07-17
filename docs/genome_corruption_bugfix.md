@@ -74,13 +74,15 @@ input nodes come out reordered `1 0 5 4 3 2`. With the fixed comparator: **0/200
    longer occasionally missed due to tie-order mismatch. Bias-free, in the
    as-designed direction.
 2. **Extinction-path memory leak** — `examm/island_speciation_strategy.cxx`:
-   the tracked global best is overwritten at every extinction event; the old
-   copy is now freed first. The **original semantics are deliberately kept**
-   (unconditional overwrite with the current population best, even when a
-   better genome existed earlier — upstream behavior, retained for
-   comparability with prior results). Note this means the saved "global best"
-   can be worse than the best genome the run ever found; a possible future
-   fix, to be coordinated upstream.
+   at every extinction event upstream runs
+   `global_best_genome = get_best_genome()->copy()`. Since `get_best_genome()`
+   returns `global_best_genome` itself, this is a **self-copy: a semantic
+   no-op that leaks the previous copy** each extinction. The fix copies
+   first, deletes the old object, then assigns — byte-for-byte identical
+   behavior, leak closed. (Cautionary note: an earlier attempt that deleted
+   BEFORE copying was a use-after-free — the delete frees the very object
+   being copied — and crashed ~20% of a 100-run campaign on glibc. Order
+   matters.)
 3. **Permanent guard** — `scripts/stock_run/verify_genome.sh`: after every
    training run, the saved genome is re-evaluated on the validation set and
    must reproduce its recorded `best_validation_mse` within 2%, or the run is
