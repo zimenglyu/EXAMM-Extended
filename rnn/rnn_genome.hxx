@@ -46,7 +46,13 @@ class RNN_Genome {
     bool use_dropout;
     double dropout_probability;
 
-    double weight_decay;  // L2 weight decay coefficient (0.0 = disabled)
+    // L2 weight decay coefficient (0.0 = disabled). In-class initializer is
+    // load-bearing: this member is NOT serialized, so genomes built by the
+    // stream/array/file constructors (every MPI transfer!) would otherwise
+    // carry uninitialized heap garbage -- positive garbage silently enables
+    // decay with an absurd lambda and NaNs the training (crashed ~2% of
+    // cluster jobs before this fix).
+    double weight_decay = 0.0;
 
     string structural_hash;
 
