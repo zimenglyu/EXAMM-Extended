@@ -42,12 +42,15 @@ def fail(msg):
 
 def reproduce_mse(bin_file, val_csv):
     with tempfile.TemporaryDirectory() as tmp:
+        # stdout=PIPE + universal_newlines instead of capture_output/text:
+        # cluster login nodes run Python 3.6
         out = subprocess.run(
             [str(BIN), "--genome_file", str(bin_file),
              "--testing_filenames", str(val_csv),
              "--time_offset", "1", "--output_directory", tmp,
              "--std_message_level", "INFO", "--file_message_level", "NONE"],
-            capture_output=True, text=True)
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            universal_newlines=True)
     for line in out.stdout.splitlines():
         if "MSE:" in line:
             return float(line.rsplit(None, 1)[-1])
