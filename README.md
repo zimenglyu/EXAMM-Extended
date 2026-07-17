@@ -8,6 +8,7 @@
 - [EXAMM and EXA-GP Overview](#examm-and-exa-gp-overview)
 - [Installation and Setup](#installation-and-setup)
   - [OSX and Linux Setup](#osx-and-linux-setup)
+  - [Ubuntu / WSL Setup](#ubuntu--wsl-setup)
   - [Building](#building)
 - [Quickstart](#quickstart)
   - [Multithreaded Version](#multithreaded-version)
@@ -60,6 +61,19 @@ brew install open-mpi
 brew install libtiff
 brew install libpng
 brew install clang-format
+```
+
+## Ubuntu / WSL Setup
+For Ubuntu (including Ubuntu running under Windows Subsystem for Linux) use `apt` to install the equivalent packages. Installing the following should be sufficient to compile EXAMM/EXA-GP:
+
+```bash
+sudo apt update
+sudo apt install build-essential cmake
+sudo apt install libmysqlclient-dev
+sudo apt install libopenmpi-dev openmpi-bin
+sudo apt install libtiff-dev
+sudo apt install libpng-dev
+sudo apt install clang-format
 ```
 
 
