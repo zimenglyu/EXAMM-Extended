@@ -134,8 +134,7 @@ int main() {
                 double avgIbi = sum / ibiCount;
                 double bpm = 60000.0 / avgIbi;
 
-                printf("Beat! Interval: %.0f ms  Instant BPM: %.1f  Avg(%d) BPM: %.1f\n",
-                       sinceLastBeatMs, 60000.0 / sinceLastBeatMs, ibiCount, bpm);
+                printf("raw: %d\n", signalValue);  // uncomment this
             }
 
             lastBeatTime = now;
