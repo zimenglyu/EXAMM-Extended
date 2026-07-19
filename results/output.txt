@@ -1,0 +1,260 @@
+Evaluating RNN on coal dataset, results will be saved to: ../test_output/coal_mpi/evaluation_results_new/0
+[INFO    main                 ] 	../datasets/2018_coal/burner_11.csv
+[INFO    main                 ] read time series '../datasets/2018_coal/burner_11.csv' with number rows: 14401
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[1903] 0.997096 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[2552] 0.998540 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[3212] 1.000000 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[11455] 0.997096 was greater than max for normalization: 0.952610
+[INFO    main                 ] normalized type: min_max 
+[INFO    main                 ] loaded 14400 rows for testing.
+[INFO    main                 ] Parameter count: 122
+[INFO    main                 ] INA219 power monitor enabled on /dev/i2c-1
+[INFO    main                 ] MSE: 0.002826
+[INFO    main                 ] MAE: 0.048196
+[INFO    main                 ] Inference time (entire dataset): 0.846 seconds (846.1 ms)
+[INFO    main                 ]   Per data point: 0.059 ms (58.8 μs)
+[INFO    main                 ]   Throughput: 17019.0 data points/second
+[INFO    main                 ] INA219 power (during inference, 9 samples):
+[INFO    main                 ]   Bus voltage:  avg 4.998 V  (min 4.968, max 5.056)
+[INFO    main                 ]   Shunt voltage: avg 33.451 mV
+[INFO    main                 ]   Current:      avg 340.022 mA  (min 281.400, max 424.400)
+[INFO    main                 ]   Power:        avg 1694.222 mW  (min 1412.000, max 2090.000)
+[INFO    main                 ]   Energy:       1524.800 mJ
+[INFO    main                 ]   Avg power per data point: 1694.222 mW
+[INFO    main                 ]   Energy per data point: 0.105889 mJ
+[INFO    main                 ] Model latency (entire dataset): 2.245 seconds (2244.9 ms)
+[INFO    main                 ]   Per data point: 0.156 ms
+Evaluating RNN on coal dataset, results will be saved to: ../test_output/coal_mpi/evaluation_results_new/1
+[INFO    main                 ] 	../datasets/2018_coal/burner_11.csv
+[INFO    main                 ] read time series '../datasets/2018_coal/burner_11.csv' with number rows: 14401
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[1903] 0.997096 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[2552] 0.998540 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[3212] 1.000000 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[11455] 0.997096 was greater than max for normalization: 0.952610
+[INFO    main                 ] normalized type: min_max 
+[INFO    main                 ] loaded 14400 rows for testing.
+[INFO    main                 ] Parameter count: 76
+[INFO    main                 ] INA219 power monitor enabled on /dev/i2c-1
+[INFO    main                 ] MSE: 0.000447
+[INFO    main                 ] MAE: 0.015845
+[INFO    main                 ] Inference time (entire dataset): 0.617 seconds (616.6 ms)
+[INFO    main                 ]   Per data point: 0.043 ms (42.8 μs)
+[INFO    main                 ]   Throughput: 23354.5 data points/second
+[INFO    main                 ] INA219 power (during inference, 7 samples):
+[INFO    main                 ]   Bus voltage:  avg 5.006 V  (min 4.988, max 5.052)
+[INFO    main                 ]   Shunt voltage: avg 32.313 mV
+[INFO    main                 ]   Current:      avg 328.786 mA  (min 323.800, max 334.100)
+[INFO    main                 ]   Power:        avg 1640.857 mW  (min 1616.000, max 1668.000)
+[INFO    main                 ]   Energy:       1148.600 mJ
+[INFO    main                 ]   Avg power per data point: 1640.857 mW
+[INFO    main                 ]   Energy per data point: 0.079764 mJ
+[INFO    main                 ] Model latency (entire dataset): 1.939 seconds (1938.8 ms)
+[INFO    main                 ]   Per data point: 0.135 ms
+Evaluating RNN on coal dataset, results will be saved to: ../test_output/coal_mpi/evaluation_results_new/2
+[INFO    main                 ] 	../datasets/2018_coal/burner_11.csv
+[INFO    main                 ] read time series '../datasets/2018_coal/burner_11.csv' with number rows: 14401
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[1903] 0.997096 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[2552] 0.998540 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[3212] 1.000000 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[11455] 0.997096 was greater than max for normalization: 0.952610
+[INFO    main                 ] normalized type: min_max 
+[INFO    main                 ] loaded 14400 rows for testing.
+[INFO    main                 ] Parameter count: 90
+[INFO    main                 ] INA219 power monitor enabled on /dev/i2c-1
+[INFO    main                 ] MSE: 0.002181
+[INFO    main                 ] MAE: 0.027689
+[INFO    main                 ] Inference time (entire dataset): 0.578 seconds (578.1 ms)
+[INFO    main                 ]   Per data point: 0.040 ms (40.1 μs)
+[INFO    main                 ]   Throughput: 24907.5 data points/second
+[INFO    main                 ] INA219 power (during inference, 6 samples):
+[INFO    main                 ]   Bus voltage:  avg 5.008 V  (min 4.992, max 5.056)
+[INFO    main                 ]   Shunt voltage: avg 31.965 mV
+[INFO    main                 ]   Current:      avg 334.700 mA  (min 322.600, max 352.900)
+[INFO    main                 ]   Power:        avg 1670.000 mW  (min 1608.000, max 1762.000)
+[INFO    main                 ]   Energy:       1002.000 mJ
+[INFO    main                 ]   Avg power per data point: 1670.000 mW
+[INFO    main                 ]   Energy per data point: 0.069583 mJ
+[INFO    main                 ] Model latency (entire dataset): 1.808 seconds (1808.4 ms)
+[INFO    main                 ]   Per data point: 0.126 ms
+Evaluating RNN on coal dataset, results will be saved to: ../test_output/coal_mpi/evaluation_results_new/3
+[INFO    main                 ] 	../datasets/2018_coal/burner_11.csv
+[INFO    main                 ] read time series '../datasets/2018_coal/burner_11.csv' with number rows: 14401
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[1903] 0.997096 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[2552] 0.998540 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[3212] 1.000000 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[11455] 0.997096 was greater than max for normalization: 0.952610
+[INFO    main                 ] normalized type: min_max 
+[INFO    main                 ] loaded 14400 rows for testing.
+[INFO    main                 ] Parameter count: 77
+[INFO    main                 ] INA219 power monitor enabled on /dev/i2c-1
+[INFO    main                 ] MSE: 0.000559
+[INFO    main                 ] MAE: 0.017438
+[INFO    main                 ] Inference time (entire dataset): 0.623 seconds (623.3 ms)
+[INFO    main                 ]   Per data point: 0.043 ms (43.3 μs)
+[INFO    main                 ]   Throughput: 23103.1 data points/second
+[INFO    main                 ] INA219 power (during inference, 7 samples):
+[INFO    main                 ]   Bus voltage:  avg 5.003 V  (min 4.980, max 5.056)
+[INFO    main                 ]   Shunt voltage: avg 31.549 mV
+[INFO    main                 ]   Current:      avg 332.086 mA  (min 326.900, max 340.800)
+[INFO    main                 ]   Power:        avg 1654.571 mW  (min 1628.000, max 1698.000)
+[INFO    main                 ]   Energy:       1158.200 mJ
+[INFO    main                 ]   Avg power per data point: 1654.571 mW
+[INFO    main                 ]   Energy per data point: 0.080431 mJ
+[INFO    main                 ] Model latency (entire dataset): 1.934 seconds (1933.7 ms)
+[INFO    main                 ]   Per data point: 0.134 ms
+Evaluating RNN on coal dataset, results will be saved to: ../test_output/coal_mpi/evaluation_results_new/4
+[INFO    main                 ] 	../datasets/2018_coal/burner_11.csv
+[INFO    main                 ] read time series '../datasets/2018_coal/burner_11.csv' with number rows: 14401
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[1903] 0.997096 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[2552] 0.998540 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[3212] 1.000000 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[11455] 0.997096 was greater than max for normalization: 0.952610
+[INFO    main                 ] normalized type: min_max 
+[INFO    main                 ] loaded 14400 rows for testing.
+[INFO    main                 ] Parameter count: 78
+[INFO    main                 ] INA219 power monitor enabled on /dev/i2c-1
+[INFO    main                 ] MSE: 0.000537
+[INFO    main                 ] MAE: 0.017506
+[INFO    main                 ] Inference time (entire dataset): 0.616 seconds (616.1 ms)
+[INFO    main                 ]   Per data point: 0.043 ms (42.8 μs)
+[INFO    main                 ]   Throughput: 23373.0 data points/second
+[INFO    main                 ] INA219 power (during inference, 7 samples):
+[INFO    main                 ]   Bus voltage:  avg 5.006 V  (min 4.992, max 5.056)
+[INFO    main                 ]   Shunt voltage: avg 32.277 mV
+[INFO    main                 ]   Current:      avg 325.271 mA  (min 297.400, max 340.600)
+[INFO    main                 ]   Power:        avg 1624.857 mW  (min 1504.000, max 1694.000)
+[INFO    main                 ]   Energy:       1137.400 mJ
+[INFO    main                 ]   Avg power per data point: 1624.857 mW
+[INFO    main                 ]   Energy per data point: 0.078986 mJ
+[INFO    main                 ] Model latency (entire dataset): 1.924 seconds (1924.0 ms)
+[INFO    main                 ]   Per data point: 0.134 ms
+Evaluating RNN on coal dataset, results will be saved to: ../test_output/coal_mpi/evaluation_results_new/5
+[INFO    main                 ] 	../datasets/2018_coal/burner_11.csv
+[INFO    main                 ] read time series '../datasets/2018_coal/burner_11.csv' with number rows: 14401
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[1903] 0.997096 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[2552] 0.998540 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[3212] 1.000000 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[11455] 0.997096 was greater than max for normalization: 0.952610
+[INFO    main                 ] normalized type: min_max 
+[INFO    main                 ] loaded 14400 rows for testing.
+[INFO    main                 ] Parameter count: 93
+[INFO    main                 ] INA219 power monitor enabled on /dev/i2c-1
+[INFO    main                 ] MSE: 0.000474
+[INFO    main                 ] MAE: 0.015893
+[INFO    main                 ] Inference time (entire dataset): 0.684 seconds (683.9 ms)
+[INFO    main                 ]   Per data point: 0.047 ms (47.5 μs)
+[INFO    main                 ]   Throughput: 21054.4 data points/second
+[INFO    main                 ] INA219 power (during inference, 7 samples):
+[INFO    main                 ]   Bus voltage:  avg 5.000 V  (min 4.964, max 5.056)
+[INFO    main                 ]   Shunt voltage: avg 32.357 mV
+[INFO    main                 ]   Current:      avg 331.729 mA  (min 325.700, max 340.000)
+[INFO    main                 ]   Power:        avg 1654.571 mW  (min 1626.000, max 1698.000)
+[INFO    main                 ]   Energy:       1158.200 mJ
+[INFO    main                 ]   Avg power per data point: 1654.571 mW
+[INFO    main                 ]   Energy per data point: 0.080431 mJ
+[INFO    main                 ] Model latency (entire dataset): 2.070 seconds (2070.4 ms)
+[INFO    main                 ]   Per data point: 0.144 ms
+Evaluating RNN on coal dataset, results will be saved to: ../test_output/coal_mpi/evaluation_results_new/6
+[INFO    main                 ] 	../datasets/2018_coal/burner_11.csv
+[INFO    main                 ] read time series '../datasets/2018_coal/burner_11.csv' with number rows: 14401
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[1903] 0.997096 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[2552] 0.998540 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[3212] 1.000000 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[11455] 0.997096 was greater than max for normalization: 0.952610
+[INFO    main                 ] normalized type: min_max 
+[INFO    main                 ] loaded 14400 rows for testing.
+[INFO    main                 ] Parameter count: 70
+[INFO    main                 ] INA219 power monitor enabled on /dev/i2c-1
+[INFO    main                 ] MSE: 0.000627
+[INFO    main                 ] MAE: 0.018567
+[INFO    main                 ] Inference time (entire dataset): 0.605 seconds (605.5 ms)
+[INFO    main                 ]   Per data point: 0.042 ms (42.0 μs)
+[INFO    main                 ]   Throughput: 23783.4 data points/second
+[INFO    main                 ] INA219 power (during inference, 6 samples):
+[INFO    main                 ]   Bus voltage:  avg 5.000 V  (min 4.944, max 5.052)
+[INFO    main                 ]   Shunt voltage: avg 32.868 mV
+[INFO    main                 ]   Current:      avg 339.983 mA  (min 322.600, max 399.800)
+[INFO    main                 ]   Power:        avg 1692.333 mW  (min 1612.000, max 1976.000)
+[INFO    main                 ]   Energy:       1015.400 mJ
+[INFO    main                 ]   Avg power per data point: 1692.333 mW
+[INFO    main                 ]   Energy per data point: 0.070514 mJ
+[INFO    main                 ] Model latency (entire dataset): 1.827 seconds (1827.4 ms)
+[INFO    main                 ]   Per data point: 0.127 ms
+Evaluating RNN on coal dataset, results will be saved to: ../test_output/coal_mpi/evaluation_results_new/7
+[INFO    main                 ] 	../datasets/2018_coal/burner_11.csv
+[INFO    main                 ] read time series '../datasets/2018_coal/burner_11.csv' with number rows: 14401
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[1903] 0.997096 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[2552] 0.998540 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[3212] 1.000000 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[11455] 0.997096 was greater than max for normalization: 0.952610
+[INFO    main                 ] normalized type: min_max 
+[INFO    main                 ] loaded 14400 rows for testing.
+[INFO    main                 ] Parameter count: 87
+[INFO    main                 ] INA219 power monitor enabled on /dev/i2c-1
+[INFO    main                 ] MSE: 0.000485
+[INFO    main                 ] MAE: 0.016271
+[INFO    main                 ] Inference time (entire dataset): 0.656 seconds (656.3 ms)
+[INFO    main                 ]   Per data point: 0.046 ms (45.6 μs)
+[INFO    main                 ]   Throughput: 21940.8 data points/second
+[INFO    main                 ] INA219 power (during inference, 7 samples):
+[INFO    main                 ]   Bus voltage:  avg 5.005 V  (min 4.992, max 5.052)
+[INFO    main                 ]   Shunt voltage: avg 32.787 mV
+[INFO    main                 ]   Current:      avg 336.671 mA  (min 325.700, max 358.000)
+[INFO    main                 ]   Power:        avg 1678.286 mW  (min 1626.000, max 1782.000)
+[INFO    main                 ]   Energy:       1174.800 mJ
+[INFO    main                 ]   Avg power per data point: 1678.286 mW
+[INFO    main                 ]   Energy per data point: 0.081583 mJ
+[INFO    main                 ] Model latency (entire dataset): 1.939 seconds (1939.4 ms)
+[INFO    main                 ]   Per data point: 0.135 ms
+Evaluating RNN on coal dataset, results will be saved to: ../test_output/coal_mpi/evaluation_results_new/8
+[INFO    main                 ] 	../datasets/2018_coal/burner_11.csv
+[INFO    main                 ] read time series '../datasets/2018_coal/burner_11.csv' with number rows: 14401
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[1903] 0.997096 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[2552] 0.998540 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[3212] 1.000000 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[11455] 0.997096 was greater than max for normalization: 0.952610
+[INFO    main                 ] normalized type: min_max 
+[INFO    main                 ] loaded 14400 rows for testing.
+[INFO    main                 ] Parameter count: 132
+[INFO    main                 ] INA219 power monitor enabled on /dev/i2c-1
+[INFO    main                 ] MSE: 0.018155
+[INFO    main                 ] MAE: 0.129407
+[INFO    main                 ] Inference time (entire dataset): 0.765 seconds (765.1 ms)
+[INFO    main                 ]   Per data point: 0.053 ms (53.1 μs)
+[INFO    main                 ]   Throughput: 18819.9 data points/second
+[INFO    main                 ] INA219 power (during inference, 8 samples):
+[INFO    main                 ]   Bus voltage:  avg 5.004 V  (min 4.992, max 5.056)
+[INFO    main                 ]   Shunt voltage: avg 32.719 mV
+[INFO    main                 ]   Current:      avg 335.113 mA  (min 325.600, max 353.800)
+[INFO    main                 ]   Power:        avg 1670.500 mW  (min 1626.000, max 1762.000)
+[INFO    main                 ]   Energy:       1336.400 mJ
+[INFO    main                 ]   Avg power per data point: 1670.500 mW
+[INFO    main                 ]   Energy per data point: 0.092806 mJ
+[INFO    main                 ] Model latency (entire dataset): 2.107 seconds (2107.1 ms)
+[INFO    main                 ]   Per data point: 0.146 ms
+Evaluating RNN on coal dataset, results will be saved to: ../test_output/coal_mpi/evaluation_results_new/9
+[INFO    main                 ] 	../datasets/2018_coal/burner_11.csv
+[INFO    main                 ] read time series '../datasets/2018_coal/burner_11.csv' with number rows: 14401
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[1903] 0.997096 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[2552] 0.998540 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[3212] 1.000000 was greater than max for normalization: 0.952610
+[WARNING main                 ] normalizing series Conditioner_Inlet_Temp, value[11455] 0.997096 was greater than max for normalization: 0.952610
+[INFO    main                 ] normalized type: min_max 
+[INFO    main                 ] loaded 14400 rows for testing.
+[INFO    main                 ] Parameter count: 78
+[INFO    main                 ] INA219 power monitor enabled on /dev/i2c-1
+[INFO    main                 ] MSE: 0.025044
+[INFO    main                 ] MAE: 0.150835
+[INFO    main                 ] Inference time (entire dataset): 0.645 seconds (645.3 ms)
+[INFO    main                 ]   Per data point: 0.045 ms (44.8 μs)
+[INFO    main                 ]   Throughput: 22316.2 data points/second
+[INFO    main                 ] INA219 power (during inference, 7 samples):
+[INFO    main                 ]   Bus voltage:  avg 5.005 V  (min 4.992, max 5.052)
+[INFO    main                 ]   Shunt voltage: avg 32.824 mV
+[INFO    main                 ]   Current:      avg 327.943 mA  (min 316.500, max 346.700)
+[INFO    main                 ]   Power:        avg 1636.000 mW  (min 1580.000, max 1730.000)
+[INFO    main                 ]   Energy:       1145.200 mJ
+[INFO    main                 ]   Avg power per data point: 1636.000 mW
+[INFO    main                 ]   Energy per data point: 0.079528 mJ
+[INFO    main                 ] Model latency (entire dataset): 1.937 seconds (1936.9 ms)
+[INFO    main                 ]   Per data point: 0.135 ms
