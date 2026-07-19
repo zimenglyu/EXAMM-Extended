@@ -87,17 +87,28 @@ int main() {
         return 1;
     }
 
-    // --- Peak detection state, adapted from the PulseSensor Amped Arduino algorithm ---
+    // --- Peak detection state ---
     int   signalValue   = 0;
     int   threshold      = 550;   // adjust after watching raw values printed below
-    int   P               = 512;   // running peak
-    int   T               = 512;   // running trough
+    int   P               = 512;   // running peak (reset each beat cycle)
+    int   T               = 512;   // running trough (reset each beat cycle)
     bool  pulseDetected  = false;
     auto  lastBeatTime    = std::chrono::steady_clock::now();
-    double bpm            = 0.0;
     int   sampleCount     = 0;
 
-    printf("Starting pulse read. Place finger/earlobe on sensor.\n");
+    // Refractory period: ignore any new beat within this many ms of the last one.
+    // 250ms = max detectable 240 BPM, well above any real resting/exercise HR,
+    // and long enough to reject double-triggers from noisy wiggles near threshold.
+    const double REFRACTORY_MS = 250.0;
+
+    // Rolling average of the last N beat intervals, so a single noisy interval
+    // doesn't swing the displayed BPM wildly.
+    const int AVG_WINDOW = 8;
+    double ibiHistory[AVG_WINDOW];
+    int    ibiCount = 0;   // how many valid intervals collected so far (caps at AVG_WINDOW)
+    int    ibiIndex = 0;   // next slot to write
+
+    printf("Starting pulse read. Place finger/earlobe on sensor, press firmly, avoid ambient light.\n");
     printf("Uncomment the raw print line below to calibrate 'threshold' first.\n\n");
 
     while (true) {
@@ -107,24 +118,37 @@ int main() {
         if (signalValue > P) P = signalValue;
         if (signalValue < T) T = signalValue;
 
-        if (signalValue > threshold && !pulseDetected) {
-            pulseDetected = true;
-            auto now = std::chrono::steady_clock::now();
-            double intervalMs = std::chrono::duration<double, std::milli>(now - lastBeatTime).count();
-            lastBeatTime = now;
+        auto now = std::chrono::steady_clock::now();
+        double sinceLastBeatMs = std::chrono::duration<double, std::milli>(now - lastBeatTime).count();
 
-            if (intervalMs > 300 && intervalMs < 2000) { // reject noise: 30-200 BPM range
-                bpm = 60000.0 / intervalMs;
-                printf("Beat! Interval: %.0f ms  BPM: %.1f\n", intervalMs, bpm);
+        if (signalValue > threshold && !pulseDetected && sinceLastBeatMs > REFRACTORY_MS) {
+            pulseDetected = true;
+
+            if (sinceLastBeatMs < 2000) { // upper bound only; refractory already enforces lower bound
+                ibiHistory[ibiIndex] = sinceLastBeatMs;
+                ibiIndex = (ibiIndex + 1) % AVG_WINDOW;
+                if (ibiCount < AVG_WINDOW) ibiCount++;
+
+                double sum = 0;
+                for (int i = 0; i < ibiCount; i++) sum += ibiHistory[i];
+                double avgIbi = sum / ibiCount;
+                double bpm = 60000.0 / avgIbi;
+
+                printf("Beat! Interval: %.0f ms  Instant BPM: %.1f  Avg(%d) BPM: %.1f\n",
+                       sinceLastBeatMs, 60000.0 / sinceLastBeatMs, ibiCount, bpm);
             }
+
+            lastBeatTime = now;
+            // reset peak/trough tracking for the next beat cycle
+            P = signalValue;
+            T = signalValue;
         } else if (signalValue < threshold) {
             pulseDetected = false;
         }
 
-        if (++sampleCount % 500 == 0) {
-            P -= (P - T) / 4;
-            T += (P - T) / 4;
-            threshold = T + (P - T) * 0.6;
+        // slowly adapt threshold toward 60% between trough and peak seen so far
+        if (++sampleCount % 100 == 0 && P > T) {
+            threshold = T + (int)((P - T) * 0.6);
         }
 
         // printf("raw: %d\n", signalValue); // uncomment for calibration
