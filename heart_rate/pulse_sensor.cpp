@@ -15,6 +15,7 @@
 //   MCP3008 DOUT     -> Pi SPI0 MISO  (GPIO9  / pin21)
 //   MCP3008 DIN      -> Pi SPI0 MOSI  (GPIO10 / pin19)
 //   MCP3008 CS       -> Pi SPI0 CE0   (GPIO8  / pin24)
+//   0.1uF ceramic capacitor across MCP3008 VDD <-> GND, as close to the chip as possible
 //
 // Setup:
 //   sudo raspi-config -> Interface Options -> SPI -> Enable -> reboot
@@ -81,6 +82,24 @@ int readADC(int channel) {
     return ((rx[1] & 0x03) << 8) | rx[2];
 }
 
+// Simple moving-average low-pass filter to smooth out high-frequency noise
+// (e.g. mains hum picked up when touching the sensor) while preserving the
+// much slower heartbeat waveform (~1 Hz).
+const int FILTER_WINDOW = 15; // ~30ms window at 2ms sampling
+int filterBuf[FILTER_WINDOW] = {0};
+int filterIndex = 0;
+int filterCount = 0;
+long filterSum = 0;
+
+int smooth(int rawValue) {
+    filterSum -= filterBuf[filterIndex];
+    filterBuf[filterIndex] = rawValue;
+    filterSum += rawValue;
+    filterIndex = (filterIndex + 1) % FILTER_WINDOW;
+    if (filterCount < FILTER_WINDOW) filterCount++;
+    return (int)(filterSum / filterCount);
+}
+
 int main() {
     if (!spiInit()) {
         fprintf(stderr, "Failed to init SPI. Is SPI enabled (raspi-config) and did you reboot?\n");
@@ -89,7 +108,7 @@ int main() {
 
     // --- Peak detection state ---
     int   signalValue   = 0;
-    int   threshold      = 550;   // adjust after watching raw values printed below
+    int   threshold      = 550;   // adjust after watching raw/filtered values (see calibration line below)
     int   P               = 512;   // running peak (reset each beat cycle)
     int   T               = 512;   // running trough (reset each beat cycle)
     bool  pulseDetected  = false;
@@ -109,11 +128,14 @@ int main() {
     int    ibiIndex = 0;   // next slot to write
 
     printf("Starting pulse read. Place finger/earlobe on sensor, press firmly, avoid ambient light.\n");
-    printf("Uncomment the raw print line below to calibrate 'threshold' first.\n\n");
+    printf("Uncomment the calibration print line below if you need to check raw/filtered values.\n\n");
 
     while (true) {
-        signalValue = readADC(ADC_CHANNEL);
-        if (signalValue < 0) break; // SPI error
+        int raw = readADC(ADC_CHANNEL);
+        if (raw < 0) break; // SPI error
+        signalValue = smooth(raw);
+
+        // printf("raw: %d  filtered: %d\n", raw, signalValue); // uncomment for calibration
 
         if (signalValue > P) P = signalValue;
         if (signalValue < T) T = signalValue;
@@ -134,7 +156,8 @@ int main() {
                 double avgIbi = sum / ibiCount;
                 double bpm = 60000.0 / avgIbi;
 
-                printf("raw: %d\n", signalValue);  // uncomment this
+                printf("Beat! Interval: %.0f ms  Instant BPM: %.1f  Avg(%d) BPM: %.1f\n",
+                       sinceLastBeatMs, 60000.0 / sinceLastBeatMs, ibiCount, bpm);
             }
 
             lastBeatTime = now;
@@ -149,8 +172,6 @@ int main() {
         if (++sampleCount % 100 == 0 && P > T) {
             threshold = T + (int)((P - T) * 0.6);
         }
-
-        // printf("raw: %d\n", signalValue); // uncomment for calibration
 
         std::this_thread::sleep_for(std::chrono::milliseconds(2)); // ~500 Hz sample rate
     }
