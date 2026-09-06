@@ -14,14 +14,14 @@
 # Name of the job - You'll probably want to customize this.
 #SBATCH -J 10k_10
 
-#SBATCH -A cis251123
+#SBATCH -A <your project name>
 
 # Standard out and Standard Error output files
 #SBATCH -o examm_%x_%j.output
 #SBATCH -e examm_%x_%j.error
 
 #To send emails, set the adcdress below and remove one of the "#" signs.
-#SBATCH --mail-user=zlyu@kean.edu
+#SBATCH --mail-user=<your email address>
 
 # notify on state change: BEGIN, END, FAIL or ALL
 #SBATCH --mail-type=ALL
