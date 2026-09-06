@@ -20,6 +20,7 @@ using std::vector;
 #include "common/process_arguments.hxx"
 #include "examm/examm.hxx"
 #include "mpi.h"
+#include "mpi/pi_sender.hxx"
 #include "rnn/generate_nn.hxx"
 #include "time_series/time_series.hxx"
 #include "weights/weight_rules.hxx"
@@ -36,6 +37,29 @@ vector<string> arguments;
 
 EXAMM* examm;
 WeightUpdate* weight_update_method;
+
+// optional: only created when --send_to_pi is given. --pi_host/--pi_port
+// override these defaults from the command line.
+const string DEFAULT_PI_HOST = "192.168.0.70";
+const int32_t DEFAULT_PI_PORT = 5555;
+PiSender* pi_sender = NULL;
+int32_t pi_last_sent_generation_id = -1;
+
+// sends the global best genome to the pi if it changed since the last send
+void send_best_genome_to_pi() {
+    RNN_Genome* best = examm->get_best_genome();
+    if (best == NULL || best->get_generation_id() == pi_last_sent_generation_id) {
+        return;
+    }
+    pi_last_sent_generation_id = best->get_generation_id();
+
+    char* byte_array;
+    int32_t length;
+    best->write_to_array(&byte_array, length);
+    pi_sender->enqueue(byte_array, length);
+    free(byte_array);
+    Log::info("queued global best genome %d for the pi\n", pi_last_sent_generation_id);
+}
 
 bool finished = false;
 
@@ -169,6 +193,9 @@ void master(int32_t max_rank) {
 
             examm_mutex.lock();
             examm->insert_genome(genome);
+            if (pi_sender != NULL) {
+                send_best_genome_to_pi();
+            }
             examm_mutex.unlock();
 
             // delete the genome as it won't be used again, a copy was inserted
@@ -264,7 +291,21 @@ int main(int argc, char** argv) {
     if (rank == 0) {
         write_time_series_to_file(arguments, time_series_sets);
         examm = generate_examm_from_arguments(arguments, time_series_sets, weight_rules, seed_genome);
+
+        if (argument_exists(arguments, "--send_to_pi")) {
+            string pi_host = DEFAULT_PI_HOST;
+            int32_t pi_port = DEFAULT_PI_PORT;
+            get_argument(arguments, "--pi_host", false, pi_host);
+            get_argument(arguments, "--pi_port", false, pi_port);
+            pi_sender = new PiSender(pi_host, pi_port);
+        }
+
         master(max_rank);
+
+        if (pi_sender != NULL) {
+            send_best_genome_to_pi();  // make sure the final best is delivered
+            delete pi_sender;          // waits for the queue to drain
+        }
     } else {
         worker(rank);
     }
