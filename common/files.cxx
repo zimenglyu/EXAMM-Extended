@@ -27,6 +27,8 @@ using std::string;
 
 typedef struct stat Stat;
 
+#include <cstdint>
+
 #include "files.hxx"
 
 string get_file_as_string(string file_path) noexcept(false) {
