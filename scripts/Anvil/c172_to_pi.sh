@@ -16,7 +16,7 @@
 # cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
 
 #SBATCH -J c172_to_pi
-#SBATCH -A <your project name>
+#SBATCH -A cis251123
 #SBATCH -o examm_%x_%j.output
 #SBATCH -e examm_%x_%j.error
 #SBATCH --mail-user=<your email address>
