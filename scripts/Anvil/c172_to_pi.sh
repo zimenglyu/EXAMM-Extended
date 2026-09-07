@@ -37,7 +37,7 @@ module load libtiff
 
 # forward this compute node's $PI_PORT to the login node, where the pi's
 # reverse tunnel is listening
-ssh -N -o ExitOnForwardFailure=yes -o BatchMode=yes -L $PI_PORT:localhost:$PI_PORT $LOGIN_NODE &
+ssh -N -o ExitOnForwardFailure=yes -o BatchMode=yes -o StrictHostKeyChecking=accept-new -L $PI_PORT:localhost:$PI_PORT $LOGIN_NODE &
 TUNNEL_PID=$!
 sleep 3
 if ! kill -0 $TUNNEL_PID 2>/dev/null; then
