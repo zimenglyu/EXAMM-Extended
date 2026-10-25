@@ -15,7 +15,7 @@ bp_iterations = 10
 output_directory = 'experiments/rec_time_delay_dist/results/control/'
 node_types = [ 'simple', 'delta' ]
 parallelism = 9
-version = "multithreaded"
+version = "mpi"
 
 [examm.rec]
 min = 1

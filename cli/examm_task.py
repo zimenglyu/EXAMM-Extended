@@ -92,14 +92,12 @@ class ExammTask(ConfigToArg):
             raise Exception(f"Configuration option 'version' is required but was not found in {file_path}")
         
         self.version = str(self.examm_config['version']).lower()
-        if self.version in ['mt', 'multithreaded']:
-            self.version = 'mt'
-        elif self.version == 'mpi':
-            self.version = 'mpi'
+        if self.version != 'mpi':
+            raise Exception("'examm.version' must be 'mpi'")
 
         # https://stackoverflow.com/questions/1006289/how-to-find-out-the-number-of-cpus-using-python
         # "parallelism": lambda: len(os.sched_getaffinity(0)) + 1,
-        # Since the master process is usually idle, it is good to use one more thread than the number of threads on the cpu.
+        # Since the master process is usually idle, it is good to use one more MPI process than the number of CPUs.
         self.parallelism = len(os.sched_getaffinity(0)) + 1
         
         if 'parallelism' in self.examm_config:
@@ -117,12 +115,9 @@ class ExammTask(ConfigToArg):
             p.mkdir(parents=True, exist_ok=True)
 
     def to_command(self):
-        if self.version == 'mpi':
-            command = ['mpirun']
-            command = command + ['-np', str(self.parallelism)]
-            command.append('./build/mpi/examm_mpi')
-        else:
-            command = ['./build/multithreaded/examm_mt', '--number_threads', str(self.parallelism)]
+        command = ['mpirun']
+        command = command + ['-np', str(self.parallelism)]
+        command.append('./build/mpi/examm_mpi')
          
         command = command + self.to_args()
         return command

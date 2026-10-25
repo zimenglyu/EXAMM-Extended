@@ -15,7 +15,7 @@ bp_iterations = 10
 output_directory = 'experiments/rec_time_delay_dist/results/hist_global/'
 node_types = [ 'simple', 'delta' ]
 parallelism = 9
-version = "multithreaded"
+version = "mpi"
 
 # Experiment specific parameters
 [examm.rec]

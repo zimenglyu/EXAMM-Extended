@@ -11,7 +11,6 @@
   - [Ubuntu / WSL Setup](#ubuntu--wsl-setup)
   - [Building](#building)
 - [Quickstart](#quickstart)
-  - [Multithreaded Version](#multithreaded-version)
   - [MPI Version](#mpi-version)
 - [Managing Datasets](#managing-datasets)
 - [Running EXAMM and EXA-GP](#running-examm-and-exa-gp)
@@ -42,7 +41,7 @@ EXAMM has since been extended to the Evolutionary Exploration of Augmenting Gene
 
 [^exagp_min]: Jared Murphy, Travis Desell. **[Minimizing the EXA-GP Graph-Based Genetic Programming Algorithm for Interpretable Time Series Forecasting](link).** *Proceedings of the Genetic and Evolutionary Computation Conference Companion.* Melbourne, Australia. July 14-18, 2024.
 
-Implemented in C++, EXAMM and EXA-GP are designed for efficient CPU-based computation (which for time series forecasting RNNs are typically more performant than GPUs) and offers excellent scalability due to its asynchronous island based distributed strategy (see above) with repopulation events which prune evolutionary dead ends to improve perforance[^examm_islands]. They employ a distributed architecture where worker processes handle RNN training while a main process manages population evolution and orchestrates the overall evolutionary process.  This allows for better performance via either multithreaded execution or distributed execution on high performance computing clusters via the message passing interface (MPI).
+Implemented in C++, EXAMM and EXA-GP are designed for efficient CPU-based computation (which for time series forecasting RNNs are typically more performant than GPUs) and offers excellent scalability due to its asynchronous island based distributed strategy (see above) with repopulation events which prune evolutionary dead ends to improve perforance[^examm_islands]. They employ a distributed architecture where worker processes handle RNN training while a main process manages population evolution and orchestrates the overall evolutionary process through the message passing interface (MPI).
 
 [^examm_islands]: Zimeng Lyu, Joshua Karns, AbdElRahman ElSaid, Mohamed Mkaouer, Travis Desell. **[Improving Distributed Neuroevolution Using Island Extinction and Repopulation](https://www.se.rit.edu/~travis/papers/2021_EvoStar_Repopulation.pdf).** *The 24th International Conference on the Applications of Evolutionary Computation (EvoStar: EvoApps 2021).*
 
@@ -89,13 +88,7 @@ make
 
 # Quickstart
 
-For quick start with example datasets using basic settings, the following scripts provide examples of running EXAMM on the coal benchmark datasets provided in this repository running either the multithreaded version or the MPI version.  For a deeper dive on EXAMM/EXA-GP's command line arguments please see the [Running EXAMM and EXA-GP](#running-examm-and-exa-gp) section.
-
-## [Multithreaded Version](./scripts/base_run/coal_mt.sh)
-```bash
-# In the root directory:
-sh scripts/base_run/coal_mt.sh
-```
+For a quick start with example datasets using basic settings, the following script runs EXAMM on the coal benchmark datasets provided in this repository with MPI. For a deeper dive on EXAMM/EXA-GP's command line arguments please see the [Running EXAMM and EXA-GP](#running-examm-and-exa-gp) section.
 
 ## [MPI Version](./scripts/base_run/coal_mpi.sh)
 ```bash
@@ -150,10 +143,10 @@ Or can be `avg_std_dev` which does computes average and standard deviation of th
 
 $$x = \frac{x - training_{avg}}{training_{std}}$$
 
-Putting this all together, given the following command line options and the above example files, we can run the multithreaded version of EXAMM (with `...` being other options described in the upcoming section):
+Putting this all together, given the following command line options and the above example files, we can run EXAMM with MPI (with `...` being other options described in the upcoming section):
 
 ```
-./multithreaded/examm_mt --training_filenames file1.csv file2.csv --validation_filenames file3.csv --input_parameter_names a b d --output_parameter_names c d --time_offset 1 --train_sequence_length 50 --normalize avg_std_dev ...
+mpirun -np <processes> ./mpi/examm_mpi --training_filenames file1.csv file2.csv --validation_filenames file3.csv --input_parameter_names a b d --output_parameter_names c d --time_offset 1 --train_sequence_length 50 --normalize avg_std_dev ...
 ```
 
 Note that the min/max or avg/std dev values from the training data are used to normalize the validation data.

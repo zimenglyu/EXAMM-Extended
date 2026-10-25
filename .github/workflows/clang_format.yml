@@ -11,4 +11,4 @@ jobs:
       uses: jidicula/clang-format-action@v4.11.0
       with:
         clang-format-version: '18'
-        include-regex: '(common|examm|mpi|multithreaded|rnn|rnn_examples|rnn_tests|time_series|weights|word_series)'
+        include-regex: '(common|examm|mpi|rnn|rnn_examples|rnn_tests|time_series|weights|word_series)'

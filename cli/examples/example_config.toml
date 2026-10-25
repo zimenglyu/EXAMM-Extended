@@ -40,11 +40,11 @@ output_directory = 'build/test_output'
 node_types = [ 'simple', 'UGRNN', 'MGU', 'GRU', 'delta', 'LSTM' ]
 
 # OPTIONAL PARAMETER: the default value will be 1 + the number of cores on the machine
-# 9 threads or processes, depending on whether you're using the MPI or multithreaded version
+# Number of MPI processes to use
 parallelism = 9
 
-# Either MPI ("mpi", "MPI") or multithreaded ("mt", "MT", "multithreaded", "MULTITHREADED")
-version = "multithreaded"
+# MPI
+version = "mpi"
 
 [examm.rec]
 min = 5
