@@ -49,7 +49,6 @@ module --force purge
 module load gcc
 module load cmake 
 module load openmpi
-module load libtiff
 
 MAX_GENOME=4000
 NUM_ISLAND=10

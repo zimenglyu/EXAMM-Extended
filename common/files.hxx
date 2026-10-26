@@ -1,5 +1,5 @@
-#ifndef EXACT_BOINC_COMMON_HXX
-#define EXACT_BOINC_COMMON_HXX
+#ifndef EXAMM_COMMON_FILES_HXX
+#define EXAMM_COMMON_FILES_HXX
 
 #include <stdexcept>
 using std::runtime_error;

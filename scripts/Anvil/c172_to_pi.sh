@@ -33,7 +33,6 @@ module --force purge
 module load gcc
 module load cmake
 module load openmpi
-module load libtiff
 
 # forward this compute node's $PI_PORT to the login node, where the pi's
 # reverse tunnel is listening

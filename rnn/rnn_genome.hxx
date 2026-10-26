@@ -29,7 +29,7 @@ using std::vector;
 #include "weights/weight_update.hxx"
 // #include "word_series/word_series.hxx"
 
-// mysql can't handle the max float value for some reason
+    // Avoid the maximum floating-point value as a sentinel.
 #define EXAMM_MAX_DOUBLE 10000000
 
 extern vector<int32_t> dnas_node_types;

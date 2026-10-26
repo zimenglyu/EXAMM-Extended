@@ -1,5 +1,3 @@
-> **Note:** This is an extended repository based on the original [EXAMM/EXACT project](https://github.com/travisdesell/exact). As one of the main contributors to the original project, I am extending EXAMM here for future research purposes.
-
 ![EXAMM Architecture](images/examm.png)
 
 # Table of Contents
@@ -22,7 +20,6 @@
     - [Training Optimizers](#training-optimizers)
   - [Tracking and Managing Evolved Networks](#tracking-and-managing-evolved-networks)
   - [Using Evolved Neural Networks for Inference](#using-evolved-neural-networks-for-inference)
-- [Archived: EXACT Project](#archived-exact-project)
 
 
 # EXAMM and EXA-GP Overview
@@ -55,10 +52,7 @@ For OSX we recommend using [Homebrew](https://brew.sh) to handle installing pack
 ```bash
 xcode-select --install
 brew install cmake
-brew install mysql
 brew install open-mpi
-brew install libtiff
-brew install libpng
 brew install clang-format
 ```
 
@@ -68,10 +62,7 @@ For Ubuntu (including Ubuntu running under Windows Subsystem for Linux) use `apt
 ```bash
 sudo apt update
 sudo apt install build-essential cmake
-sudo apt install libmysqlclient-dev
 sudo apt install libopenmpi-dev openmpi-bin
-sudo apt install libtiff-dev
-sudo apt install libpng-dev
 sudo apt install clang-format
 ```
 
@@ -324,10 +315,6 @@ As discussed in the previous section, EXAMM will save the best found generated n
 * [evaluate_rnn.cxx](./rnn_examples/evaluate_rnn.cxx) can take a target set of testing files (in the expected format from datasets above) which will evaluate the input RNN (specified by the `--genome_file <file.bin>` command line argument) on the testing files (specified by `--testing_filenames <str>+`). Note that the genome binary files save the normalization values and methodology used on the **training data** so that these same normalization values are used on the testing data (this methodology does not cheat by utilizing normalization statistics from potentially unknown test data).  This will write files with the predictions of the RNN or genetic program to the specified `--output_directory <str>` with the output predicition filenames as `<input_test_file>_predictions.csv`.
 
 
-
-# Archived: EXACT Project
-
-EXACT (Evolutionary eXploration of Augmenting Convolutional Topologies) was a predecessor project focused on evolving convolutional neural networks. While the source code and documentation for EXACT is still available in this repository, setting it up requires specific configurations and dependencies. If you're interested in using EXACT, please contact us for instruction on setup and implementation. We're happy to help you get started with the system.
 
 ![DS2L Banner](images/lab_logo_banner.png)
 
