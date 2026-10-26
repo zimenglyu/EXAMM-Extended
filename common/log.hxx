@@ -79,6 +79,12 @@ class Log {
     static map<thread::id, string> log_ids;
 
     /**
+     * Optional per-thread context appended to message headers. The context does
+     * not affect the log file selected by the thread id.
+     */
+    static thread_local string message_context;
+
+    /**
      *  The MPI process rank for this Log instance. Set to -1 if not specified or not using MPI.
      */
     static int32_t process_rank;
@@ -181,6 +187,17 @@ class Log {
      * \param human_readable_id a human readable thread id
      */
     static void set_id(string human_readable_id);
+
+    /**
+     * Adds context to message headers written by the current thread without
+     * changing that thread's log file.
+     *
+     * \param context a human-readable context string for the current thread
+     */
+    static void set_message_context(string context);
+
+    /** Clears the message-header context for the current thread. */
+    static void clear_message_context();
 
     /**
      * Releases a the human readable thread id previously set

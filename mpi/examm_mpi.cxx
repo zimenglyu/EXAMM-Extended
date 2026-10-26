@@ -209,7 +209,9 @@ void master(int32_t max_rank) {
 }
 
 void worker(int32_t rank) {
-    Log::set_id("worker_" + to_string(rank));
+    const string worker_log_id = "worker_" + to_string(rank);
+    const bool per_genome_worker_logs = argument_exists(arguments, "--per_genome_worker_logs");
+    Log::set_id(worker_log_id);
 
     while (true) {
         Log::debug("sending work request!\n");
@@ -230,17 +232,31 @@ void worker(int32_t rank) {
         } else if (tag == GENOME_LENGTH_TAG) {
             Log::debug("received genome!\n");
             RNN_Genome* genome = receive_genome_from(0);
+            const int32_t generation_id = genome->get_generation_id();
 
-            // have each worker write the backproagation to a separate log file
-            string log_id = "genome_" + to_string(genome->get_generation_id()) + "_worker_" + to_string(rank);
-            Log::set_id(log_id);
+            string genome_log_id = "genome_" + to_string(generation_id) + "_worker_" + to_string(rank);
+            if (per_genome_worker_logs) {
+                // Preserve the legacy per-genome diagnostic log layout when explicitly requested.
+                Log::set_id(genome_log_id);
+            } else {
+                // Keep a single worker log while marking every training message with its genome generation.
+                Log::set_message_context("generation=" + to_string(generation_id));
+                Log::info("beginning backpropagation\n");
+            }
+
             genome->backpropagate_stochastic(
                 training_inputs, training_outputs, validation_inputs, validation_outputs, weight_update_method
             );
-            Log::release_id(log_id);
 
-            // go back to the worker's log for MPI communication
-            Log::set_id("worker_" + to_string(rank));
+            if (per_genome_worker_logs) {
+                Log::release_id(genome_log_id);
+
+                // Return to the worker's log for MPI communication.
+                Log::set_id(worker_log_id);
+            } else {
+                Log::info("finished backpropagation\n");
+                Log::clear_message_context();
+            }
 
             send_genome_to(0, genome);
 
@@ -252,7 +268,7 @@ void worker(int32_t rank) {
     }
 
     // release the log file for the worker communication
-    Log::release_id("worker_" + to_string(rank));
+    Log::release_id(worker_log_id);
 }
 
 int main(int argc, char** argv) {

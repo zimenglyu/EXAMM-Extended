@@ -31,6 +31,7 @@ int32_t Log::restricted_rank = -1;
 string Log::output_directory = "./logs";
 
 map<thread::id, string> Log::log_ids;
+thread_local string Log::message_context = "";
 map<string, LogFile*> Log::output_files;
 
 shared_mutex Log::log_ids_mutex;
@@ -120,10 +121,20 @@ void Log::set_id(string human_readable_id) {
     log_ids_mutex.unlock();
 }
 
+void Log::set_message_context(string context) {
+    message_context = context;
+}
+
+void Log::clear_message_context() {
+    message_context = "";
+}
+
 void Log::release_id(string human_readable_id) {
     // cerr << "locking thread from human readable id: '" << human_readable_id << "'" << endl;
     log_ids_mutex.lock();
     // cerr << "releasing thread from human readable id: '" << human_readable_id << "'" << endl;
+
+    clear_message_context();
 
     if (output_files.count(human_readable_id) == 0) {
         // this file was never created and written to
@@ -164,8 +175,14 @@ void Log::write_message(
     char header_buffer[max_header_length];
     // we only need to print the header for some messages
     if (print_header) {
-        // snprintf(header_buffer, max_header_length, "[%-8s %-20s]", message_type, human_readable_id.c_str());
-        snprintf(header_buffer, max_header_length, "[%-7s %-21s]", message_type, human_readable_id.c_str());
+        if (message_context == "") {
+            snprintf(header_buffer, max_header_length, "[%-7s %-21s]", message_type, human_readable_id.c_str());
+        } else {
+            snprintf(
+                header_buffer, max_header_length, "[%-7s %-21s %s]", message_type, human_readable_id.c_str(),
+                message_context.c_str()
+            );
+        }
     }
 
     // print the actual message contents into a string
