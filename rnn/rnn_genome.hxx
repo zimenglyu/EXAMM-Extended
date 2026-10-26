@@ -10,6 +10,9 @@ using std::ostream;
 #include <map>
 using std::map;
 
+#include <memory>
+using std::shared_ptr;
+
 #include <random>
 using std::minstd_rand0;
 using std::mt19937;
@@ -20,6 +23,7 @@ using std::uniform_real_distribution;
 using std::vector;
 
 #include "common/random.hxx"
+#include "evaluation.hxx"
 #include "rnn.hxx"
 #include "rnn_edge.hxx"
 #include "rnn_node_interface.hxx"
@@ -60,6 +64,11 @@ class RNN_Genome {
     double best_validation_mse;
     double best_validation_mae;
     vector<double> best_parameters;
+
+    // Policies are run-level configuration and deliberately do not participate
+    // in genome serialization.  MPI ranks reconstruct and attach the same
+    // immutable plan from their command-line arguments.
+    shared_ptr<const FitnessPolicy> fitness_policy;
 
     minstd_rand0 generator;
 
@@ -129,6 +138,10 @@ class RNN_Genome {
     double get_best_validation_softmax() const;
     double get_best_validation_mse() const;
     double get_best_validation_mae() const;
+    ValidationMetrics get_validation_metrics() const;
+    void set_validation_metrics(const ValidationMetrics& metrics);
+    void set_fitness_policy(shared_ptr<const FitnessPolicy> policy);
+    void set_evaluation_plan(const EvaluationPlan& plan);
 
     void set_normalize_bounds(
         string _normalize_type, const map<string, double>& _normalize_mins, const map<string, double>& _normalize_maxs,
@@ -197,21 +210,16 @@ class RNN_Genome {
     void set_initial_parameters(vector<double> parameters);  // INFO: ADDED BY ABDELRAHMAN TO USE FOR TRANSFER LEARNING
     void apply_homeostasis(double downscale_factor);          // SHY: multiplicative weight downscaling
 
-    void get_analytic_gradient(
-        vector<RNN*>& rnns, const vector<double>& parameters, const vector<vector<vector<double> > >& inputs,
-        const vector<vector<vector<double> > >& outputs, double& mse, vector<double>& analytic_gradient, bool training
-    );
-
-    void backpropagate(
-        const vector<vector<vector<double> > >& inputs, const vector<vector<vector<double> > >& outputs,
-        const vector<vector<vector<double> > >& validation_inputs,
-        const vector<vector<vector<double> > >& validation_outputs, WeightUpdate* weight_update_method
-    );
-
     void backpropagate_stochastic(
         const vector<vector<vector<double> > >& inputs, const vector<vector<vector<double> > >& outputs,
         const vector<vector<vector<double> > >& validation_inputs,
         const vector<vector<vector<double> > >& validation_outputs, WeightUpdate* weight_update_method
+    );
+    void backpropagate_stochastic(
+        const vector<vector<vector<double> > >& inputs, const vector<vector<vector<double> > >& outputs,
+        const vector<vector<vector<double> > >& validation_inputs,
+        const vector<vector<vector<double> > >& validation_outputs, WeightUpdate* weight_update_method,
+        const EvaluationPlan& evaluation_plan
     );
 
     double get_softmax(

@@ -219,14 +219,8 @@ int main(int argc, char** argv) {
     get_argument(arguments, "--sequence_length_lower_bound", false, sequence_length_lower_bound);
     get_argument(arguments, "--sequence_length_upper_bound", false, sequence_length_upper_bound);
 
-    if (argument_exists(arguments, "--stochastic")) {
-        Log::info("running stochastic back prop \n");
-        genome->backpropagate_stochastic(
-            training_inputs, training_outputs, test_inputs, test_outputs, weight_update_method
-        );
-    } else {
-        genome->backpropagate(training_inputs, training_outputs, test_inputs, test_outputs, weight_update_method);
-    }
+    Log::info("running stochastic back prop \n");
+    genome->backpropagate_stochastic(training_inputs, training_outputs, test_inputs, test_outputs, weight_update_method);
 
     Log::info("Training finished\n");
     genome->get_weights(best_parameters);

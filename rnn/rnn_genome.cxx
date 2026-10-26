@@ -25,9 +25,6 @@ using std::endl;
 using std::minstd_rand0;
 using std::uniform_real_distribution;
 
-#include <thread>
-using std::thread;
-
 #include <random>
 using std::minstd_rand0;
 using std::uniform_int_distribution;
@@ -197,6 +194,7 @@ RNN_Genome* RNN_Genome::copy() {
     other->best_validation_mse = best_validation_mse;
     other->best_validation_mae = best_validation_mae;
     other->best_parameters = best_parameters;
+    other->fitness_policy = fitness_policy;
 
     other->input_parameter_names = input_parameter_names;
     other->output_parameter_names = output_parameter_names;
@@ -926,8 +924,10 @@ void RNN_Genome::set_generation_id(int32_t _generation_id) {
 }
 
 double RNN_Genome::get_fitness() const {
+    if (fitness_policy != nullptr) {
+        return fitness_policy->score(get_validation_metrics());
+    }
     return best_validation_mse;
-    // return best_validation_mae;
 }
 
 double RNN_Genome::get_best_validation_mse() const {
@@ -936,6 +936,23 @@ double RNN_Genome::get_best_validation_mse() const {
 
 double RNN_Genome::get_best_validation_mae() const {
     return best_validation_mae;
+}
+
+ValidationMetrics RNN_Genome::get_validation_metrics() const {
+    return {best_validation_mse, best_validation_mae};
+}
+
+void RNN_Genome::set_validation_metrics(const ValidationMetrics& metrics) {
+    best_validation_mse = metrics.mse;
+    best_validation_mae = metrics.mae;
+}
+
+void RNN_Genome::set_fitness_policy(shared_ptr<const FitnessPolicy> policy) {
+    fitness_policy = policy;
+}
+
+void RNN_Genome::set_evaluation_plan(const EvaluationPlan& plan) {
+    set_fitness_policy(plan.fitness_policy_handle());
 }
 
 void RNN_Genome::set_generated_by(string type) {
@@ -950,158 +967,23 @@ bool RNN_Genome::sanity_check() {
     return true;
 }
 
-void forward_pass_thread_regression(
-    RNN* rnn, const vector<double>& parameters, const vector<vector<double> >& inputs,
-    const vector<vector<double> >& outputs, int32_t i, double* mses, bool use_dropout, bool training,
-    double dropout_probability
-) {
-    rnn->set_weights(parameters);
-    rnn->forward_pass(inputs, use_dropout, training, dropout_probability);
-    mses[i] = rnn->calculate_error_mse(outputs);
-    // mses[i] = rnn->calculate_error_mae(outputs);
-
-    Log::trace("mse[%d]: %lf\n", i, mses[i]);
-}
-
-void forward_pass_thread_classification(
-    RNN* rnn, const vector<double>& parameters, const vector<vector<double> >& inputs,
-    const vector<vector<double> >& outputs, int32_t i, double* mses, bool use_dropout, bool training,
-    double dropout_probability
-) {
-    rnn->set_weights(parameters);
-    rnn->forward_pass(inputs, use_dropout, training, dropout_probability);
-    mses[i] = rnn->calculate_error_softmax(outputs);
-    // mses[i] = rnn->calculate_error_mae(outputs);
-
-    Log::trace("mse[%d]: %lf\n", i, mses[i]);
-}
-
-void RNN_Genome::get_analytic_gradient(
-    vector<RNN*>& rnns, const vector<double>& parameters, const vector<vector<vector<double> > >& inputs,
-    const vector<vector<vector<double> > >& outputs, double& mse, vector<double>& analytic_gradient, bool training
-) {
-    double* mses = new double[rnns.size()];
-    double mse_sum = 0.0;
-    vector<thread> threads;
-    for (int32_t i = 0; i < (int32_t) rnns.size(); i++) {
-        threads.push_back(thread(
-            forward_pass_thread_regression, rnns[i], parameters, inputs[i], outputs[i], i, mses, use_dropout, training,
-            dropout_probability
-        ));
-    }
-
-    for (int32_t i = 0; i < (int32_t) rnns.size(); i++) {
-        threads[i].join();
-        mse_sum += mses[i];
-    }
-    delete[] mses;
-
-    for (int32_t i = 0; i < (int32_t) rnns.size(); i++) {
-        double d_mse = 0.0;
-        d_mse = mse_sum * (1.0 / outputs[i][0].size()) * 2.0;
-        rnns[i]->backward_pass(d_mse, use_dropout, training, dropout_probability);
-    }
-
-    mse = mse_sum;
-
-    vector<double> current_gradients;
-    analytic_gradient.assign(parameters.size(), 0.0);
-    for (int32_t k = 0; k < (int32_t) rnns.size(); k++) {
-        int32_t current = 0;
-        for (int32_t i = 0; i < rnns[k]->get_number_nodes(); i++) {
-            rnns[k]->get_node(i)->get_gradients(current_gradients);
-
-            for (int32_t j = 0; j < (int32_t) current_gradients.size(); j++) {
-                analytic_gradient[current] += current_gradients[j];
-                current++;
-            }
-        }
-
-        for (int32_t i = 0; i < rnns[k]->get_number_edges(); i++) {
-            analytic_gradient[current] += rnns[k]->get_edge(i)->get_gradient();
-            current++;
-        }
-    }
-}
-
-void RNN_Genome::backpropagate(
-    const vector<vector<vector<double> > >& inputs, const vector<vector<vector<double> > >& outputs,
-    const vector<vector<vector<double> > >& validation_inputs,
-    const vector<vector<vector<double> > >& validation_outputs, WeightUpdate* weight_update_method
-) {
-    // double learning_rate = weight_update_method->get_learning_rate() / inputs.size();
-    // double low_threshold = sqrt(weight_update_method->get_low_threshold() * inputs.size());
-    // double high_threshold = sqrt(weight_update_method->get_high_threshold() * inputs.size());
-
-    int32_t n_series = (int32_t) inputs.size();
-    vector<RNN*> rnns;
-    for (int32_t i = 0; i < n_series; i++) {
-        rnns.push_back(this->get_rnn());
-    }
-    int32_t n_parameters = this->get_number_weights();
-    vector<double> parameters = initial_parameters;
-    vector<double> velocity(n_parameters, 0.0);
-    vector<double> prev_velocity(n_parameters, 0.0);
-    vector<double> analytic_gradient;
-    vector<double> prev_gradient(n_parameters, 0.0);
-
-    double mse;
-    double norm = 0.0;
-
-    // initialize the initial previous values
-    get_analytic_gradient(rnns, parameters, inputs, outputs, mse, analytic_gradient, true);
-    double validation_mse = get_mse(parameters, validation_inputs, validation_outputs);
-    best_validation_mse = validation_mse;
-    best_validation_mae = get_mae(parameters, validation_inputs, validation_outputs);
-    best_parameters = parameters;
-
-    norm = weight_update_method->get_norm(analytic_gradient);
-
-    ofstream* output_log = create_log_file();
-
-    for (int32_t iteration = 0; iteration < bp_iterations; iteration++) {
-        prev_gradient = analytic_gradient;
-        get_analytic_gradient(rnns, parameters, inputs, outputs, mse, analytic_gradient, true);
-        this->set_weights(parameters);
-        validation_mse = get_mse(parameters, validation_inputs, validation_outputs);
-        if (validation_mse < best_validation_mse) {
-            best_validation_mse = validation_mse;
-            best_validation_mae = get_mae(parameters, validation_inputs, validation_outputs);
-            best_parameters = parameters;
-        }
-        norm = weight_update_method->get_norm(analytic_gradient);
-        if (output_log != NULL) {
-            (*output_log) << iteration << " " << mse << " " << validation_mse << " " << best_validation_mse << endl;
-        }
-        weight_update_method->norm_gradients(analytic_gradient, norm);
-        weight_update_method->update_weights(parameters, velocity, prev_velocity, analytic_gradient, iteration);
-        if (weight_decay > 0.0) {
-            double decay_factor = 1.0 - weight_decay;
-            for (int32_t i = 0; i < (int32_t) parameters.size(); i++) {
-                parameters[i] *= decay_factor;
-            }
-        }
-        Log::info(
-            "iteration %10d, mse: %10lf, v_mse: %10lf, bv_mse: %10lf, norm: %lf", iteration, mse, validation_mse,
-            best_validation_mse, norm
-        );
-        Log::info_no_header("\n");
-    }
-
-    RNN* g;
-    while (rnns.size() > 0) {
-        g = rnns.back();
-        rnns.pop_back();
-        delete g;
-    }
-    this->set_weights(best_parameters);
-}
-
 void RNN_Genome::backpropagate_stochastic(
     const vector<vector<vector<double> > >& inputs, const vector<vector<vector<double> > >& outputs,
     const vector<vector<vector<double> > >& validation_inputs,
     const vector<vector<vector<double> > >& validation_outputs, WeightUpdate* weight_update_method
 ) {
+    backpropagate_stochastic(
+        inputs, outputs, validation_inputs, validation_outputs, weight_update_method, default_evaluation_plan()
+    );
+}
+
+void RNN_Genome::backpropagate_stochastic(
+    const vector<vector<vector<double> > >& inputs, const vector<vector<vector<double> > >& outputs,
+    const vector<vector<vector<double> > >& validation_inputs,
+    const vector<vector<vector<double> > >& validation_outputs, WeightUpdate* weight_update_method,
+    const EvaluationPlan& evaluation_plan
+) {
+    set_evaluation_plan(evaluation_plan);
     int32_t n_parameters = this->get_number_weights();
     int32_t n_series = (int32_t) inputs.size();
 
@@ -1130,7 +1012,8 @@ void RNN_Genome::backpropagate_stochastic(
             i, n_series, parameters.size(), inputs.size(), outputs.size(), log_filename.c_str()
         );
         rnn->get_analytic_gradient(
-            parameters, inputs[i], outputs[i], mse, analytic_gradient, use_dropout, true, dropout_probability
+            parameters, inputs[i], outputs[i], mse, analytic_gradient, use_dropout, true, dropout_probability,
+            evaluation_plan.training_loss()
         );
         Log::trace("got analytic gradient.\n");
         norm = weight_update_method->get_norm(analytic_gradient);
@@ -1138,9 +1021,11 @@ void RNN_Genome::backpropagate_stochastic(
     Log::trace("initialized previous values.\n");
 
     // TODO: need to get validation mse on the RNN not the genome
-    double validation_mse = get_mse(parameters, validation_inputs, validation_outputs);
-    best_validation_mse = validation_mse;
-    best_validation_mae = get_mae(parameters, validation_inputs, validation_outputs);
+    ValidationMetrics validation_metrics = {
+        get_mse(parameters, validation_inputs, validation_outputs), get_mae(parameters, validation_inputs, validation_outputs)
+    };
+    double validation_mse = validation_metrics.mse;
+    set_validation_metrics(validation_metrics);
     best_parameters = parameters;
 
     Log::trace("got initial mses.\n");
@@ -1164,7 +1049,7 @@ void RNN_Genome::backpropagate_stochastic(
             prev_gradient = analytic_gradient;
             rnn->get_analytic_gradient(
                 parameters, inputs[random_selection], outputs[random_selection], mse, analytic_gradient, use_dropout,
-                true, dropout_probability
+                true, dropout_probability, evaluation_plan.training_loss()
             );
 
             norm = weight_update_method->get_norm(analytic_gradient);
@@ -1176,8 +1061,7 @@ void RNN_Genome::backpropagate_stochastic(
                 // method to handle it.
                 delete rnn;
                 best_parameters = parameters;
-                this->best_validation_mse = NAN;
-                this->best_validation_mae = NAN;
+                set_validation_metrics({NAN, NAN});
                 return;
             }
 
@@ -1193,11 +1077,14 @@ void RNN_Genome::backpropagate_stochastic(
         }
         this->set_weights(parameters);
         double training_mse = get_mse(parameters, inputs, outputs);
-        validation_mse = get_mse(parameters, validation_inputs, validation_outputs);
+        validation_metrics = {
+            get_mse(parameters, validation_inputs, validation_outputs),
+            get_mae(parameters, validation_inputs, validation_outputs)
+        };
+        validation_mse = validation_metrics.mse;
 
-        if (validation_mse < best_validation_mse) {
-            best_validation_mse = validation_mse;
-            best_validation_mae = get_mae(parameters, validation_inputs, validation_outputs);
+        if (evaluation_plan.checkpoint_policy().should_replace(validation_metrics, get_validation_metrics())) {
+            set_validation_metrics(validation_metrics);
             best_parameters = parameters;
         }
         if (output_log != NULL) {

@@ -41,7 +41,6 @@ do
                 --input_parameter_names $INPUT_PARAMETERS \
                 --output_parameter_names $OUTPUT_PARAMETERS \
                 --bp_iterations $bp_epoch \
-                --stochastic \
                 --rnn_type $rnn_type \
                 --normalize $norm \
                 --num_hidden_layers $num_hidden_layer \

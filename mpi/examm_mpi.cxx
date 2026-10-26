@@ -7,6 +7,9 @@ using std::setw;
 #include <mutex>
 using std::mutex;
 
+#include <memory>
+using std::shared_ptr;
+
 #include <string>
 using std::string;
 
@@ -21,6 +24,7 @@ using std::vector;
 #include "examm/examm.hxx"
 #include "mpi.h"
 #include "mpi/pi_sender.hxx"
+#include "rnn/evaluation.hxx"
 #include "rnn/generate_nn.hxx"
 #include "time_series/time_series.hxx"
 #include "weights/weight_rules.hxx"
@@ -37,6 +41,7 @@ vector<string> arguments;
 
 EXAMM* examm;
 WeightUpdate* weight_update_method;
+shared_ptr<const EvaluationPlan> evaluation_plan;
 
 // optional: only created when --send_to_pi is given. --pi_host/--pi_port
 // override these defaults from the command line.
@@ -103,6 +108,11 @@ RNN_Genome* receive_genome_from(int32_t source) {
     Log::trace("genome_str:\n%s\n", genome_str);
 
     RNN_Genome* genome = new RNN_Genome(genome_str, length);
+    if (evaluation_plan != nullptr) {
+        // Policies are intentionally not serialized with genomes.  Every rank
+        // creates the same run-level plan from its command-line arguments.
+        genome->set_evaluation_plan(*evaluation_plan);
+    }
 
     delete[] genome_str;
     return genome;
@@ -245,7 +255,8 @@ void worker(int32_t rank) {
             }
 
             genome->backpropagate_stochastic(
-                training_inputs, training_outputs, validation_inputs, validation_outputs, weight_update_method
+                training_inputs, training_outputs, validation_inputs, validation_outputs, weight_update_method,
+                *evaluation_plan
             );
 
             if (per_genome_worker_logs) {
@@ -288,6 +299,8 @@ int main(int argc, char** argv) {
     Log::restrict_to_rank(0);
     std::cout << "initailized log!" << std::endl;
 
+    evaluation_plan = evaluation_plan_from_arguments(arguments);
+
     TimeSeriesSets* time_series_sets = NULL;
     time_series_sets = TimeSeriesSets::generate_from_arguments(arguments);
     get_train_validation_data(
@@ -301,6 +314,7 @@ int main(int argc, char** argv) {
     weight_rules->initialize_from_args(arguments);
 
     RNN_Genome* seed_genome = get_seed_genome(arguments, time_series_sets, weight_rules);
+    seed_genome->set_evaluation_plan(*evaluation_plan);
 
     Log::clear_rank_restriction();
 

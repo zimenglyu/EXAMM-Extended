@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 project (EXACT)
 
+enable_testing()
+
 SET (PLATFORM 64)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

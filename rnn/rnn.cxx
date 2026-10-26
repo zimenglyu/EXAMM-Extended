@@ -34,6 +34,7 @@ using std::vector;
 // #include "enarc_node.hxx"
 // #include "enas_dag_node.hxx"
 #include "common/log.hxx"
+#include "evaluation.hxx"
 #include "mgu_node.hxx"
 #include "mse.hxx"
 #include "random_dag_node.hxx"
@@ -456,6 +457,33 @@ void RNN::backward_pass(double error, bool using_dropout, bool training, double 
     }
 }
 
+void RNN::backward_pass(
+    const vector<vector<double> >& output_gradients, bool using_dropout, bool training, double dropout_probability
+) {
+    if (output_gradients.size() != output_nodes.size()) {
+        Log::fatal(
+            "ERROR: output gradient count %d does not match output node count %d.\n", output_gradients.size(),
+            output_nodes.size()
+        );
+        exit(1);
+    }
+
+    for (int32_t i = 0; i < (int32_t) output_nodes.size(); i++) {
+        if (output_gradients[i].size() != output_nodes[i]->output_values.size()) {
+            Log::fatal(
+                "ERROR: output gradient length %d does not match output length %d for output %d.\n",
+                output_gradients[i].size(), output_nodes[i]->output_values.size(), i
+            );
+            exit(1);
+        }
+        output_nodes[i]->error_values = output_gradients[i];
+    }
+
+    // Node implementations already multiply error_values by this scalar.
+    // Passing one therefore propagates the explicitly supplied derivatives.
+    backward_pass(1.0, using_dropout, training, dropout_probability);
+}
+
 double RNN::calculate_error_softmax(const vector<vector<double> >& expected_outputs) {
     double cross_entropy_sum = 0.0;
     double error;
@@ -588,6 +616,15 @@ vector<double> RNN::get_predictions(
     return result;
 }
 
+vector<vector<double> > RNN::get_output_values() const {
+    vector<vector<double> > values;
+    values.reserve(output_nodes.size());
+    for (int32_t i = 0; i < (int32_t) output_nodes.size(); i++) {
+        values.push_back(output_nodes[i]->output_values);
+    }
+    return values;
+}
+
 void RNN::write_predictions(
     string output_filename, const vector<string>& input_parameter_names, const vector<string>& output_parameter_names,
     const vector<vector<double> >& series_data, const vector<vector<double> >& expected_outputs,
@@ -653,13 +690,25 @@ void RNN::get_analytic_gradient(
     const vector<vector<double> >& outputs, double& mse, vector<double>& analytic_gradient, bool using_dropout,
     bool training, double dropout_probability
 ) {
+    get_analytic_gradient(
+        test_parameters, inputs, outputs, mse, analytic_gradient, using_dropout, training, dropout_probability,
+        default_evaluation_plan().training_loss()
+    );
+}
+
+void RNN::get_analytic_gradient(
+    const vector<double>& test_parameters, const vector<vector<double> >& inputs,
+    const vector<vector<double> >& outputs, double& mse, vector<double>& analytic_gradient, bool using_dropout,
+    bool training, double dropout_probability, const TrainingLoss& loss
+) {
     analytic_gradient.assign(test_parameters.size(), 0.0);
 
     set_weights(test_parameters);
     forward_pass(inputs, using_dropout, training, dropout_probability);
 
-    mse = calculate_error_mse(outputs);
-    backward_pass(mse * (1.0 / outputs[0].size()) * 2.0, using_dropout, training, dropout_probability);
+    LossEvaluation evaluation = loss.evaluate(*this, outputs);
+    mse = evaluation.reported_value;
+    loss.backward(*this, outputs, evaluation, using_dropout, training, dropout_probability);
 
     vector<double> current_gradients;
 
@@ -695,17 +744,27 @@ void RNN::get_empirical_gradient(
     const vector<vector<double> >& outputs, double& mse, vector<double>& empirical_gradient, bool using_dropout,
     bool training, double dropout_probability
 ) {
-    empirical_gradient.assign(test_parameters.size(), 0.0);
+    get_empirical_gradient(
+        test_parameters, inputs, outputs, mse, empirical_gradient, using_dropout, training, dropout_probability,
+        default_evaluation_plan().training_loss()
+    );
+}
 
-    vector<vector<double> > deltas;
+void RNN::get_empirical_gradient(
+    const vector<double>& test_parameters, const vector<vector<double> >& inputs,
+    const vector<vector<double> >& outputs, double& mse, vector<double>& empirical_gradient, bool using_dropout,
+    bool training, double dropout_probability, const TrainingLoss& loss
+) {
+    empirical_gradient.assign(test_parameters.size(), 0.0);
 
     set_weights(test_parameters);
     forward_pass(inputs, using_dropout, training, dropout_probability);
-    double original_mse = calculate_error_mse(outputs);
+    LossEvaluation original_evaluation = loss.evaluate(*this, outputs);
+    double original_mse = original_evaluation.reported_value;
 
     double save;
     double diff = 0.00001;
-    double mse1, mse2;
+    double objective1, objective2;
 
     vector<double> parameters = test_parameters;
     for (int32_t i = 0; i < (int32_t) parameters.size(); i++) {
@@ -714,15 +773,14 @@ void RNN::get_empirical_gradient(
         parameters[i] = save - diff;
         set_weights(parameters);
         forward_pass(inputs, using_dropout, training, dropout_probability);
-        get_mse(this, outputs, mse1, deltas);
+        objective1 = loss.optimization_objective(loss.evaluate(*this, outputs).reported_value);
 
         parameters[i] = save + diff;
         set_weights(parameters);
         forward_pass(inputs, using_dropout, training, dropout_probability);
-        get_mse(this, outputs, mse2, deltas);
+        objective2 = loss.optimization_objective(loss.evaluate(*this, outputs).reported_value);
 
-        empirical_gradient[i] = (mse2 - mse1) / (2.0 * diff);
-        empirical_gradient[i] *= original_mse;
+        empirical_gradient[i] = (objective2 - objective1) / (2.0 * diff);
 
         parameters[i] = save;
     }

@@ -12,6 +12,8 @@ using std::vector;
 #include "rnn_recurrent_edge.hxx"
 #include "time_series/time_series.hxx"
 
+class TrainingLoss;
+
 class RNN {
    private:
     int32_t series_length;
@@ -45,6 +47,9 @@ class RNN {
         const vector<vector<double> >& series_data, bool using_dropout, bool training, double dropout_probability
     );
     void backward_pass(double error, bool using_dropout, bool training, double dropout_probability);
+    void backward_pass(
+        const vector<vector<double> >& output_gradients, bool using_dropout, bool training, double dropout_probability
+    );
 
     double calculate_error_softmax(const vector<vector<double> >& expected_outputs);
     double calculate_error_mse(const vector<vector<double> >& expected_outputs);
@@ -67,6 +72,9 @@ class RNN {
         const vector<vector<double> >& series_data, const vector<vector<double> >& expected_outputs, bool usng_dropout,
         double dropout_probability
     );
+    // Returns the outputs produced by the most recent forward pass.  Loss
+    // implementations use this to construct arbitrary output derivatives.
+    vector<vector<double> > get_output_values() const;
 
     void write_predictions(
         string output_filename, const vector<string>& input_parameter_names,
@@ -86,10 +94,20 @@ class RNN {
         const vector<vector<double> >& outputs, double& mse, vector<double>& analytic_gradient, bool using_dropout,
         bool training, double dropout_probability
     );
+    void get_analytic_gradient(
+        const vector<double>& test_parameters, const vector<vector<double> >& inputs,
+        const vector<vector<double> >& outputs, double& mse, vector<double>& analytic_gradient, bool using_dropout,
+        bool training, double dropout_probability, const TrainingLoss& loss
+    );
     void get_empirical_gradient(
         const vector<double>& test_parameters, const vector<vector<double> >& inputs,
         const vector<vector<double> >& outputs, double& mae, vector<double>& empirical_gradient, bool using_dropout,
         bool training, double dropout_probability
+    );
+    void get_empirical_gradient(
+        const vector<double>& test_parameters, const vector<vector<double> >& inputs,
+        const vector<vector<double> >& outputs, double& mae, vector<double>& empirical_gradient, bool using_dropout,
+        bool training, double dropout_probability, const TrainingLoss& loss
     );
 
     // RNN* copy();

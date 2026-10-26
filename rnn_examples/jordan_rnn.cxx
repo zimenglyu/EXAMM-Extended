@@ -190,13 +190,7 @@ int main(int argc, char** argv) {
         genome->set_log_filename(log_filename);
     }
 
-    if (argument_exists(arguments, "--stochastic")) {
-        genome->backpropagate_stochastic(
-            training_inputs, training_outputs, test_inputs, test_outputs, weight_update_method
-        );
-    } else {
-        genome->backpropagate(training_inputs, training_outputs, test_inputs, test_outputs, weight_update_method);
-    }
+    genome->backpropagate_stochastic(training_inputs, training_outputs, test_inputs, test_outputs, weight_update_method);
 
     genome->write_to_file(output_filename);
 

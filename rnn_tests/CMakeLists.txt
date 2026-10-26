@@ -61,6 +61,11 @@ target_link_libraries(test_get_equations examm_strategy exact_common exact_time_
 add_executable(test_node_to_binary test_node_to_binary.cxx gradient_test.cxx)
 target_link_libraries(test_node_to_binary examm_strategy exact_common exact_time_series exact_weights examm_nn pthread)
 
+add_executable(test_loss_checkpoint_fitness test_loss_checkpoint_fitness.cxx)
+target_link_libraries(test_loss_checkpoint_fitness examm_strategy exact_common exact_time_series exact_weights examm_nn pthread)
+add_test(NAME rnn.loss_checkpoint_fitness COMMAND test_loss_checkpoint_fitness)
+set_tests_properties(rnn.loss_checkpoint_fitness PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
 add_executable(test_sin_gp_gradients test_sin_gp_gradients.cxx gradient_test.cxx)
 target_link_libraries(test_sin_gp_gradients examm_strategy exact_common exact_time_series exact_weights examm_nn pthread)
 
