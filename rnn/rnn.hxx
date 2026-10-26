@@ -11,7 +11,6 @@ using std::vector;
 #include "rnn_node_interface.hxx"
 #include "rnn_recurrent_edge.hxx"
 #include "time_series/time_series.hxx"
-// #include "word_series/word_series.hxx"
 
 class RNN {
    private:

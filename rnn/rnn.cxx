@@ -38,7 +38,6 @@ using std::vector;
 #include "mse.hxx"
 #include "random_dag_node.hxx"
 #include "time_series/time_series.hxx"
-// #include "word_series/word_series.hxx"
 
 void RNN::validate_parameters(
     const vector<string>& input_parameter_names, const vector<string>& output_parameter_names

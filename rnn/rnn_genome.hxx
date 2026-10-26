@@ -27,7 +27,6 @@ using std::vector;
 #include "time_series/time_series.hxx"
 #include "weights/weight_rules.hxx"
 #include "weights/weight_update.hxx"
-// #include "word_series/word_series.hxx"
 
     // Avoid the maximum floating-point value as a sentinel.
 #define EXAMM_MAX_DOUBLE 10000000
@@ -237,9 +236,6 @@ class RNN_Genome {
         const vector<vector<vector<double> > >& inputs, const vector<vector<vector<double> > >& outputs,
         TimeSeriesSets* time_series_sets
     );
-    // void write_predictions(string output_directory, const vector<string> &input_filenames, const vector<double>
-    // &parameters, const vector< vector< vector<double> > > &inputs, const vector< vector< vector<double> > > &outputs,
-    // Corpus * word_series_sets);
 
     void get_mu_sigma(const vector<double>& p, double& mu, double& sigma);
 

@@ -1380,35 +1380,6 @@ void RNN_Genome::write_predictions(
     delete rnn;
 }
 
-// void RNN_Genome::write_predictions(string output_directory, const vector<string> &input_filenames, const
-// vector<double> &parameters, const vector< vector< vector<double> > > &inputs, const vector< vector< vector<double> >
-// > &outputs, Corpus *word_series_sets) {
-//     RNN *rnn = get_rnn();
-//     rnn->set_weights(parameters);
-
-//     vector< vector<double> > all_results;
-
-//     //one input vector per testing file
-//     for (int32_t i = 0; i < inputs.size(); i++) {
-//         string filename = input_filenames[i];
-//         Log::info("input filename[%5d]: '%s'\n", i, filename.c_str());
-
-//         int32_t last_dot_pos = filename.find_last_of(".");
-//         string extension = filename.substr(last_dot_pos);
-//         string prefix = filename.substr(0, last_dot_pos);
-
-//         string output_filename = prefix + "_predictions" + extension;
-//         output_filename = output_directory + "/" + output_filename.substr(output_filename.find_last_of("/") + 1);
-
-//         Log::info("output filename: '%s'\n", output_filename.c_str());
-
-//         rnn->write_predictions(output_filename, input_parameter_names, output_parameter_names, inputs[i], outputs[i],
-//         word_series_sets, use_dropout, dropout_probability);
-//     }
-
-//     delete rnn;
-// }
-
 bool RNN_Genome::has_node_with_innovation(int32_t innovation_number) const {
     for (int32_t i = 0; i < (int32_t) nodes.size(); i++) {
         if (nodes[i]->get_innovation_number() == innovation_number) {

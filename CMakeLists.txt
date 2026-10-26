@@ -53,7 +53,6 @@ include_directories(${PROJECT_SOURCE_DIR})
 
 add_subdirectory(common)
 add_subdirectory(time_series)
-# add_subdirectory(word_series)
 
 add_subdirectory(rnn)
 add_subdirectory(rnn_tests)
