@@ -101,6 +101,30 @@ class IslandSpeciationStrategy : public SpeciationStrategy {
     //                         (RNN_Genome*)> &modify);
 
     /**
+     * Changes the shares of new genomes made by mutation, intra-island crossover and inter-island crossover while the
+     * search is running. The three values are scaled to add up to 1, the same as in the constructor. Call this only
+     * while holding the same lock that protects generate_genome() and insert_genome().
+     */
+    void set_rates(double _mutation_rate, double _intra_island_crossover_rate, double _inter_island_crossover_rate);
+
+    /**
+     * Gets the current shares (they add up to 1). The member variables hold running totals, so this undoes that.
+     */
+    void get_rates(double& _mutation_rate, double& _intra_island_crossover_rate, double& _inter_island_crossover_rate)
+        const;
+
+    /**
+     * Changes how many mutations are applied to each mutated genome (also used when an erased island is repopulated).
+     */
+    void set_num_mutations(int32_t _num_mutations);
+    int32_t get_num_mutations() const;
+
+    int32_t get_number_of_islands() const;
+    int32_t get_island_size(int32_t island_index);
+    /** \return the best fitness (validation MSE) on this island, or EXAMM_MAX_DOUBLE if it is empty. */
+    double get_island_best_fitness(int32_t island_index);
+
+    /**
      * \return the number of generated genomes.
      */
     int32_t get_generated_genomes() const;

@@ -23,6 +23,8 @@ using std::vector;
 #include "time_series/time_series.hxx"
 #include "weights/weight_rules.hxx"
 
+class IslandSpeciationStrategy;
+
 class EXAMM {
    private:
     int32_t island_size;
@@ -125,6 +127,9 @@ class EXAMM {
         RNN_Recurrent_Edge* recurrent_edge, RNN_Recurrent_Edge* second_edge, bool set_enabled
     );
     RNN_Genome* crossover(RNN_Genome* p1, RNN_Genome* p2);
+
+    // NULL unless island strategy
+    IslandSpeciationStrategy* get_island_strategy();
 
     double get_best_fitness();
     double get_worst_fitness();

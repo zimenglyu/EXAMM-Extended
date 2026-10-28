@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <functional>
@@ -96,6 +97,68 @@ void IslandSpeciationStrategy::initialize_population(function<void(int32_t, RNN_
 
 int32_t IslandSpeciationStrategy::get_generated_genomes() const {
     return generated_genomes;
+}
+
+void IslandSpeciationStrategy::set_rates(
+    double _mutation_rate, double _intra_island_crossover_rate, double _inter_island_crossover_rate
+) {
+    if (!std::isfinite(_mutation_rate) || !std::isfinite(_intra_island_crossover_rate)
+        || !std::isfinite(_inter_island_crossover_rate)) {
+        Log::warning("Island Strategy: ignoring new rates, one of them is not a finite number\n");
+        return;
+    }
+    _mutation_rate = std::max(0.0, _mutation_rate);
+    _intra_island_crossover_rate = std::max(0.0, _intra_island_crossover_rate);
+    _inter_island_crossover_rate = std::max(0.0, _inter_island_crossover_rate);
+    double rate_sum = _mutation_rate + _intra_island_crossover_rate + _inter_island_crossover_rate;
+    if (!std::isfinite(rate_sum) || rate_sum <= 0.0) {
+        Log::warning("Island Strategy: ignoring new rates, they do not add up to a positive number\n");
+        return;
+    }
+    // same as constructor: sum to 1, then store totals
+    mutation_rate = _mutation_rate / rate_sum;
+    intra_island_crossover_rate = mutation_rate + _intra_island_crossover_rate / rate_sum;
+    inter_island_crossover_rate = intra_island_crossover_rate + _inter_island_crossover_rate / rate_sum;
+    Log::info(
+        "Island Strategy: rates are now mutation %.4f, intra-island crossover %.4f, inter-island crossover %.4f\n",
+        mutation_rate, intra_island_crossover_rate - mutation_rate,
+        inter_island_crossover_rate - intra_island_crossover_rate
+    );
+}
+
+void IslandSpeciationStrategy::get_rates(
+    double& _mutation_rate, double& _intra_island_crossover_rate, double& _inter_island_crossover_rate
+) const {
+    _mutation_rate = mutation_rate;
+    _intra_island_crossover_rate = intra_island_crossover_rate - mutation_rate;
+    _inter_island_crossover_rate = inter_island_crossover_rate - intra_island_crossover_rate;
+}
+
+void IslandSpeciationStrategy::set_num_mutations(int32_t _num_mutations) {
+    num_mutations = std::max(1, _num_mutations);
+    Log::info("Island Strategy: number of mutations is now %d\n", num_mutations);
+}
+
+int32_t IslandSpeciationStrategy::get_num_mutations() const {
+    return num_mutations;
+}
+
+int32_t IslandSpeciationStrategy::get_number_of_islands() const {
+    return number_of_islands;
+}
+
+int32_t IslandSpeciationStrategy::get_island_size(int32_t island_index) {
+    if (island_index < 0 || island_index >= (int32_t) islands.size()) {
+        return 0;  // islands created as genomes arrive
+    }
+    return islands[island_index]->size();
+}
+
+double IslandSpeciationStrategy::get_island_best_fitness(int32_t island_index) {
+    if (island_index < 0 || island_index >= (int32_t) islands.size()) {
+        return EXAMM_MAX_DOUBLE;
+    }
+    return islands[island_index]->get_best_fitness();
 }
 
 int32_t IslandSpeciationStrategy::get_evaluated_genomes() const {

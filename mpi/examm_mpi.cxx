@@ -1,5 +1,10 @@
+#include <algorithm>
+#include <cctype>
 #include <chrono>
+#include <cmath>
+#include <cstdio>
 #include <iomanip>
+#include <sstream>
 using std::fixed;
 using std::setprecision;
 using std::setw;
@@ -20,6 +25,7 @@ using std::vector;
 #include "common/process_arguments.hxx"
 #include "examm/examm.hxx"
 #include "mpi.h"
+#include "mpi/controller_client.hxx"
 #include "mpi/pi_sender.hxx"
 #include "rnn/generate_nn.hxx"
 #include "time_series/time_series.hxx"
@@ -59,6 +65,111 @@ void send_best_genome_to_pi() {
     pi_sender->enqueue(byte_array, length);
     free(byte_array);
     Log::info("queued global best genome %d for the pi\n", pi_last_sent_generation_id);
+}
+
+// search settings should change and EXAMM applies the answers while it runs
+ControllerClient* controller_client = NULL;
+int32_t controller_every = 500;       // inserted genomes between progress summaries (--controller_every)
+int32_t controller_last_sent_at = 0;  // evaluated-genome count when the last summary was sent
+int32_t controller_window = 0;        // num of summaries sent so far
+int32_t max_genomes_argument = 0;
+
+string controller_settings_json(IslandSpeciationStrategy* s) {
+    double mutation, intra, inter;
+    s->get_rates(mutation, intra, inter);
+    char buf[256];
+    snprintf(
+        buf, sizeof(buf),
+        "{\"mutation_rate\":%.6f,\"intra_island_crossover_rate\":%.6f,\"inter_island_crossover_rate\":%.6f,"
+        "\"num_mutations\":%d}",
+        mutation, intra, inter, s->get_num_mutations()
+    );
+    return string(buf);
+}
+
+string controller_state_json(IslandSpeciationStrategy* s, int32_t window) {
+    string islands = "[";
+    for (int32_t i = 0; i < s->get_number_of_islands(); i++) {
+        double best = s->get_island_best_fitness(i);
+        char buf[128];
+        if (best >= EXAMM_MAX_DOUBLE) {  // empty island has no best genome yet
+            snprintf(
+                buf, sizeof(buf), "%s{\"id\":%d,\"best_mse\":null,\"genomes\":%d}", i > 0 ? "," : "", i,
+                s->get_island_size(i)
+            );
+        } else {
+            snprintf(
+                buf, sizeof(buf), "%s{\"id\":%d,\"best_mse\":%.6g,\"genomes\":%d}", i > 0 ? "," : "", i, best,
+                s->get_island_size(i)
+            );
+        }
+        islands += buf;
+    }
+    islands += "]";
+
+    char head[256];
+    snprintf(
+        head, sizeof(head),
+        "{\"type\":\"state\",\"t\":%d,\"inserted_genomes\":%d,\"max_genomes\":%d,\"global_best_mse\":%.6g,"
+        "\"settings\":",
+        window, s->get_evaluated_genomes(), max_genomes_argument, examm->get_best_fitness()
+    );
+    return string(head) + controller_settings_json(s) + ",\"islands\":" + islands + "}";
+}
+
+// call with examm_mutex held, right after a genome was inserted
+void controller_after_insert() {
+    IslandSpeciationStrategy* s = examm->get_island_strategy();
+    if (s->get_evaluated_genomes() - controller_last_sent_at < controller_every) {
+        return;
+    }
+    // if controller is still answering the last summary, returns false and we try again on the next insert
+    if (controller_client->submit_state(controller_state_json(s, controller_window + 1))) {
+        controller_window++;
+        controller_last_sent_at = s->get_evaluated_genomes();
+        Log::info("sent progress summary %d to the controller\n", controller_window);
+    }
+}
+
+// call with examm_mutex held
+void controller_apply_decisions() {
+    string args, reason;
+    while (controller_client->take_decision(args, reason)) {
+        IslandSpeciationStrategy* s = examm->get_island_strategy();
+        double mutation, intra, inter;
+        s->get_rates(mutation, intra, inter);
+        int32_t num_mutations = s->get_num_mutations();
+
+        // args looks like "--mutation_rate 0.7 --num_mutations 2"; missing settings keep their val
+        std::istringstream in(args);
+        string name, value;
+        while (in >> name >> value) {
+            try {
+                if (name == "--mutation_rate") {
+                    mutation = std::stod(value);
+                } else if (name == "--intra_island_crossover_rate") {
+                    intra = std::stod(value);
+                } else if (name == "--inter_island_crossover_rate") {
+                    inter = std::stod(value);
+                } else if (name == "--num_mutations") {
+                    num_mutations = std::stoi(value);
+                } else {
+                    Log::warning("controller: ignoring unknown setting %s\n", name.c_str());
+                }
+            } catch (...) {
+                Log::warning("controller: could not read '%s' for %s\n", value.c_str(), name.c_str());
+            }
+        }
+        if (!std::isfinite(mutation) || !std::isfinite(intra) || !std::isfinite(inter)) {
+            Log::warning("controller: ignoring decision with a non-finite rate: %s\n", args.c_str());
+            continue;
+        }
+        num_mutations = std::min(std::max(num_mutations, 1), 20);  // the controller keeps this small
+
+        s->set_rates(mutation, intra, inter);
+        s->set_num_mutations(num_mutations);
+        Log::info("applied controller decision: %s (reason: %s)\n", args.c_str(), reason.c_str());
+    }
 }
 
 bool finished = false;
@@ -153,6 +264,12 @@ void master(int32_t max_rank) {
         int32_t tag = status.MPI_TAG;
         Log::debug("probe returned message from: %d with tag: %d\n", source, tag);
 
+        if (controller_client != NULL) {
+            examm_mutex.lock();
+            controller_apply_decisions();
+            examm_mutex.unlock();
+        }
+
         // if the message is a work request, send a genome
 
         if (tag == WORK_REQUEST_TAG) {
@@ -195,6 +312,9 @@ void master(int32_t max_rank) {
             examm->insert_genome(genome);
             if (pi_sender != NULL) {
                 send_best_genome_to_pi();
+            }
+            if (controller_client != NULL) {
+                controller_after_insert();
             }
             examm_mutex.unlock();
 
@@ -300,7 +420,49 @@ int main(int argc, char** argv) {
             pi_sender = new PiSender(pi_host, pi_port);
         }
 
+        if (argument_exists(arguments, "--controller_addr_file")) {
+            if (examm->get_island_strategy() == NULL) {
+                Log::fatal("--controller_addr_file only works with the island speciation strategy\n");
+                MPI_Abort(MPI_COMM_WORLD, 1);
+            }
+            string controller_addr_file;
+            get_argument(arguments, "--controller_addr_file", true, controller_addr_file);
+            get_argument(arguments, "--controller_every", false, controller_every);
+            int32_t controller_timeout = 900;  // seconds to wait for one decision before giving up on it
+            get_argument(arguments, "--controller_timeout", false, controller_timeout);
+            get_argument(arguments, "--max_genomes", false, max_genomes_argument);
+
+            // the run name is the last part of the output directory, with odd characters replaced
+            string output_directory = "examm";
+            get_argument(arguments, "--output_directory", false, output_directory);
+            while (output_directory.size() > 1 && output_directory.back() == '/') {
+                output_directory.pop_back();
+            }
+            string run_name = output_directory.substr(output_directory.find_last_of('/') + 1);
+            for (size_t i = 0; i < run_name.size(); i++) {
+                if (!isalnum((unsigned char) run_name[i]) && run_name[i] != '_' && run_name[i] != '-'
+                    && run_name[i] != '.') {
+                    run_name[i] = '_';
+                }
+            }
+
+            controller_client = new ControllerClient(controller_addr_file, controller_timeout);
+            controller_client->set_hello(
+                "{\"type\":\"hello\",\"run\":\"" + run_name + "\",\"settings\":"
+                + controller_settings_json(examm->get_island_strategy()) + "}"
+            );
+            Log::info(
+                "controller enabled: address file %s, a summary every %d inserted genomes\n",
+                controller_addr_file.c_str(), controller_every
+            );
+        }
+
         master(max_rank);
+
+        if (controller_client != NULL) {
+            controller_client->send_notice("{\"type\":\"done\",\"t\":" + to_string(controller_window) + "}");
+            delete controller_client;  // sends the done message, does not wait for an unanswered summary
+        }
 
         if (pi_sender != NULL) {
             send_best_genome_to_pi();  // make sure the final best is delivered

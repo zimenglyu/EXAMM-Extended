@@ -332,6 +332,10 @@ string EXAMM::get_output_directory() const {
     return output_directory;
 }
 
+IslandSpeciationStrategy* EXAMM::get_island_strategy() {
+    return dynamic_cast<IslandSpeciationStrategy*>(speciation_strategy);
+}
+
 double EXAMM::get_best_fitness() {
     return speciation_strategy->get_best_fitness();
 }
