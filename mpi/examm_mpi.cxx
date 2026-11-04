@@ -37,6 +37,9 @@ vector<string> arguments;
 
 EXAMM* examm;
 WeightUpdate* weight_update_method;
+// weight_decay is not serialized with genomes; every rank reads it from the
+// command line and re-applies it to each genome it receives.
+double weight_decay = 0.0;
 
 // optional: only created when --send_to_pi is given. --pi_host/--pi_port
 // override these defaults from the command line.
@@ -103,6 +106,7 @@ RNN_Genome* receive_genome_from(int32_t source) {
     Log::trace("genome_str:\n%s\n", genome_str);
 
     RNN_Genome* genome = new RNN_Genome(genome_str, length);
+    genome->set_weight_decay(weight_decay);
 
     delete[] genome_str;
     return genome;
@@ -271,6 +275,8 @@ int main(int argc, char** argv) {
     Log::set_id("main_" + to_string(rank));
     Log::restrict_to_rank(0);
     std::cout << "initailized log!" << std::endl;
+
+    get_argument(arguments, "--weight_decay", false, weight_decay);
 
     TimeSeriesSets* time_series_sets = NULL;
     time_series_sets = TimeSeriesSets::generate_from_arguments(arguments);
