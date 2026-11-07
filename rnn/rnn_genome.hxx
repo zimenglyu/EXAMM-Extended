@@ -46,7 +46,7 @@ class RNN_Genome {
     bool use_dropout;
     double dropout_probability;
 
-    double weight_decay;  // L2 weight decay coefficient (0.0 = disabled)
+    double weight_decay = 0.0;  // L2 weight decay coefficient (0.0 = disabled)
 
     string structural_hash;
 
