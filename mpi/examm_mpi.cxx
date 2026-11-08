@@ -1,5 +1,7 @@
 #include <chrono>
+#include <csignal>
 #include <iomanip>
+#include <memory>
 using std::fixed;
 using std::setprecision;
 using std::setw;
@@ -21,6 +23,7 @@ using std::vector;
 #include "examm/examm.hxx"
 #include "mpi.h"
 #include "mpi/pi_sender.hxx"
+#include "pi_training/pi_bridge.hxx"
 #include "rnn/generate_nn.hxx"
 #include "time_series/time_series.hxx"
 #include "weights/weight_rules.hxx"
@@ -196,7 +199,16 @@ void master(int32_t max_rank) {
             RNN_Genome* genome = receive_genome_from(source);
 
             examm_mutex.lock();
-            examm->insert_genome(genome);
+            bool inserted = examm->insert_genome(genome);
+            if (argument_exists(arguments, "--pi_train_host")) {
+                Log::info(
+                    "Pi training result received for genome %d validation MSE %.17g parameter fingerprint %llu; "
+                    "population %s\n",
+                    genome->get_generation_id(), genome->get_best_validation_mse(),
+                    static_cast<unsigned long long>(pi_training::fingerprint_parameters(genome->get_best_parameters())),
+                    inserted ? "accepted" : "rejected"
+                );
+            }
             if (pi_sender != NULL) {
                 send_best_genome_to_pi();
             }
@@ -215,6 +227,22 @@ void master(int32_t max_rank) {
 void worker(int32_t rank) {
     Log::set_id("worker_" + to_string(rank));
 
+    std::unique_ptr<pi_training::Bridge> bridge;
+    if (argument_exists(arguments, "--pi_train_host")) {
+        signal(SIGPIPE, SIG_IGN);
+        string host;
+        int32_t port = 0;
+        int32_t timeout_seconds = pi_training::kDefaultTrainingTimeoutSeconds;
+        get_argument(arguments, "--pi_train_host", true, host);
+        get_argument(arguments, "--pi_train_port", true, port);
+        get_argument(arguments, "--pi_train_timeout_seconds", false, timeout_seconds);
+        if (host.empty() || port < 1 || port > 65535 || timeout_seconds <= 0) {
+            throw std::runtime_error("invalid Pi training host, port, or timeout");
+        }
+        bridge = std::make_unique<pi_training::Bridge>(host, port, arguments, timeout_seconds);
+        Log::info("connected to Pi training worker\n");
+    }
+
     while (true) {
         Log::debug("sending work request!\n");
         send_work_request(0);
@@ -229,6 +257,9 @@ void worker(int32_t rank) {
         if (tag == TERMINATE_TAG) {
             Log::debug("received terminate tag!\n");
             receive_terminate_message(0);
+            if (bridge) {
+                bridge->stop();
+            }
             break;
 
         } else if (tag == GENOME_LENGTH_TAG) {
@@ -238,9 +269,15 @@ void worker(int32_t rank) {
             // have each worker write the backproagation to a separate log file
             string log_id = "genome_" + to_string(genome->get_generation_id()) + "_worker_" + to_string(rank);
             Log::set_id(log_id);
-            genome->backpropagate_stochastic(
-                training_inputs, training_outputs, validation_inputs, validation_outputs, weight_update_method
-            );
+            if (bridge) {
+                auto trained = bridge->train(*genome);
+                delete genome;
+                genome = trained.release();
+            } else {
+                genome->backpropagate_stochastic(
+                    training_inputs, training_outputs, validation_inputs, validation_outputs, weight_update_method
+                );
+            }
             Log::release_id(log_id);
 
             // go back to the worker's log for MPI communication
@@ -269,6 +306,15 @@ int main(int argc, char** argv) {
     std::cout << "got rank " << rank << " and max rank " << max_rank << std::endl;
     arguments = vector<string>(argv, argv + argc);
     std::cout << "got arguments!" << std::endl;
+
+    if (argument_exists(arguments, "--pi_train_host")
+        && (max_rank != 2 || argument_exists(arguments, "--send_to_pi"))) {
+        if (rank == 0) {
+            std::cerr << "Pi training requires exactly two MPI ranks and cannot be combined with --send_to_pi"
+                      << std::endl;
+        }
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
 
     Log::initialize(arguments);
     Log::set_rank(rank);
@@ -313,7 +359,12 @@ int main(int argc, char** argv) {
             delete pi_sender;          // waits for the queue to drain
         }
     } else {
-        worker(rank);
+        try {
+            worker(rank);
+        } catch (const std::exception& error) {
+            Log::error("Pi training failed: %s\n", error.what());
+            MPI_Abort(MPI_COMM_WORLD, 1);
+        }
     }
     Log::set_id("main_" + to_string(rank));
     finished = true;

@@ -1,0 +1,7 @@
+[INFO    genome_472_pi        ] initial validation_mse: 0.025375, best validation mse: 0.025375
+[INFO    genome_472_pi        ] iteration    0, mse: 0.0438997403, v_mse: 0.0254727797, bv_mse: 0.0253745767, avg_norm: 0.0553550254
+[INFO    genome_472_pi        ] iteration    1, mse: 0.0439599641, v_mse: 0.0255247042, bv_mse: 0.0253745767, avg_norm: 0.0552238603
+[INFO    genome_472_pi        ] iteration    2, mse: 0.0440063128, v_mse: 0.0255646112, bv_mse: 0.0253745767, avg_norm: 0.0551355424
+[INFO    genome_472_pi        ] iteration    3, mse: 0.0440452938, v_mse: 0.0255981540, bv_mse: 0.0253745767, avg_norm: 0.0550388633
+[INFO    genome_472_pi        ] iteration    4, mse: 0.0440794751, v_mse: 0.0256275480, bv_mse: 0.0253745767, avg_norm: 0.0549737475
+[INFO    genome_472_pi        ] backpropagation completed, getting mu/sigma

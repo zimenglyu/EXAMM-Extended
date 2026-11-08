@@ -1,0 +1,1737 @@
+[INFO    pi_worker            ] listening on 127.0.0.1:24680
+[INFO    pi_worker            ] Generating time series data for EXAMM
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_0.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_0.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_1.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_1.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_2.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_2.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_3.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_3.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_4.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_4.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_5.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_5.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_6.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_6.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_7.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_7.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_8.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_8.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_9.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_9.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_10.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_10.csv' with number rows: 14401
+[INFO    pi_worker            ] 	datasets/2018_coal/burner_11.csv
+[INFO    pi_worker            ] read time series 'datasets/2018_coal/burner_11.csv' with number rows: 14401
+[INFO    pi_worker            ] Generating time series data finished! 
+[INFO    pi_worker            ] Getting infomation on weight update methods for backprop
+[INFO    pi_worker            ] Doing backprop with weight update method: adagrad
+[INFO    pi_worker            ] Adagrad weight update eps=0.000001
+[INFO    pi_worker            ] Backprop learning rate: 0.001000
+[INFO    pi_worker            ] Use high norm is set to True, high norm is 1.000000
+[INFO    pi_worker            ] Use low norm is set to True, low norm is 0.050000
+[INFO    pi_worker            ] received genome 1
+[INFO    pi_worker            ] returned genome 1 validation MSE 1.7891731499275914 parameter fingerprint 7103066674534274394
+[INFO    pi_worker            ] received genome 2
+[INFO    pi_worker            ] returned genome 2 validation MSE 1.6683383175329081 parameter fingerprint 16392779031815857900
+[INFO    pi_worker            ] received genome 3
+[INFO    pi_worker            ] returned genome 3 validation MSE 1.7882804281165803 parameter fingerprint 14383315221049435747
+[INFO    pi_worker            ] received genome 4
+[INFO    pi_worker            ] returned genome 4 validation MSE 0.86932564910450782 parameter fingerprint 13279197191425308589
+[INFO    pi_worker            ] received genome 5
+[INFO    pi_worker            ] returned genome 5 validation MSE 0.065621918400512361 parameter fingerprint 3731740691597982029
+[INFO    pi_worker            ] received genome 6
+[INFO    pi_worker            ] returned genome 6 validation MSE 0.59905588332516824 parameter fingerprint 12868485872053234856
+[INFO    pi_worker            ] received genome 7
+[INFO    pi_worker            ] returned genome 7 validation MSE 0.39591234705926776 parameter fingerprint 544738222002095008
+[INFO    pi_worker            ] received genome 8
+[INFO    pi_worker            ] returned genome 8 validation MSE 2.427110548308443 parameter fingerprint 15656434387359923255
+[INFO    pi_worker            ] received genome 9
+[INFO    pi_worker            ] returned genome 9 validation MSE 0.0052462400280931416 parameter fingerprint 11948370533148793834
+[INFO    pi_worker            ] received genome 10
+[INFO    pi_worker            ] returned genome 10 validation MSE 0.19619922636480469 parameter fingerprint 17924499618368723250
+[INFO    pi_worker            ] received genome 11
+[INFO    pi_worker            ] returned genome 11 validation MSE 0.73230773371797553 parameter fingerprint 3181076657564624166
+[INFO    pi_worker            ] received genome 12
+[INFO    pi_worker            ] returned genome 12 validation MSE 0.72419250541679903 parameter fingerprint 16392779031815857900
+[INFO    pi_worker            ] received genome 13
+[INFO    pi_worker            ] returned genome 13 validation MSE 2.3201682298874702 parameter fingerprint 1230860850501169160
+[INFO    pi_worker            ] received genome 14
+[INFO    pi_worker            ] returned genome 14 validation MSE 0.6010669651642192 parameter fingerprint 7463538651016002802
+[INFO    pi_worker            ] received genome 15
+[INFO    pi_worker            ] returned genome 15 validation MSE 0.30214476580205407 parameter fingerprint 9035810900565175891
+[INFO    pi_worker            ] received genome 16
+[INFO    pi_worker            ] returned genome 16 validation MSE 0.39008980647817004 parameter fingerprint 6049942991720083324
+[INFO    pi_worker            ] received genome 17
+[INFO    pi_worker            ] returned genome 17 validation MSE 0.55549231973414959 parameter fingerprint 4573957158268470118
+[INFO    pi_worker            ] received genome 18
+[INFO    pi_worker            ] returned genome 18 validation MSE 2.3662057479374328 parameter fingerprint 17063447496342950193
+[INFO    pi_worker            ] received genome 19
+[INFO    pi_worker            ] returned genome 19 validation MSE 0.055926141661673354 parameter fingerprint 10257707082633077566
+[INFO    pi_worker            ] received genome 20
+[INFO    pi_worker            ] returned genome 20 validation MSE 0.035356845238929374 parameter fingerprint 13607594057729724165
+[INFO    pi_worker            ] received genome 21
+[INFO    pi_worker            ] returned genome 21 validation MSE 1.4814500589018529 parameter fingerprint 4816798825636512174
+[INFO    pi_worker            ] received genome 22
+[INFO    pi_worker            ] returned genome 22 validation MSE 0.010660202686963091 parameter fingerprint 1390579765617181986
+[INFO    pi_worker            ] received genome 23
+[INFO    pi_worker            ] returned genome 23 validation MSE 2.1227267894121549 parameter fingerprint 15997138769444240444
+[INFO    pi_worker            ] received genome 24
+[INFO    pi_worker            ] returned genome 24 validation MSE 0.041542747022731315 parameter fingerprint 9994174307516575902
+[INFO    pi_worker            ] received genome 25
+[INFO    pi_worker            ] returned genome 25 validation MSE 0.55252881144045829 parameter fingerprint 16264034268595836031
+[INFO    pi_worker            ] received genome 26
+[INFO    pi_worker            ] returned genome 26 validation MSE 0.12580624638975685 parameter fingerprint 12868485872053234856
+[INFO    pi_worker            ] received genome 27
+[INFO    pi_worker            ] returned genome 27 validation MSE 2.0652962030311213 parameter fingerprint 4573957158268470118
+[INFO    pi_worker            ] received genome 28
+[INFO    pi_worker            ] returned genome 28 validation MSE 3.3007300911623165 parameter fingerprint 3582258182508808778
+[INFO    pi_worker            ] received genome 29
+[INFO    pi_worker            ] returned genome 29 validation MSE 0.033797277739720959 parameter fingerprint 11948370533148793834
+[INFO    pi_worker            ] received genome 30
+[INFO    pi_worker            ] returned genome 30 validation MSE 0.032818495335243794 parameter fingerprint 10479289121712368708
+[INFO    pi_worker            ] received genome 31
+[INFO    pi_worker            ] returned genome 31 validation MSE 0.80713667121975408 parameter fingerprint 732351152265091543
+[INFO    pi_worker            ] received genome 32
+[INFO    pi_worker            ] returned genome 32 validation MSE 0.51963242527555709 parameter fingerprint 16392779031815857900
+[INFO    pi_worker            ] received genome 33
+[INFO    pi_worker            ] returned genome 33 validation MSE 2.3004313030373669 parameter fingerprint 3166888790485628976
+[INFO    pi_worker            ] received genome 34
+[INFO    pi_worker            ] returned genome 34 validation MSE 0.67114687065740086 parameter fingerprint 3912589761337408319
+[INFO    pi_worker            ] received genome 35
+[INFO    pi_worker            ] returned genome 35 validation MSE 0.036062411995111412 parameter fingerprint 15932030224061011729
+[INFO    pi_worker            ] received genome 36
+[INFO    pi_worker            ] returned genome 36 validation MSE 0.45842418877746383 parameter fingerprint 12868485872053234856
+[INFO    pi_worker            ] received genome 37
+[INFO    pi_worker            ] returned genome 37 validation MSE 1.2731073199937777 parameter fingerprint 544738222002095008
+[INFO    pi_worker            ] received genome 38
+[INFO    pi_worker            ] returned genome 38 validation MSE 1.3688352455405646 parameter fingerprint 7342180050498291927
+[INFO    pi_worker            ] received genome 39
+[INFO    pi_worker            ] returned genome 39 validation MSE 0.0047427701467767473 parameter fingerprint 10353022779554961113
+[INFO    pi_worker            ] received genome 40
+[INFO    pi_worker            ] returned genome 40 validation MSE 0.031164808852109809 parameter fingerprint 3793837436775892015
+[INFO    pi_worker            ] received genome 41
+[INFO    pi_worker            ] returned genome 41 validation MSE 0.51955190872064638 parameter fingerprint 9436897323095906546
+[INFO    pi_worker            ] received genome 42
+[INFO    pi_worker            ] returned genome 42 validation MSE 1.170393584596999 parameter fingerprint 16392779031815857900
+[INFO    pi_worker            ] received genome 43
+[INFO    pi_worker            ] returned genome 43 validation MSE 2.1407716109928274 parameter fingerprint 1860240480940156897
+[INFO    pi_worker            ] received genome 44
+[INFO    pi_worker            ] returned genome 44 validation MSE 1.1787400206220338 parameter fingerprint 9651369551049402458
+[INFO    pi_worker            ] received genome 45
+[INFO    pi_worker            ] returned genome 45 validation MSE 0.028089532790137137 parameter fingerprint 15695493451829446085
+[INFO    pi_worker            ] received genome 46
+[INFO    pi_worker            ] returned genome 46 validation MSE 1.4048220090472625 parameter fingerprint 7052285333548577686
+[INFO    pi_worker            ] received genome 47
+[INFO    pi_worker            ] returned genome 47 validation MSE 1.3247979145542947 parameter fingerprint 2579242289442354086
+[INFO    pi_worker            ] received genome 48
+[INFO    pi_worker            ] returned genome 48 validation MSE 1.6922558688699685 parameter fingerprint 5098902527470995581
+[INFO    pi_worker            ] received genome 49
+[INFO    pi_worker            ] returned genome 49 validation MSE 0.20523631435615008 parameter fingerprint 14522246961650730921
+[INFO    pi_worker            ] received genome 50
+[INFO    pi_worker            ] returned genome 50 validation MSE 1.1219667104261741 parameter fingerprint 17924499618368723250
+[INFO    pi_worker            ] received genome 51
+[INFO    pi_worker            ] returned genome 51 validation MSE 0.64841936958807778 parameter fingerprint 6577437715830881784
+[INFO    pi_worker            ] received genome 52
+[INFO    pi_worker            ] returned genome 52 validation MSE 0.19779529149141317 parameter fingerprint 5784956010416997487
+[INFO    pi_worker            ] received genome 53
+[INFO    pi_worker            ] returned genome 53 validation MSE 1.5367185066597477 parameter fingerprint 15519693926658048675
+[INFO    pi_worker            ] received genome 54
+[INFO    pi_worker            ] returned genome 54 validation MSE 0.63122446793398068 parameter fingerprint 322815227162553912
+[INFO    pi_worker            ] received genome 55
+[INFO    pi_worker            ] returned genome 55 validation MSE 0.04146137294349625 parameter fingerprint 11222826992116404989
+[INFO    pi_worker            ] received genome 56
+[INFO    pi_worker            ] returned genome 56 validation MSE 1.1888859595828738 parameter fingerprint 367801259162160162
+[INFO    pi_worker            ] received genome 57
+[INFO    pi_worker            ] returned genome 57 validation MSE 0.049605410328614902 parameter fingerprint 7978389931620260520
+[INFO    pi_worker            ] received genome 58
+[INFO    pi_worker            ] returned genome 58 validation MSE 3.2991969971108945 parameter fingerprint 5304394038598084642
+[INFO    pi_worker            ] received genome 59
+[INFO    pi_worker            ] returned genome 59 validation MSE 0.010850301484642114 parameter fingerprint 7434551164114921124
+[INFO    pi_worker            ] received genome 60
+[INFO    pi_worker            ] returned genome 60 validation MSE 0.041519719721580486 parameter fingerprint 15990905966010774820
+[INFO    pi_worker            ] received genome 61
+[INFO    pi_worker            ] returned genome 61 validation MSE 0.56388391677664307 parameter fingerprint 17040296736727829704
+[INFO    pi_worker            ] received genome 62
+[INFO    pi_worker            ] returned genome 62 validation MSE 0.73879094935306355 parameter fingerprint 12806965831220782852
+[INFO    pi_worker            ] received genome 63
+[INFO    pi_worker            ] returned genome 63 validation MSE 0.62020702623647739 parameter fingerprint 2886136685855928835
+[INFO    pi_worker            ] received genome 64
+[INFO    pi_worker            ] returned genome 64 validation MSE 0.7642034992744613 parameter fingerprint 9039310331459715210
+[INFO    pi_worker            ] received genome 65
+[INFO    pi_worker            ] returned genome 65 validation MSE 0.04146061548559514 parameter fingerprint 9947275106187574544
+[INFO    pi_worker            ] received genome 66
+[INFO    pi_worker            ] returned genome 66 validation MSE 0.6633212976446754 parameter fingerprint 5329165195648322484
+[INFO    pi_worker            ] received genome 67
+[INFO    pi_worker            ] returned genome 67 validation MSE 0.010542196886957837 parameter fingerprint 11944780790488506243
+[INFO    pi_worker            ] received genome 68
+[INFO    pi_worker            ] returned genome 68 validation MSE 2.1028322962088826 parameter fingerprint 7637376448874743282
+[INFO    pi_worker            ] received genome 69
+[INFO    pi_worker            ] returned genome 69 validation MSE 0.024930454505484829 parameter fingerprint 1164589278367450576
+[INFO    pi_worker            ] received genome 70
+[INFO    pi_worker            ] returned genome 70 validation MSE 0.041271419317264996 parameter fingerprint 2799183351020556903
+[INFO    pi_worker            ] received genome 71
+[INFO    pi_worker            ] returned genome 71 validation MSE 0.85819993996786381 parameter fingerprint 187230432578425958
+[INFO    pi_worker            ] received genome 72
+[INFO    pi_worker            ] returned genome 72 validation MSE 0.041702238797879765 parameter fingerprint 3822904827526062875
+[INFO    pi_worker            ] received genome 73
+[INFO    pi_worker            ] returned genome 73 validation MSE 1.2820652395591217 parameter fingerprint 1898937079373045270
+[INFO    pi_worker            ] received genome 74
+[INFO    pi_worker            ] returned genome 74 validation MSE 0.63716620846279926 parameter fingerprint 16588091623625153609
+[INFO    pi_worker            ] received genome 75
+[INFO    pi_worker            ] returned genome 75 validation MSE 0.023554481724729275 parameter fingerprint 16019857265613725672
+[INFO    pi_worker            ] received genome 76
+[INFO    pi_worker            ] returned genome 76 validation MSE 0.47585831212991669 parameter fingerprint 12868485872053234856
+[INFO    pi_worker            ] received genome 77
+[INFO    pi_worker            ] returned genome 77 validation MSE 0.24570396368912165 parameter fingerprint 6579606540726962921
+[INFO    pi_worker            ] received genome 78
+[INFO    pi_worker            ] returned genome 78 validation MSE 1.9006775939661498 parameter fingerprint 7366193339275907622
+[INFO    pi_worker            ] received genome 79
+[INFO    pi_worker            ] returned genome 79 validation MSE 0.0071267279325944108 parameter fingerprint 4411468821202908507
+[INFO    pi_worker            ] received genome 80
+[INFO    pi_worker            ] returned genome 80 validation MSE 0.04146575822393344 parameter fingerprint 17793131970044338225
+[INFO    pi_worker            ] received genome 81
+[INFO    pi_worker            ] returned genome 81 validation MSE 1.1679620663588142 parameter fingerprint 11343869265041716507
+[INFO    pi_worker            ] received genome 82
+[INFO    pi_worker            ] returned genome 82 validation MSE 0.45450223545642987 parameter fingerprint 18157207067647747600
+[INFO    pi_worker            ] received genome 83
+[INFO    pi_worker            ] returned genome 83 validation MSE 1.8545406454748528 parameter fingerprint 5478069079509041144
+[INFO    pi_worker            ] received genome 84
+[INFO    pi_worker            ] returned genome 84 validation MSE 0.35535555317850531 parameter fingerprint 3787418312975707634
+[INFO    pi_worker            ] received genome 85
+[INFO    pi_worker            ] returned genome 85 validation MSE 0.0075853137349606407 parameter fingerprint 12551177457213785219
+[INFO    pi_worker            ] received genome 86
+[INFO    pi_worker            ] returned genome 86 validation MSE 1.7851017753776803 parameter fingerprint 6112629403484628716
+[INFO    pi_worker            ] received genome 87
+[INFO    pi_worker            ] returned genome 87 validation MSE 3.0551967053534685 parameter fingerprint 3541630796113197514
+[INFO    pi_worker            ] received genome 88
+[INFO    pi_worker            ] returned genome 88 validation MSE 2.9062236221318845 parameter fingerprint 15656434387359923255
+[INFO    pi_worker            ] received genome 89
+[INFO    pi_worker            ] returned genome 89 validation MSE 0.055926141661673354 parameter fingerprint 10257707082633077566
+[INFO    pi_worker            ] received genome 90
+[INFO    pi_worker            ] returned genome 90 validation MSE 0.04115590112005868 parameter fingerprint 1571043765559537564
+[INFO    pi_worker            ] received genome 91
+[INFO    pi_worker            ] returned genome 91 validation MSE 0.40085767377859932 parameter fingerprint 3302206827134035979
+[INFO    pi_worker            ] received genome 92
+[INFO    pi_worker            ] returned genome 92 validation MSE 1.170393584596999 parameter fingerprint 16392779031815857900
+[INFO    pi_worker            ] received genome 93
+[INFO    pi_worker            ] returned genome 93 validation MSE 2.1463304410508037 parameter fingerprint 15997138769444240444
+[INFO    pi_worker            ] received genome 94
+[INFO    pi_worker            ] returned genome 94 validation MSE 0.6028214952392853 parameter fingerprint 13213533339183683990
+[INFO    pi_worker            ] received genome 95
+[INFO    pi_worker            ] returned genome 95 validation MSE 0.03193818263777394 parameter fingerprint 14719751466583320878
+[INFO    pi_worker            ] received genome 96
+[INFO    pi_worker            ] returned genome 96 validation MSE 1.4137164741918564 parameter fingerprint 16313223929674372664
+[INFO    pi_worker            ] received genome 97
+[INFO    pi_worker            ] returned genome 97 validation MSE 0.41615220789980656 parameter fingerprint 544738222002095008
+[INFO    pi_worker            ] received genome 98
+[INFO    pi_worker            ] returned genome 98 validation MSE 2.4744880900188155 parameter fingerprint 5043228673566122963
+[INFO    pi_worker            ] received genome 99
+[INFO    pi_worker            ] returned genome 99 validation MSE 0.028213592558397758 parameter fingerprint 11948370533148793834
+[INFO    pi_worker            ] received genome 100
+[INFO    pi_worker            ] returned genome 100 validation MSE 0.021990834178562624 parameter fingerprint 10255520937269155164
+[INFO    pi_worker            ] received genome 101
+[INFO    pi_worker            ] returned genome 101 validation MSE 0.39857058413514496 parameter fingerprint 17492125557432519398
+[INFO    pi_worker            ] received genome 102
+[INFO    pi_worker            ] returned genome 102 validation MSE 0.041962039319807957 parameter fingerprint 6214828588596106286
+[INFO    pi_worker            ] received genome 103
+[INFO    pi_worker            ] returned genome 103 validation MSE 0.91890773428153349 parameter fingerprint 7296549821101442982
+[INFO    pi_worker            ] received genome 104
+[INFO    pi_worker            ] returned genome 104 validation MSE 1.3980548279198479 parameter fingerprint 17589664813466031859
+[INFO    pi_worker            ] received genome 105
+[INFO    pi_worker            ] returned genome 105 validation MSE 0.14904561763382279 parameter fingerprint 16863071073583406358
+[INFO    pi_worker            ] received genome 106
+[INFO    pi_worker            ] returned genome 106 validation MSE 0.066726070827068246 parameter fingerprint 12081287388426530590
+[INFO    pi_worker            ] received genome 107
+[INFO    pi_worker            ] returned genome 107 validation MSE 0.022330909434833932 parameter fingerprint 15243162848156922825
+[INFO    pi_worker            ] received genome 108
+[INFO    pi_worker            ] returned genome 108 validation MSE 3.156929858707878 parameter fingerprint 14086364581382114242
+[INFO    pi_worker            ] received genome 109
+[INFO    pi_worker            ] returned genome 109 validation MSE 0.014820774487229453 parameter fingerprint 10257707082633077566
+[INFO    pi_worker            ] received genome 110
+[INFO    pi_worker            ] returned genome 110 validation MSE 0.041789079959685088 parameter fingerprint 6325328884109462021
+[INFO    pi_worker            ] received genome 111
+[INFO    pi_worker            ] returned genome 111 validation MSE 0.4101393554310494 parameter fingerprint 6868908489157728095
+[INFO    pi_worker            ] received genome 112
+[INFO    pi_worker            ] returned genome 112 validation MSE 0.041773691135672746 parameter fingerprint 14277189591368939399
+[INFO    pi_worker            ] received genome 113
+[INFO    pi_worker            ] returned genome 113 validation MSE 0.71663098545971182 parameter fingerprint 9563847939049751483
+[INFO    pi_worker            ] received genome 114
+[INFO    pi_worker            ] returned genome 114 validation MSE 3.3051205456686965 parameter fingerprint 1038896303997909655
+[INFO    pi_worker            ] received genome 115
+[INFO    pi_worker            ] returned genome 115 validation MSE 0.018974405246921885 parameter fingerprint 10134577097079921113
+[INFO    pi_worker            ] received genome 116
+[INFO    pi_worker            ] returned genome 116 validation MSE 1.4048220090472625 parameter fingerprint 7052285333548577686
+[INFO    pi_worker            ] received genome 117
+[INFO    pi_worker            ] returned genome 117 validation MSE 1.5875975947434053 parameter fingerprint 9261050303543922906
+[INFO    pi_worker            ] received genome 118
+[INFO    pi_worker            ] returned genome 118 validation MSE 3.2060443060599795 parameter fingerprint 2373261197369797558
+[INFO    pi_worker            ] received genome 119
+[INFO    pi_worker            ] returned genome 119 validation MSE 0.20046101004640671 parameter fingerprint 13001120893208084707
+[INFO    pi_worker            ] received genome 120
+[INFO    pi_worker            ] returned genome 120 validation MSE 0.041450961728137739 parameter fingerprint 2799861053051285213
+[INFO    pi_worker            ] received genome 121
+[INFO    pi_worker            ] returned genome 121 validation MSE 0.22181204260667242 parameter fingerprint 3215529813269997011
+[INFO    pi_worker            ] received genome 122
+[INFO    pi_worker            ] returned genome 122 validation MSE 0.010103139854515476 parameter fingerprint 12104091864610154392
+[INFO    pi_worker            ] received genome 123
+[INFO    pi_worker            ] returned genome 123 validation MSE 1.0598916767687232 parameter fingerprint 14701123998796642259
+[INFO    pi_worker            ] received genome 124
+[INFO    pi_worker            ] returned genome 124 validation MSE 2.5479535311442132 parameter fingerprint 5689425729110374419
+[INFO    pi_worker            ] received genome 125
+[INFO    pi_worker            ] returned genome 125 validation MSE 0.04145973850438095 parameter fingerprint 9437958455756705717
+[INFO    pi_worker            ] received genome 126
+[INFO    pi_worker            ] returned genome 126 validation MSE 1.3793928951142425 parameter fingerprint 10612785547540422386
+[INFO    pi_worker            ] received genome 127
+[INFO    pi_worker            ] returned genome 127 validation MSE 0.0135497579935683 parameter fingerprint 10585808478452348290
+[INFO    pi_worker            ] received genome 128
+[INFO    pi_worker            ] returned genome 128 validation MSE 2.5380735832900267 parameter fingerprint 5325651781244986399
+[INFO    pi_worker            ] received genome 129
+[INFO    pi_worker            ] returned genome 129 validation MSE 0.012288433456636881 parameter fingerprint 11385802847360886211
+[INFO    pi_worker            ] received genome 130
+[INFO    pi_worker            ] returned genome 130 validation MSE 3.3031339442134247 parameter fingerprint 17328523438119951775
+[INFO    pi_worker            ] received genome 131
+[INFO    pi_worker            ] returned genome 131 validation MSE 0.75272564603163827 parameter fingerprint 16093158407883492301
+[INFO    pi_worker            ] received genome 132
+[INFO    pi_worker            ] returned genome 132 validation MSE 1.042536199841773 parameter fingerprint 2919653918595562082
+[INFO    pi_worker            ] received genome 133
+[INFO    pi_worker            ] returned genome 133 validation MSE 0.99270236040519932 parameter fingerprint 12854986639192561640
+[INFO    pi_worker            ] received genome 134
+[INFO    pi_worker            ] returned genome 134 validation MSE 0.42234827794697338 parameter fingerprint 15549126883028991906
+[INFO    pi_worker            ] received genome 135
+[INFO    pi_worker            ] returned genome 135 validation MSE 0.016205493669883761 parameter fingerprint 2621523959531430219
+[INFO    pi_worker            ] received genome 136
+[INFO    pi_worker            ] returned genome 136 validation MSE 0.0085631395258576343 parameter fingerprint 15506672876262667227
+[INFO    pi_worker            ] received genome 137
+[INFO    pi_worker            ] returned genome 137 validation MSE 1.6791807802792671 parameter fingerprint 14539616320336592051
+[INFO    pi_worker            ] received genome 138
+[INFO    pi_worker            ] returned genome 138 validation MSE 2.1074769304097831 parameter fingerprint 5671938020790814280
+[INFO    pi_worker            ] received genome 139
+[INFO    pi_worker            ] returned genome 139 validation MSE 0.0070257734789366238 parameter fingerprint 11385802847360886211
+[INFO    pi_worker            ] received genome 140
+[INFO    pi_worker            ] returned genome 140 validation MSE 0.041500440647167673 parameter fingerprint 585987061822685589
+[INFO    pi_worker            ] received genome 141
+[INFO    pi_worker            ] returned genome 141 validation MSE 0.015752055917849429 parameter fingerprint 13236777436312066814
+[INFO    pi_worker            ] received genome 142
+[INFO    pi_worker            ] returned genome 142 validation MSE 0.010086410068083992 parameter fingerprint 9148156573490728131
+[INFO    pi_worker            ] received genome 143
+[INFO    pi_worker            ] returned genome 143 validation MSE 1.699545833661344 parameter fingerprint 10915483836573935795
+[INFO    pi_worker            ] received genome 144
+[INFO    pi_worker            ] returned genome 144 validation MSE 1.1373697250716099 parameter fingerprint 7715977518530642394
+[INFO    pi_worker            ] received genome 145
+[INFO    pi_worker            ] returned genome 145 validation MSE 0.028860604897904516 parameter fingerprint 14003831043350272221
+[INFO    pi_worker            ] received genome 146
+[INFO    pi_worker            ] returned genome 146 validation MSE 0.037096564353807877 parameter fingerprint 12013788554492476576
+[INFO    pi_worker            ] received genome 147
+[INFO    pi_worker            ] returned genome 147 validation MSE 0.021205120894644346 parameter fingerprint 9359187629662724355
+[INFO    pi_worker            ] received genome 148
+[INFO    pi_worker            ] returned genome 148 validation MSE 2.352088571369467 parameter fingerprint 15656434387359923255
+[INFO    pi_worker            ] received genome 149
+[INFO    pi_worker            ] returned genome 149 validation MSE 0.014989673252296068 parameter fingerprint 8008369094074402350
+[INFO    pi_worker            ] received genome 150
+[INFO    pi_worker            ] returned genome 150 validation MSE 0.036034690698685902 parameter fingerprint 2639527432147148658
+[INFO    pi_worker            ] received genome 151
+[INFO    pi_worker            ] returned genome 151 validation MSE 1.4923287874691338 parameter fingerprint 1836108806210489721
+[INFO    pi_worker            ] received genome 152
+[INFO    pi_worker            ] returned genome 152 validation MSE 0.3597253736462897 parameter fingerprint 7064372901536071779
+[INFO    pi_worker            ] received genome 153
+[INFO    pi_worker            ] returned genome 153 validation MSE 0.76017902011362448 parameter fingerprint 11483022336367816184
+[INFO    pi_worker            ] received genome 154
+[INFO    pi_worker            ] returned genome 154 validation MSE 1.0271548459635487 parameter fingerprint 13868797082675105886
+[INFO    pi_worker            ] received genome 155
+[INFO    pi_worker            ] returned genome 155 validation MSE 0.012203081259918189 parameter fingerprint 2029617273738472772
+[INFO    pi_worker            ] received genome 156
+[INFO    pi_worker            ] returned genome 156 validation MSE 0.041461019528382631 parameter fingerprint 17503562969211642454
+[INFO    pi_worker            ] received genome 157
+[INFO    pi_worker            ] returned genome 157 validation MSE 0.012288682961379988 parameter fingerprint 3946237495822664897
+[INFO    pi_worker            ] received genome 158
+[INFO    pi_worker            ] returned genome 158 validation MSE 0.16850785987761391 parameter fingerprint 13474405092003264553
+[INFO    pi_worker            ] received genome 159
+[INFO    pi_worker            ] returned genome 159 validation MSE 0.0060222798512848067 parameter fingerprint 12396578955292614498
+[INFO    pi_worker            ] received genome 160
+[INFO    pi_worker            ] returned genome 160 validation MSE 0.035924590388888247 parameter fingerprint 3620863047285962945
+[INFO    pi_worker            ] received genome 161
+[INFO    pi_worker            ] returned genome 161 validation MSE 0.42300145677278134 parameter fingerprint 2502856425628909895
+[INFO    pi_worker            ] received genome 162
+[INFO    pi_worker            ] returned genome 162 validation MSE 0.0080676055381346118 parameter fingerprint 16610546369668091261
+[INFO    pi_worker            ] received genome 163
+[INFO    pi_worker            ] returned genome 163 validation MSE 0.51676263007654932 parameter fingerprint 13337443190543919217
+[INFO    pi_worker            ] received genome 164
+[INFO    pi_worker            ] returned genome 164 validation MSE 0.1584582331062985 parameter fingerprint 3912589761337408319
+[INFO    pi_worker            ] received genome 165
+[INFO    pi_worker            ] returned genome 165 validation MSE 0.019008597389961635 parameter fingerprint 14888279643932925828
+[INFO    pi_worker            ] received genome 166
+[INFO    pi_worker            ] returned genome 166 validation MSE 0.25465297723177294 parameter fingerprint 15474796294543066038
+[INFO    pi_worker            ] received genome 167
+[INFO    pi_worker            ] returned genome 167 validation MSE 0.20089541122050963 parameter fingerprint 3703902189843589324
+[INFO    pi_worker            ] received genome 168
+[INFO    pi_worker            ] returned genome 168 validation MSE 1.8579366253948697 parameter fingerprint 9052398285074762382
+[INFO    pi_worker            ] received genome 169
+[INFO    pi_worker            ] returned genome 169 validation MSE 0.022076951736694536 parameter fingerprint 14579764570993234303
+[INFO    pi_worker            ] received genome 170
+[INFO    pi_worker            ] returned genome 170 validation MSE 0.76251202631103387 parameter fingerprint 14347937874990304268
+[INFO    pi_worker            ] received genome 171
+[INFO    pi_worker            ] returned genome 171 validation MSE 0.34820526963108644 parameter fingerprint 5677278028944541579
+[INFO    pi_worker            ] received genome 172
+[INFO    pi_worker            ] returned genome 172 validation MSE 0.0097512428020314883 parameter fingerprint 4540384711113911208
+[INFO    pi_worker            ] received genome 173
+[INFO    pi_worker            ] returned genome 173 validation MSE 0.014050855441227037 parameter fingerprint 16464421653519995500
+[INFO    pi_worker            ] received genome 174
+[INFO    pi_worker            ] returned genome 174 validation MSE 1.057570871357064 parameter fingerprint 638908752863031926
+[INFO    pi_worker            ] received genome 175
+[INFO    pi_worker            ] returned genome 175 validation MSE 1.7802276871405964 parameter fingerprint 17528360273190603163
+[INFO    pi_worker            ] received genome 176
+[INFO    pi_worker            ] returned genome 176 validation MSE 0.081728661544362174 parameter fingerprint 6022596392432038741
+[INFO    pi_worker            ] received genome 177
+[INFO    pi_worker            ] returned genome 177 validation MSE 0.010440431683666585 parameter fingerprint 10144101638956458654
+[INFO    pi_worker            ] received genome 178
+[INFO    pi_worker            ] returned genome 178 validation MSE 2.4924659672088634 parameter fingerprint 594718150395499142
+[INFO    pi_worker            ] received genome 179
+[INFO    pi_worker            ] returned genome 179 validation MSE 0.0062454927665493883 parameter fingerprint 6451102750696534796
+[INFO    pi_worker            ] received genome 180
+[INFO    pi_worker            ] returned genome 180 validation MSE 0.014046237231465291 parameter fingerprint 912864344751070734
+[INFO    pi_worker            ] received genome 181
+[INFO    pi_worker            ] returned genome 181 validation MSE 0.021702020049151928 parameter fingerprint 11168105236798344942
+[INFO    pi_worker            ] received genome 182
+[INFO    pi_worker            ] returned genome 182 validation MSE 0.041470359266901888 parameter fingerprint 14301275884106275310
+[INFO    pi_worker            ] received genome 183
+[INFO    pi_worker            ] returned genome 183 validation MSE 0.85796268304475465 parameter fingerprint 13587261464104267009
+[INFO    pi_worker            ] received genome 184
+[INFO    pi_worker            ] returned genome 184 validation MSE 0.15998002965311517 parameter fingerprint 8195234083152604012
+[INFO    pi_worker            ] received genome 185
+[INFO    pi_worker            ] returned genome 185 validation MSE 0.010520210720314529 parameter fingerprint 11294130036939453650
+[INFO    pi_worker            ] received genome 186
+[INFO    pi_worker            ] returned genome 186 validation MSE 0.2700766502749371 parameter fingerprint 3380059283821228014
+[INFO    pi_worker            ] received genome 187
+[INFO    pi_worker            ] returned genome 187 validation MSE 0.018329972713120764 parameter fingerprint 9320767021925170711
+[INFO    pi_worker            ] received genome 188
+[INFO    pi_worker            ] returned genome 188 validation MSE 2.0376183591177277 parameter fingerprint 6413940660166509571
+[INFO    pi_worker            ] received genome 189
+[INFO    pi_worker            ] returned genome 189 validation MSE 0.041398643253487223 parameter fingerprint 12542883158065035263
+[INFO    pi_worker            ] received genome 190
+[INFO    pi_worker            ] returned genome 190 validation MSE 0.041407436814409199 parameter fingerprint 12553359060651624815
+[INFO    pi_worker            ] received genome 191
+[INFO    pi_worker            ] returned genome 191 validation MSE 0.31909334021909591 parameter fingerprint 11074152053421430570
+[INFO    pi_worker            ] received genome 192
+[INFO    pi_worker            ] returned genome 192 validation MSE 1.2215268859610309 parameter fingerprint 1032101745216464144
+[INFO    pi_worker            ] received genome 193
+[INFO    pi_worker            ] returned genome 193 validation MSE 0.51749956028509669 parameter fingerprint 17036397639534578299
+[INFO    pi_worker            ] received genome 194
+[INFO    pi_worker            ] returned genome 194 validation MSE 0.037258491923243639 parameter fingerprint 11926791722802068585
+[INFO    pi_worker            ] received genome 195
+[INFO    pi_worker            ] returned genome 195 validation MSE 0.007007590345055199 parameter fingerprint 14252045290088859354
+[INFO    pi_worker            ] received genome 196
+[INFO    pi_worker            ] returned genome 196 validation MSE 0.011748953379971543 parameter fingerprint 318631126682520914
+[INFO    pi_worker            ] received genome 197
+[INFO    pi_worker            ] returned genome 197 validation MSE 0.012560351035715088 parameter fingerprint 6172423563227002495
+[INFO    pi_worker            ] received genome 198
+[INFO    pi_worker            ] returned genome 198 validation MSE 1.8405977114137282 parameter fingerprint 7457092957124065539
+[INFO    pi_worker            ] received genome 199
+[INFO    pi_worker            ] returned genome 199 validation MSE 0.014104155555223777 parameter fingerprint 1949421173375936921
+[INFO    pi_worker            ] received genome 200
+[INFO    pi_worker            ] returned genome 200 validation MSE 0.038270633331394494 parameter fingerprint 11322263165713922464
+[INFO    pi_worker            ] received genome 201
+[INFO    pi_worker            ] returned genome 201 validation MSE 0.60138125337707449 parameter fingerprint 10498539194092534219
+[INFO    pi_worker            ] received genome 202
+[INFO    pi_worker            ] returned genome 202 validation MSE 0.041644199552228291 parameter fingerprint 4050998447574179074
+[INFO    pi_worker            ] received genome 203
+[INFO    pi_worker            ] returned genome 203 validation MSE 0.12313338568441898 parameter fingerprint 6317378997690312308
+[INFO    pi_worker            ] received genome 204
+[INFO    pi_worker            ] returned genome 204 validation MSE 0.17333071674893485 parameter fingerprint 12114024109834449801
+[INFO    pi_worker            ] received genome 205
+[INFO    pi_worker            ] returned genome 205 validation MSE 0.094954137764957841 parameter fingerprint 6424978257326667661
+[INFO    pi_worker            ] received genome 206
+[INFO    pi_worker            ] returned genome 206 validation MSE 0.35254238741950794 parameter fingerprint 9205288540910741600
+[INFO    pi_worker            ] received genome 207
+[INFO    pi_worker            ] returned genome 207 validation MSE 0.032910396122138946 parameter fingerprint 7703411513108503019
+[INFO    pi_worker            ] received genome 208
+[INFO    pi_worker            ] returned genome 208 validation MSE 1.301255825186787 parameter fingerprint 10046885591033921408
+[INFO    pi_worker            ] received genome 209
+[INFO    pi_worker            ] returned genome 209 validation MSE 0.0044678420549803775 parameter fingerprint 13343211861814552002
+[INFO    pi_worker            ] received genome 210
+[INFO    pi_worker            ] returned genome 210 validation MSE 0.037891651349376582 parameter fingerprint 16869170510270996203
+[INFO    pi_worker            ] received genome 211
+[INFO    pi_worker            ] returned genome 211 validation MSE 0.072626680411323752 parameter fingerprint 5897217912798903870
+[INFO    pi_worker            ] received genome 212
+[INFO    pi_worker            ] returned genome 212 validation MSE 0.0100482754783278 parameter fingerprint 13477064399464907678
+[INFO    pi_worker            ] received genome 213
+[INFO    pi_worker            ] returned genome 213 validation MSE 1.2376053699273388 parameter fingerprint 15722595103689402275
+[INFO    pi_worker            ] received genome 214
+[INFO    pi_worker            ] returned genome 214 validation MSE 0.041553225051351929 parameter fingerprint 5403397512425488053
+[INFO    pi_worker            ] received genome 215
+[INFO    pi_worker            ] returned genome 215 validation MSE 0.037252726024685497 parameter fingerprint 10583754804323363199
+[INFO    pi_worker            ] received genome 216
+[INFO    pi_worker            ] returned genome 216 validation MSE 0.041468994433642235 parameter fingerprint 14254580698154216722
+[INFO    pi_worker            ] received genome 217
+[INFO    pi_worker            ] returned genome 217 validation MSE 0.33704839220710792 parameter fingerprint 4275606783087207830
+[INFO    pi_worker            ] received genome 218
+[INFO    pi_worker            ] returned genome 218 validation MSE 2.6448381328810555 parameter fingerprint 12156492336919885449
+[INFO    pi_worker            ] received genome 219
+[INFO    pi_worker            ] returned genome 219 validation MSE 0.039056071860309002 parameter fingerprint 9253112334389151395
+[INFO    pi_worker            ] received genome 220
+[INFO    pi_worker            ] returned genome 220 validation MSE 0.035207188094909629 parameter fingerprint 18086414815009414468
+[INFO    pi_worker            ] received genome 221
+[INFO    pi_worker            ] returned genome 221 validation MSE 0.01140657247319421 parameter fingerprint 4121610559058204167
+[INFO    pi_worker            ] received genome 222
+[INFO    pi_worker            ] returned genome 222 validation MSE 0.041498601059629332 parameter fingerprint 126597483281736060
+[INFO    pi_worker            ] received genome 223
+[INFO    pi_worker            ] returned genome 223 validation MSE 0.015354180552101453 parameter fingerprint 11905022379584041648
+[INFO    pi_worker            ] received genome 224
+[INFO    pi_worker            ] returned genome 224 validation MSE 0.33828130644753562 parameter fingerprint 15908053828954641972
+[INFO    pi_worker            ] received genome 225
+[INFO    pi_worker            ] returned genome 225 validation MSE 0.96590599579485814 parameter fingerprint 917472797166579440
+[INFO    pi_worker            ] received genome 226
+[INFO    pi_worker            ] returned genome 226 validation MSE 0.0061260759679156842 parameter fingerprint 7644264368085724455
+[INFO    pi_worker            ] received genome 227
+[INFO    pi_worker            ] returned genome 227 validation MSE 0.027154691597472497 parameter fingerprint 10144101638956458654
+[INFO    pi_worker            ] received genome 228
+[INFO    pi_worker            ] returned genome 228 validation MSE 2.2473604299125904 parameter fingerprint 8264938590271843855
+[INFO    pi_worker            ] received genome 229
+[INFO    pi_worker            ] returned genome 229 validation MSE 0.0077610803547553996 parameter fingerprint 5996526184286271466
+[INFO    pi_worker            ] received genome 230
+[INFO    pi_worker            ] returned genome 230 validation MSE 0.016004680519609706 parameter fingerprint 9282051888149898387
+[INFO    pi_worker            ] received genome 231
+[INFO    pi_worker            ] returned genome 231 validation MSE 1.0693927810291923 parameter fingerprint 13360784716772270155
+[INFO    pi_worker            ] received genome 232
+[INFO    pi_worker            ] returned genome 232 validation MSE 0.041607883662596948 parameter fingerprint 13710378350853541964
+[INFO    pi_worker            ] received genome 233
+[INFO    pi_worker            ] returned genome 233 validation MSE 0.18909287137064856 parameter fingerprint 1750391041107203111
+[INFO    pi_worker            ] received genome 234
+[INFO    pi_worker            ] returned genome 234 validation MSE 0.16991728629934258 parameter fingerprint 12257512940166590087
+[INFO    pi_worker            ] received genome 235
+[INFO    pi_worker            ] returned genome 235 validation MSE 0.037689102409390218 parameter fingerprint 11760257350552373506
+[INFO    pi_worker            ] received genome 236
+[INFO    pi_worker            ] returned genome 236 validation MSE 0.022199274156795942 parameter fingerprint 13163936181188950236
+[INFO    pi_worker            ] received genome 237
+[INFO    pi_worker            ] returned genome 237 validation MSE 0.018937821730451842 parameter fingerprint 8955063040450496282
+[INFO    pi_worker            ] received genome 238
+[INFO    pi_worker            ] returned genome 238 validation MSE 3.0417232958954723 parameter fingerprint 2552467832542943266
+[INFO    pi_worker            ] received genome 239
+[INFO    pi_worker            ] returned genome 239 validation MSE 0.0094293039161172949 parameter fingerprint 11998171333081035221
+[INFO    pi_worker            ] received genome 240
+[INFO    pi_worker            ] returned genome 240 validation MSE 0.02868041287773003 parameter fingerprint 12534229156211057906
+[INFO    pi_worker            ] received genome 241
+[INFO    pi_worker            ] returned genome 241 validation MSE 0.021169288668139091 parameter fingerprint 5562338360274042323
+[INFO    pi_worker            ] received genome 242
+[INFO    pi_worker            ] returned genome 242 validation MSE 0.041472075962355248 parameter fingerprint 6827459145800982003
+[INFO    pi_worker            ] received genome 243
+[INFO    pi_worker            ] returned genome 243 validation MSE 0.38801048795894166 parameter fingerprint 13187425447097856117
+[INFO    pi_worker            ] received genome 244
+[INFO    pi_worker            ] returned genome 244 validation MSE 0.041535816349618879 parameter fingerprint 3638600207530379937
+[INFO    pi_worker            ] received genome 245
+[INFO    pi_worker            ] returned genome 245 validation MSE 0.019787456621134122 parameter fingerprint 2902327738534512065
+[INFO    pi_worker            ] received genome 246
+[INFO    pi_worker            ] returned genome 246 validation MSE 2.3441291755390692 parameter fingerprint 4452754419675735661
+[INFO    pi_worker            ] received genome 247
+[INFO    pi_worker            ] returned genome 247 validation MSE 0.25573282163786631 parameter fingerprint 9862547674874291362
+[INFO    pi_worker            ] received genome 248
+[INFO    pi_worker            ] returned genome 248 validation MSE 0.041065167481002397 parameter fingerprint 4408200305333824801
+[INFO    pi_worker            ] received genome 249
+[INFO    pi_worker            ] returned genome 249 validation MSE 0.0043879598534317041 parameter fingerprint 6683757668389371344
+[INFO    pi_worker            ] received genome 250
+[INFO    pi_worker            ] returned genome 250 validation MSE 0.016555915011002242 parameter fingerprint 912864344751070734
+[INFO    pi_worker            ] received genome 251
+[INFO    pi_worker            ] returned genome 251 validation MSE 0.041834042762989368 parameter fingerprint 16871613164435263864
+[INFO    pi_worker            ] received genome 252
+[INFO    pi_worker            ] returned genome 252 validation MSE 0.62099801551771949 parameter fingerprint 16545301201207432480
+[INFO    pi_worker            ] received genome 253
+[INFO    pi_worker            ] returned genome 253 validation MSE 0.44215164630822362 parameter fingerprint 11270366621181057620
+[INFO    pi_worker            ] received genome 254
+[INFO    pi_worker            ] returned genome 254 validation MSE 0.1584582331062985 parameter fingerprint 8195234083152604012
+[INFO    pi_worker            ] received genome 255
+[INFO    pi_worker            ] returned genome 255 validation MSE 0.039785997611849706 parameter fingerprint 4667289105418009503
+[INFO    pi_worker            ] received genome 256
+[INFO    pi_worker            ] returned genome 256 validation MSE 0.0080471289792940007 parameter fingerprint 6054884284609187918
+[INFO    pi_worker            ] received genome 257
+[INFO    pi_worker            ] returned genome 257 validation MSE 0.0098684116588615041 parameter fingerprint 16610582237590566211
+[INFO    pi_worker            ] received genome 258
+[INFO    pi_worker            ] returned genome 258 validation MSE 0.041430899154784109 parameter fingerprint 7753201218748318644
+[INFO    pi_worker            ] received genome 259
+[INFO    pi_worker            ] returned genome 259 validation MSE 0.013530030789243938 parameter fingerprint 2570491828685088349
+[INFO    pi_worker            ] received genome 260
+[INFO    pi_worker            ] returned genome 260 validation MSE 0.0076511801473348184 parameter fingerprint 17786270607801241880
+[INFO    pi_worker            ] received genome 261
+[INFO    pi_worker            ] returned genome 261 validation MSE 0.0072795371500677161 parameter fingerprint 14218386482451636826
+[INFO    pi_worker            ] received genome 262
+[INFO    pi_worker            ] returned genome 262 validation MSE 0.010854929512792294 parameter fingerprint 1672437905900662983
+[INFO    pi_worker            ] received genome 263
+[INFO    pi_worker            ] returned genome 263 validation MSE 1.5189442678467866 parameter fingerprint 8488082687440406930
+[INFO    pi_worker            ] received genome 264
+[INFO    pi_worker            ] returned genome 264 validation MSE 1.8163678812461077 parameter fingerprint 15304902129295302696
+[INFO    pi_worker            ] received genome 265
+[INFO    pi_worker            ] returned genome 265 validation MSE 0.022218358634023272 parameter fingerprint 1236361735173194802
+[INFO    pi_worker            ] received genome 266
+[INFO    pi_worker            ] returned genome 266 validation MSE 0.0088902144328509014 parameter fingerprint 11665822126027821105
+[INFO    pi_worker            ] received genome 267
+[INFO    pi_worker            ] returned genome 267 validation MSE 0.011667413284828152 parameter fingerprint 5749240158849904181
+[INFO    pi_worker            ] received genome 268
+[INFO    pi_worker            ] returned genome 268 validation MSE 0.0042479672575414578 parameter fingerprint 1277752492321198536
+[INFO    pi_worker            ] received genome 269
+[INFO    pi_worker            ] returned genome 269 validation MSE 0.20047219872189453 parameter fingerprint 8322354119195048732
+[INFO    pi_worker            ] received genome 270
+[INFO    pi_worker            ] returned genome 270 validation MSE 0.017593494291513245 parameter fingerprint 4426717538110344001
+[INFO    pi_worker            ] received genome 271
+[INFO    pi_worker            ] returned genome 271 validation MSE 0.040948720317386583 parameter fingerprint 14347451340090498177
+[INFO    pi_worker            ] received genome 272
+[INFO    pi_worker            ] returned genome 272 validation MSE 0.041643913734403876 parameter fingerprint 15911212944410346738
+[INFO    pi_worker            ] received genome 273
+[INFO    pi_worker            ] returned genome 273 validation MSE 1.1450257305989004 parameter fingerprint 13567616035219936262
+[INFO    pi_worker            ] received genome 274
+[INFO    pi_worker            ] returned genome 274 validation MSE 2.2313964410936782 parameter fingerprint 5379447275050532883
+[INFO    pi_worker            ] received genome 275
+[INFO    pi_worker            ] returned genome 275 validation MSE 0.0078932162444812944 parameter fingerprint 2281880044519919897
+[INFO    pi_worker            ] received genome 276
+[INFO    pi_worker            ] returned genome 276 validation MSE 0.018744074680527033 parameter fingerprint 14127882217680192148
+[INFO    pi_worker            ] received genome 277
+[INFO    pi_worker            ] returned genome 277 validation MSE 0.13944564956828753 parameter fingerprint 4309339510517684417
+[INFO    pi_worker            ] received genome 278
+[INFO    pi_worker            ] returned genome 278 validation MSE 2.0293720076390311 parameter fingerprint 11781752502374881280
+[INFO    pi_worker            ] received genome 279
+[INFO    pi_worker            ] returned genome 279 validation MSE 0.015387924061353772 parameter fingerprint 11998171333081035221
+[INFO    pi_worker            ] received genome 280
+[INFO    pi_worker            ] returned genome 280 validation MSE 0.045772669129414231 parameter fingerprint 15592195163382072407
+[INFO    pi_worker            ] received genome 281
+[INFO    pi_worker            ] returned genome 281 validation MSE 0.041922303124175865 parameter fingerprint 6564235527091587864
+[INFO    pi_worker            ] received genome 282
+[INFO    pi_worker            ] returned genome 282 validation MSE 0.041466211595391822 parameter fingerprint 3388628891111965678
+[INFO    pi_worker            ] received genome 283
+[INFO    pi_worker            ] returned genome 283 validation MSE 1.2296952183523966 parameter fingerprint 16970001477436023545
+[INFO    pi_worker            ] received genome 284
+[INFO    pi_worker            ] returned genome 284 validation MSE 0.041402154999389019 parameter fingerprint 90896871546490876
+[INFO    pi_worker            ] received genome 285
+[INFO    pi_worker            ] returned genome 285 validation MSE 0.0078064934482885134 parameter fingerprint 15458218933389948112
+[INFO    pi_worker            ] received genome 286
+[INFO    pi_worker            ] returned genome 286 validation MSE 0.039530944698644342 parameter fingerprint 18437826576965790658
+[INFO    pi_worker            ] received genome 287
+[INFO    pi_worker            ] returned genome 287 validation MSE 0.71123841445214497 parameter fingerprint 5442557195940837814
+[INFO    pi_worker            ] received genome 288
+[INFO    pi_worker            ] returned genome 288 validation MSE 0.028206446735652965 parameter fingerprint 4452153036159806728
+[INFO    pi_worker            ] received genome 289
+[INFO    pi_worker            ] returned genome 289 validation MSE 0.0081865941654031427 parameter fingerprint 14801834000960945730
+[INFO    pi_worker            ] received genome 290
+[INFO    pi_worker            ] returned genome 290 validation MSE 0.081039197508570374 parameter fingerprint 14045582401600977687
+[INFO    pi_worker            ] received genome 291
+[INFO    pi_worker            ] returned genome 291 validation MSE 0.048065784302208793 parameter fingerprint 15947850508594092890
+[INFO    pi_worker            ] received genome 292
+[INFO    pi_worker            ] returned genome 292 validation MSE 0.014938013428004854 parameter fingerprint 4891346828944196046
+[INFO    pi_worker            ] received genome 293
+[INFO    pi_worker            ] returned genome 293 validation MSE 0.018536976069392266 parameter fingerprint 12382050913661416940
+[INFO    pi_worker            ] received genome 294
+[INFO    pi_worker            ] returned genome 294 validation MSE 0.040640690060754187 parameter fingerprint 11520099418277256355
+[INFO    pi_worker            ] received genome 295
+[INFO    pi_worker            ] returned genome 295 validation MSE 0.027680085211220277 parameter fingerprint 14494558969872720311
+[INFO    pi_worker            ] received genome 296
+[INFO    pi_worker            ] returned genome 296 validation MSE 0.011426426896259799 parameter fingerprint 15562420048457670433
+[INFO    pi_worker            ] received genome 297
+[INFO    pi_worker            ] returned genome 297 validation MSE 2.1127325865564064 parameter fingerprint 15022319018135866840
+[INFO    pi_worker            ] received genome 298
+[INFO    pi_worker            ] returned genome 298 validation MSE 0.032615968935680015 parameter fingerprint 17014027898984676253
+[INFO    pi_worker            ] received genome 299
+[INFO    pi_worker            ] returned genome 299 validation MSE 0.0091797373998262627 parameter fingerprint 15485227425490756463
+[INFO    pi_worker            ] received genome 300
+[INFO    pi_worker            ] returned genome 300 validation MSE 0.019362013773967564 parameter fingerprint 4302318847273749642
+[INFO    pi_worker            ] received genome 301
+[INFO    pi_worker            ] returned genome 301 validation MSE 0.0075722758568515548 parameter fingerprint 16457884507196188444
+[INFO    pi_worker            ] received genome 302
+[INFO    pi_worker            ] returned genome 302 validation MSE 0.010757755389832075 parameter fingerprint 3975221245143844813
+[INFO    pi_worker            ] received genome 303
+[INFO    pi_worker            ] returned genome 303 validation MSE 0.017797059146892016 parameter fingerprint 3732631043721040058
+[INFO    pi_worker            ] received genome 304
+[INFO    pi_worker            ] returned genome 304 validation MSE 0.42800425190087543 parameter fingerprint 15451098669213185568
+[INFO    pi_worker            ] received genome 305
+[INFO    pi_worker            ] returned genome 305 validation MSE 0.011716636828186328 parameter fingerprint 14888279643932925828
+[INFO    pi_worker            ] received genome 306
+[INFO    pi_worker            ] returned genome 306 validation MSE 0.018187289704055927 parameter fingerprint 10968334130875276454
+[INFO    pi_worker            ] received genome 307
+[INFO    pi_worker            ] returned genome 307 validation MSE 0.012103825343598478 parameter fingerprint 18272373206006828551
+[INFO    pi_worker            ] received genome 308
+[INFO    pi_worker            ] returned genome 308 validation MSE 0.041133578678717586 parameter fingerprint 15825356982119803843
+[INFO    pi_worker            ] received genome 309
+[INFO    pi_worker            ] returned genome 309 validation MSE 0.0079155753684034963 parameter fingerprint 2098550492190092620
+[INFO    pi_worker            ] received genome 310
+[INFO    pi_worker            ] returned genome 310 validation MSE 0.026938661399153845 parameter fingerprint 1744440708801235441
+[INFO    pi_worker            ] received genome 311
+[INFO    pi_worker            ] returned genome 311 validation MSE 0.068524179061860854 parameter fingerprint 5399969024968141790
+[INFO    pi_worker            ] received genome 312
+[INFO    pi_worker            ] returned genome 312 validation MSE 0.010550261752711919 parameter fingerprint 5827698614418988013
+[INFO    pi_worker            ] received genome 313
+[INFO    pi_worker            ] returned genome 313 validation MSE 0.61909555585843934 parameter fingerprint 7000576348175731749
+[INFO    pi_worker            ] received genome 314
+[INFO    pi_worker            ] returned genome 314 validation MSE 0.027732803783977703 parameter fingerprint 13503807182195039453
+[INFO    pi_worker            ] received genome 315
+[INFO    pi_worker            ] returned genome 315 validation MSE 0.010440580244574633 parameter fingerprint 8020301071223739089
+[INFO    pi_worker            ] received genome 316
+[INFO    pi_worker            ] returned genome 316 validation MSE 0.3161049106472319 parameter fingerprint 14802747374069747996
+[INFO    pi_worker            ] received genome 317
+[INFO    pi_worker            ] returned genome 317 validation MSE 0.029952560775033474 parameter fingerprint 17241003564251847843
+[INFO    pi_worker            ] received genome 318
+[INFO    pi_worker            ] returned genome 318 validation MSE 1.6049836719041739 parameter fingerprint 6077359170628120095
+[INFO    pi_worker            ] received genome 319
+[INFO    pi_worker            ] returned genome 319 validation MSE 0.029699998612674236 parameter fingerprint 1050818972592777937
+[INFO    pi_worker            ] received genome 320
+[INFO    pi_worker            ] returned genome 320 validation MSE 1.5063213009567278 parameter fingerprint 6291250752647015172
+[INFO    pi_worker            ] received genome 321
+[INFO    pi_worker            ] returned genome 321 validation MSE 0.01622870010510969 parameter fingerprint 3379390852477518547
+[INFO    pi_worker            ] received genome 322
+[INFO    pi_worker            ] returned genome 322 validation MSE 0.64047723024825587 parameter fingerprint 17135959840876971997
+[INFO    pi_worker            ] received genome 323
+[INFO    pi_worker            ] returned genome 323 validation MSE 0.33812504099030805 parameter fingerprint 4475482211053845886
+[INFO    pi_worker            ] received genome 324
+[INFO    pi_worker            ] returned genome 324 validation MSE 0.058544790681565907 parameter fingerprint 9352306630996941163
+[INFO    pi_worker            ] received genome 325
+[INFO    pi_worker            ] returned genome 325 validation MSE 0.010287265779351885 parameter fingerprint 3157651076758425792
+[INFO    pi_worker            ] received genome 326
+[INFO    pi_worker            ] returned genome 326 validation MSE 0.0073387744631622683 parameter fingerprint 7615791803375537866
+[INFO    pi_worker            ] received genome 327
+[INFO    pi_worker            ] returned genome 327 validation MSE 0.0099076292265303598 parameter fingerprint 13868933760995830010
+[INFO    pi_worker            ] received genome 328
+[INFO    pi_worker            ] returned genome 328 validation MSE 0.48303457094931118 parameter fingerprint 9540403865294305248
+[INFO    pi_worker            ] received genome 329
+[INFO    pi_worker            ] returned genome 329 validation MSE 0.0076184132284196175 parameter fingerprint 3707739956595676024
+[INFO    pi_worker            ] received genome 330
+[INFO    pi_worker            ] returned genome 330 validation MSE 0.011961900011267556 parameter fingerprint 4817591588255764074
+[INFO    pi_worker            ] received genome 331
+[INFO    pi_worker            ] returned genome 331 validation MSE 0.041006955447801016 parameter fingerprint 6078496093702230467
+[INFO    pi_worker            ] received genome 332
+[INFO    pi_worker            ] returned genome 332 validation MSE 0.14870230028622899 parameter fingerprint 6716847030260262916
+[INFO    pi_worker            ] received genome 333
+[INFO    pi_worker            ] returned genome 333 validation MSE 0.086953190179518164 parameter fingerprint 8307448640675067962
+[INFO    pi_worker            ] received genome 334
+[INFO    pi_worker            ] returned genome 334 validation MSE 0.041537947719514967 parameter fingerprint 359219650781909242
+[INFO    pi_worker            ] received genome 335
+[INFO    pi_worker            ] returned genome 335 validation MSE 0.039574033991403329 parameter fingerprint 1180778321071249086
+[INFO    pi_worker            ] received genome 336
+[INFO    pi_worker            ] returned genome 336 validation MSE 0.020403312336855058 parameter fingerprint 15774712817618816635
+[INFO    pi_worker            ] received genome 337
+[INFO    pi_worker            ] returned genome 337 validation MSE 0.034072703165991508 parameter fingerprint 12596405358382083043
+[INFO    pi_worker            ] received genome 338
+[INFO    pi_worker            ] returned genome 338 validation MSE 1.2785663534174456 parameter fingerprint 6639019215548172305
+[INFO    pi_worker            ] received genome 339
+[INFO    pi_worker            ] returned genome 339 validation MSE 0.019474959385969336 parameter fingerprint 6280045880455910372
+[INFO    pi_worker            ] received genome 340
+[INFO    pi_worker            ] returned genome 340 validation MSE 0.019101617830144503 parameter fingerprint 8453170102708214786
+[INFO    pi_worker            ] received genome 341
+[INFO    pi_worker            ] returned genome 341 validation MSE 0.0066789380463376166 parameter fingerprint 17078199396392175485
+[INFO    pi_worker            ] received genome 342
+[INFO    pi_worker            ] returned genome 342 validation MSE 3.1993200328794984 parameter fingerprint 16668144448923615173
+[INFO    pi_worker            ] received genome 343
+[INFO    pi_worker            ] returned genome 343 validation MSE 0.041003774323432406 parameter fingerprint 18138951272731887017
+[INFO    pi_worker            ] received genome 344
+[INFO    pi_worker            ] returned genome 344 validation MSE 0.041539576558409813 parameter fingerprint 7309707770954247950
+[INFO    pi_worker            ] received genome 345
+[INFO    pi_worker            ] returned genome 345 validation MSE 0.030098920840127389 parameter fingerprint 216048706601597526
+[INFO    pi_worker            ] received genome 346
+[INFO    pi_worker            ] returned genome 346 validation MSE 0.088064849337472911 parameter fingerprint 4853231787873562119
+[INFO    pi_worker            ] received genome 347
+[INFO    pi_worker            ] returned genome 347 validation MSE 3.3034265950152699 parameter fingerprint 13702121547935219724
+[INFO    pi_worker            ] received genome 348
+[INFO    pi_worker            ] returned genome 348 validation MSE 0.47877344742044958 parameter fingerprint 14609487204960330588
+[INFO    pi_worker            ] received genome 349
+[INFO    pi_worker            ] returned genome 349 validation MSE 0.0079360367394835755 parameter fingerprint 18371233080150655099
+[INFO    pi_worker            ] received genome 350
+[INFO    pi_worker            ] returned genome 350 validation MSE 0.0076511801473348184 parameter fingerprint 17786270607801241880
+[INFO    pi_worker            ] received genome 351
+[INFO    pi_worker            ] returned genome 351 validation MSE 0.04147585656612645 parameter fingerprint 11835425133412187077
+[INFO    pi_worker            ] received genome 352
+[INFO    pi_worker            ] returned genome 352 validation MSE 0.010085838502121896 parameter fingerprint 9840223337696636828
+[INFO    pi_worker            ] received genome 353
+[INFO    pi_worker            ] returned genome 353 validation MSE 0.10347101985721088 parameter fingerprint 1750391041107203111
+[INFO    pi_worker            ] received genome 354
+[INFO    pi_worker            ] returned genome 354 validation MSE 0.040620405569097871 parameter fingerprint 285137680299322748
+[INFO    pi_worker            ] received genome 355
+[INFO    pi_worker            ] returned genome 355 validation MSE 0.033389359480996465 parameter fingerprint 4107001265623319440
+[INFO    pi_worker            ] received genome 356
+[INFO    pi_worker            ] returned genome 356 validation MSE 0.21035134895584554 parameter fingerprint 8506564181677720884
+[INFO    pi_worker            ] received genome 357
+[INFO    pi_worker            ] returned genome 357 validation MSE 0.010651982395264867 parameter fingerprint 18146890742285906206
+[INFO    pi_worker            ] received genome 358
+[INFO    pi_worker            ] returned genome 358 validation MSE 0.035749800770721978 parameter fingerprint 12750745092587808569
+[INFO    pi_worker            ] received genome 359
+[INFO    pi_worker            ] returned genome 359 validation MSE 0.0043578529081495926 parameter fingerprint 17212225278582586427
+[INFO    pi_worker            ] received genome 360
+[INFO    pi_worker            ] returned genome 360 validation MSE 0.012839389351176376 parameter fingerprint 5434981233172519899
+[INFO    pi_worker            ] received genome 361
+[INFO    pi_worker            ] returned genome 361 validation MSE 0.03924245799247051 parameter fingerprint 16637510215877201264
+[INFO    pi_worker            ] received genome 362
+[INFO    pi_worker            ] returned genome 362 validation MSE 3.0140327801571072 parameter fingerprint 505433019781594104
+[INFO    pi_worker            ] received genome 363
+[INFO    pi_worker            ] returned genome 363 validation MSE 0.20380862165440577 parameter fingerprint 12477813678884791319
+[INFO    pi_worker            ] received genome 364
+[INFO    pi_worker            ] returned genome 364 validation MSE 0.041514592592650557 parameter fingerprint 10089486793365167663
+[INFO    pi_worker            ] received genome 365
+[INFO    pi_worker            ] returned genome 365 validation MSE 0.0046686686645546881 parameter fingerprint 13004182082460863973
+[INFO    pi_worker            ] received genome 366
+[INFO    pi_worker            ] returned genome 366 validation MSE 0.04098324325376005 parameter fingerprint 638426793544975296
+[INFO    pi_worker            ] received genome 367
+[INFO    pi_worker            ] returned genome 367 validation MSE 0.093019946200447054 parameter fingerprint 3485453104742348594
+[INFO    pi_worker            ] received genome 368
+[INFO    pi_worker            ] returned genome 368 validation MSE 0.04082089324112502 parameter fingerprint 11380354837454422237
+[INFO    pi_worker            ] received genome 369
+[INFO    pi_worker            ] returned genome 369 validation MSE 0.0042140632782887433 parameter fingerprint 2662758881476130259
+[INFO    pi_worker            ] received genome 370
+[INFO    pi_worker            ] returned genome 370 validation MSE 0.017079432260363597 parameter fingerprint 912864344751070734
+[INFO    pi_worker            ] received genome 371
+[INFO    pi_worker            ] returned genome 371 validation MSE 0.011426030856508571 parameter fingerprint 6066356770474382224
+[INFO    pi_worker            ] received genome 372
+[INFO    pi_worker            ] returned genome 372 validation MSE 0.010174594338374351 parameter fingerprint 14470604051834917317
+[INFO    pi_worker            ] received genome 373
+[INFO    pi_worker            ] returned genome 373 validation MSE 0.0069769838831390592 parameter fingerprint 5844076942313775034
+[INFO    pi_worker            ] received genome 374
+[INFO    pi_worker            ] returned genome 374 validation MSE 0.041464564591238193 parameter fingerprint 8897536230594130035
+[INFO    pi_worker            ] received genome 375
+[INFO    pi_worker            ] returned genome 375 validation MSE 3.2502541484371443 parameter fingerprint 3336140476043639345
+[INFO    pi_worker            ] received genome 376
+[INFO    pi_worker            ] returned genome 376 validation MSE 0.0066533618686969165 parameter fingerprint 7107381747571150671
+[INFO    pi_worker            ] received genome 377
+[INFO    pi_worker            ] returned genome 377 validation MSE 0.011523554370668137 parameter fingerprint 14140442486708395648
+[INFO    pi_worker            ] received genome 378
+[INFO    pi_worker            ] returned genome 378 validation MSE 0.17426906369121031 parameter fingerprint 280743422602890535
+[INFO    pi_worker            ] received genome 379
+[INFO    pi_worker            ] returned genome 379 validation MSE 0.019528983602370421 parameter fingerprint 6583556388780516575
+[INFO    pi_worker            ] received genome 380
+[INFO    pi_worker            ] returned genome 380 validation MSE 0.014533115372972423 parameter fingerprint 5434981233172519899
+[INFO    pi_worker            ] received genome 381
+[INFO    pi_worker            ] returned genome 381 validation MSE 0.039990755589217601 parameter fingerprint 7716223034385254168
+[INFO    pi_worker            ] received genome 382
+[INFO    pi_worker            ] returned genome 382 validation MSE 0.010915137328678968 parameter fingerprint 6402714693456313584
+[INFO    pi_worker            ] received genome 383
+[INFO    pi_worker            ] returned genome 383 validation MSE 3.293577161393515 parameter fingerprint 14787287113206212077
+[INFO    pi_worker            ] received genome 384
+[INFO    pi_worker            ] returned genome 384 validation MSE 0.037156910273427102 parameter fingerprint 18337219824258657381
+[INFO    pi_worker            ] received genome 385
+[INFO    pi_worker            ] returned genome 385 validation MSE 0.16041908832468735 parameter fingerprint 5797075708276236464
+[INFO    pi_worker            ] received genome 386
+[INFO    pi_worker            ] returned genome 386 validation MSE 0.0065806186856691377 parameter fingerprint 16914055869844389154
+[INFO    pi_worker            ] received genome 387
+[INFO    pi_worker            ] returned genome 387 validation MSE 0.025030779207039926 parameter fingerprint 3834260559175699073
+[INFO    pi_worker            ] received genome 388
+[INFO    pi_worker            ] returned genome 388 validation MSE 0.041241787295073468 parameter fingerprint 7661354231198326092
+[INFO    pi_worker            ] received genome 389
+[INFO    pi_worker            ] returned genome 389 validation MSE 0.0070257734789366238 parameter fingerprint 11385802847360886211
+[INFO    pi_worker            ] received genome 390
+[INFO    pi_worker            ] returned genome 390 validation MSE 0.031643530082287319 parameter fingerprint 1662467651319608359
+[INFO    pi_worker            ] received genome 391
+[INFO    pi_worker            ] returned genome 391 validation MSE 0.0052578547630147522 parameter fingerprint 17029041082233355457
+[INFO    pi_worker            ] received genome 392
+[INFO    pi_worker            ] returned genome 392 validation MSE 1.9869528547884379 parameter fingerprint 14866793922394111764
+[INFO    pi_worker            ] received genome 393
+[INFO    pi_worker            ] returned genome 393 validation MSE 0.14450659715558967 parameter fingerprint 294415712538448489
+[INFO    pi_worker            ] received genome 394
+[INFO    pi_worker            ] returned genome 394 validation MSE 0.038088355551101655 parameter fingerprint 9986079094592282313
+[INFO    pi_worker            ] received genome 395
+[INFO    pi_worker            ] returned genome 395 validation MSE 0.0098181673455270107 parameter fingerprint 4865914270539457420
+[INFO    pi_worker            ] received genome 396
+[INFO    pi_worker            ] returned genome 396 validation MSE 2.6370523495840823 parameter fingerprint 17450434893719102801
+[INFO    pi_worker            ] received genome 397
+[INFO    pi_worker            ] returned genome 397 validation MSE 0.0097706796950870582 parameter fingerprint 2204200511109078867
+[INFO    pi_worker            ] received genome 398
+[INFO    pi_worker            ] returned genome 398 validation MSE 0.041057245217269243 parameter fingerprint 1170674358400087882
+[INFO    pi_worker            ] received genome 399
+[INFO    pi_worker            ] returned genome 399 validation MSE 0.031939633239825037 parameter fingerprint 5389493490939972719
+[INFO    pi_worker            ] received genome 400
+[INFO    pi_worker            ] returned genome 400 validation MSE 0.040395304328692427 parameter fingerprint 3030080589013756887
+[INFO    pi_worker            ] received genome 401
+[INFO    pi_worker            ] returned genome 401 validation MSE 0.0096440213515536898 parameter fingerprint 15898026731852975310
+[INFO    pi_worker            ] received genome 402
+[INFO    pi_worker            ] returned genome 402 validation MSE 0.0415291385982526 parameter fingerprint 18140269309570755332
+[INFO    pi_worker            ] received genome 403
+[INFO    pi_worker            ] returned genome 403 validation MSE 2.2769206597857954 parameter fingerprint 13171782969252847007
+[INFO    pi_worker            ] received genome 404
+[INFO    pi_worker            ] returned genome 404 validation MSE 0.25341607722201159 parameter fingerprint 5326315216959760549
+[INFO    pi_worker            ] received genome 405
+[INFO    pi_worker            ] returned genome 405 validation MSE 0.031494972083156061 parameter fingerprint 14252045290088859354
+[INFO    pi_worker            ] received genome 406
+[INFO    pi_worker            ] returned genome 406 validation MSE 0.018285087573182306 parameter fingerprint 11102891250126900280
+[INFO    pi_worker            ] received genome 407
+[INFO    pi_worker            ] returned genome 407 validation MSE 0.03322591751376279 parameter fingerprint 12316324667603332635
+[INFO    pi_worker            ] received genome 408
+[INFO    pi_worker            ] returned genome 408 validation MSE 0.041455913810010118 parameter fingerprint 11297111226467569479
+[INFO    pi_worker            ] received genome 409
+[INFO    pi_worker            ] returned genome 409 validation MSE 0.005169831284990746 parameter fingerprint 15311198596330708718
+[INFO    pi_worker            ] received genome 410
+[INFO    pi_worker            ] returned genome 410 validation MSE 0.02485808492150797 parameter fingerprint 6288778947337882975
+[INFO    pi_worker            ] received genome 411
+[INFO    pi_worker            ] returned genome 411 validation MSE 0.0044914447850383128 parameter fingerprint 9907517005600803231
+[INFO    pi_worker            ] received genome 412
+[INFO    pi_worker            ] returned genome 412 validation MSE 0.019716691606786324 parameter fingerprint 779098331709398831
+[INFO    pi_worker            ] received genome 413
+[INFO    pi_worker            ] returned genome 413 validation MSE 0.077742614742366753 parameter fingerprint 8421335388969188700
+[INFO    pi_worker            ] received genome 414
+[INFO    pi_worker            ] returned genome 414 validation MSE 0.84930404756467959 parameter fingerprint 16947876356754903473
+[INFO    pi_worker            ] received genome 415
+[INFO    pi_worker            ] returned genome 415 validation MSE 3.1710685765353972 parameter fingerprint 10854788844715691367
+[INFO    pi_worker            ] received genome 416
+[INFO    pi_worker            ] returned genome 416 validation MSE 0.57612102552604594 parameter fingerprint 4841427535914920215
+[INFO    pi_worker            ] received genome 417
+[INFO    pi_worker            ] returned genome 417 validation MSE 0.016217921961296563 parameter fingerprint 15360674847007316988
+[INFO    pi_worker            ] received genome 418
+[INFO    pi_worker            ] returned genome 418 validation MSE 0.04125284441500901 parameter fingerprint 17549341188716599020
+[INFO    pi_worker            ] received genome 419
+[INFO    pi_worker            ] returned genome 419 validation MSE 0.0061734500675732044 parameter fingerprint 8168909727299002272
+[INFO    pi_worker            ] received genome 420
+[INFO    pi_worker            ] returned genome 420 validation MSE 0.57205727251536698 parameter fingerprint 11444836038146317421
+[INFO    pi_worker            ] received genome 421
+[INFO    pi_worker            ] returned genome 421 validation MSE 0.081738553007212444 parameter fingerprint 16735756194123477820
+[INFO    pi_worker            ] received genome 422
+[INFO    pi_worker            ] returned genome 422 validation MSE 0.010086345888087746 parameter fingerprint 3036084257740566116
+[INFO    pi_worker            ] received genome 423
+[INFO    pi_worker            ] returned genome 423 validation MSE 0.026596705362331129 parameter fingerprint 13087058937055946165
+[INFO    pi_worker            ] received genome 424
+[INFO    pi_worker            ] returned genome 424 validation MSE 0.041344741138776925 parameter fingerprint 8897536230594130035
+[INFO    pi_worker            ] received genome 425
+[INFO    pi_worker            ] returned genome 425 validation MSE 0.01964344245737298 parameter fingerprint 14594502756113136972
+[INFO    pi_worker            ] received genome 426
+[INFO    pi_worker            ] returned genome 426 validation MSE 0.021975653653970612 parameter fingerprint 13762890026810364809
+[INFO    pi_worker            ] received genome 427
+[INFO    pi_worker            ] returned genome 427 validation MSE 0.0083220267383502973 parameter fingerprint 79410133669720027
+[INFO    pi_worker            ] received genome 428
+[INFO    pi_worker            ] returned genome 428 validation MSE 0.041241560779017375 parameter fingerprint 7727746419252463651
+[INFO    pi_worker            ] received genome 429
+[INFO    pi_worker            ] returned genome 429 validation MSE 0.0047923678230072878 parameter fingerprint 15141995742785574618
+[INFO    pi_worker            ] received genome 430
+[INFO    pi_worker            ] returned genome 430 validation MSE 0.011196988280951229 parameter fingerprint 14190939016032368923
+[INFO    pi_worker            ] received genome 431
+[INFO    pi_worker            ] returned genome 431 validation MSE 0.016744616986679346 parameter fingerprint 676518241072894808
+[INFO    pi_worker            ] received genome 432
+[INFO    pi_worker            ] returned genome 432 validation MSE 0.010053745537248613 parameter fingerprint 15726447634866121481
+[INFO    pi_worker            ] received genome 433
+[INFO    pi_worker            ] returned genome 433 validation MSE 0.03488664228991685 parameter fingerprint 18391565230165988873
+[INFO    pi_worker            ] received genome 434
+[INFO    pi_worker            ] returned genome 434 validation MSE 0.040390481041014045 parameter fingerprint 9693665005888978364
+[INFO    pi_worker            ] received genome 435
+[INFO    pi_worker            ] returned genome 435 validation MSE 0.038723852509124308 parameter fingerprint 2916416247396935986
+[INFO    pi_worker            ] received genome 436
+[INFO    pi_worker            ] returned genome 436 validation MSE 0.10763460064656186 parameter fingerprint 5533365932213691990
+[INFO    pi_worker            ] received genome 437
+[INFO    pi_worker            ] returned genome 437 validation MSE 0.022610029895124333 parameter fingerprint 14034120906014421610
+[INFO    pi_worker            ] received genome 438
+[INFO    pi_worker            ] returned genome 438 validation MSE 3.0180235547797913 parameter fingerprint 1104754032057737560
+[INFO    pi_worker            ] received genome 439
+[INFO    pi_worker            ] returned genome 439 validation MSE 0.033681632538993866 parameter fingerprint 6713682244416612562
+[INFO    pi_worker            ] received genome 440
+[INFO    pi_worker            ] returned genome 440 validation MSE 0.012680274716690001 parameter fingerprint 16399237440640753205
+[INFO    pi_worker            ] received genome 441
+[INFO    pi_worker            ] returned genome 441 validation MSE 0.0062295081444145722 parameter fingerprint 8772530712065694575
+[INFO    pi_worker            ] received genome 442
+[INFO    pi_worker            ] returned genome 442 validation MSE 0.10770944733418955 parameter fingerprint 14768520250921472110
+[INFO    pi_worker            ] received genome 443
+[INFO    pi_worker            ] returned genome 443 validation MSE 0.010894393176386739 parameter fingerprint 11905022379584041648
+[INFO    pi_worker            ] received genome 444
+[INFO    pi_worker            ] returned genome 444 validation MSE 0.011354899732146208 parameter fingerprint 8595097256162654603
+[INFO    pi_worker            ] received genome 445
+[INFO    pi_worker            ] returned genome 445 validation MSE 0.037542978099648579 parameter fingerprint 13583096531245681571
+[INFO    pi_worker            ] received genome 446
+[INFO    pi_worker            ] returned genome 446 validation MSE 0.0064610598131991503 parameter fingerprint 702501076799339022
+[INFO    pi_worker            ] received genome 447
+[INFO    pi_worker            ] returned genome 447 validation MSE 0.14452667606629144 parameter fingerprint 7061584753325784413
+[INFO    pi_worker            ] received genome 448
+[INFO    pi_worker            ] returned genome 448 validation MSE 0.041435444935949757 parameter fingerprint 8911057016688488093
+[INFO    pi_worker            ] received genome 449
+[INFO    pi_worker            ] returned genome 449 validation MSE 0.0052684225828376584 parameter fingerprint 9386311482760959575
+[INFO    pi_worker            ] received genome 450
+[INFO    pi_worker            ] returned genome 450 validation MSE 0.040833678488486763 parameter fingerprint 2038525871913160055
+[INFO    pi_worker            ] received genome 451
+[INFO    pi_worker            ] returned genome 451 validation MSE 0.042748487732294317 parameter fingerprint 13030157144930883545
+[INFO    pi_worker            ] received genome 452
+[INFO    pi_worker            ] returned genome 452 validation MSE 0.12630042749753212 parameter fingerprint 11531903220686921898
+[INFO    pi_worker            ] received genome 453
+[INFO    pi_worker            ] returned genome 453 validation MSE 0.066082002227534686 parameter fingerprint 16737865552762949384
+[INFO    pi_worker            ] received genome 454
+[INFO    pi_worker            ] returned genome 454 validation MSE 0.04142381376634665 parameter fingerprint 18220769790262761060
+[INFO    pi_worker            ] received genome 455
+[INFO    pi_worker            ] returned genome 455 validation MSE 0.027146304771199867 parameter fingerprint 13440198663104801251
+[INFO    pi_worker            ] received genome 456
+[INFO    pi_worker            ] returned genome 456 validation MSE 0.041356139452636234 parameter fingerprint 13623179136459226586
+[INFO    pi_worker            ] received genome 457
+[INFO    pi_worker            ] returned genome 457 validation MSE 0.01857937255713258 parameter fingerprint 15126290270722080095
+[INFO    pi_worker            ] received genome 458
+[INFO    pi_worker            ] returned genome 458 validation MSE 0.03977648766696637 parameter fingerprint 2338455349656880391
+[INFO    pi_worker            ] received genome 459
+[INFO    pi_worker            ] returned genome 459 validation MSE 0.015414753340987925 parameter fingerprint 16591108567020814113
+[INFO    pi_worker            ] received genome 460
+[INFO    pi_worker            ] returned genome 460 validation MSE 0.039103376313399954 parameter fingerprint 13329061134673686154
+[INFO    pi_worker            ] received genome 461
+[INFO    pi_worker            ] returned genome 461 validation MSE 0.011854926092384501 parameter fingerprint 17078199396392175485
+[INFO    pi_worker            ] received genome 462
+[INFO    pi_worker            ] returned genome 462 validation MSE 0.51180855220356924 parameter fingerprint 2465388061598055417
+[INFO    pi_worker            ] received genome 463
+[INFO    pi_worker            ] returned genome 463 validation MSE 0.063870259024437978 parameter fingerprint 4250712700949510057
+[INFO    pi_worker            ] received genome 464
+[INFO    pi_worker            ] returned genome 464 validation MSE 0.0052241665368011024 parameter fingerprint 1297077334351541458
+[INFO    pi_worker            ] received genome 465
+[INFO    pi_worker            ] returned genome 465 validation MSE 0.28060065969732911 parameter fingerprint 10105092102708063201
+[INFO    pi_worker            ] received genome 466
+[INFO    pi_worker            ] returned genome 466 validation MSE 0.0065714896599400026 parameter fingerprint 16386981651026569290
+[INFO    pi_worker            ] received genome 467
+[INFO    pi_worker            ] returned genome 467 validation MSE 0.035370459019918823 parameter fingerprint 17596098296847886651
+[INFO    pi_worker            ] received genome 468
+[INFO    pi_worker            ] returned genome 468 validation MSE 0.041445200503110707 parameter fingerprint 14945112171006167210
+[INFO    pi_worker            ] received genome 469
+[INFO    pi_worker            ] returned genome 469 validation MSE 0.030224117086524831 parameter fingerprint 12248117757962972600
+[INFO    pi_worker            ] received genome 470
+[INFO    pi_worker            ] returned genome 470 validation MSE 0.015503503342974404 parameter fingerprint 5355618017102720644
+[INFO    pi_worker            ] received genome 471
+[INFO    pi_worker            ] returned genome 471 validation MSE 0.041272365855498788 parameter fingerprint 4189083203411081393
+[INFO    pi_worker            ] received genome 472
+[INFO    pi_worker            ] returned genome 472 validation MSE 0.025374576736905533 parameter fingerprint 17843184049468835872
+[INFO    pi_worker            ] received genome 473
+[INFO    pi_worker            ] returned genome 473 validation MSE 0.030199234103590666 parameter fingerprint 12845761018886035704
+[INFO    pi_worker            ] received genome 474
+[INFO    pi_worker            ] returned genome 474 validation MSE 0.032867305674432239 parameter fingerprint 914178194888645732
+[INFO    pi_worker            ] received genome 475
+[INFO    pi_worker            ] returned genome 475 validation MSE 0.0049562414835324269 parameter fingerprint 14434887200538082272
+[INFO    pi_worker            ] received genome 476
+[INFO    pi_worker            ] returned genome 476 validation MSE 0.11022771237141307 parameter fingerprint 14731604619774891198
+[INFO    pi_worker            ] received genome 477
+[INFO    pi_worker            ] returned genome 477 validation MSE 0.011527749146103029 parameter fingerprint 13014670012668745335
+[INFO    pi_worker            ] received genome 478
+[INFO    pi_worker            ] returned genome 478 validation MSE 0.041371609599572576 parameter fingerprint 17399806644010729233
+[INFO    pi_worker            ] received genome 479
+[INFO    pi_worker            ] returned genome 479 validation MSE 0.0079166376699072848 parameter fingerprint 10511559841425085953
+[INFO    pi_worker            ] received genome 480
+[INFO    pi_worker            ] returned genome 480 validation MSE 0.014533115372972423 parameter fingerprint 5434981233172519899
+[INFO    pi_worker            ] received genome 481
+[INFO    pi_worker            ] returned genome 481 validation MSE 0.040057417331405339 parameter fingerprint 3792708863496603542
+[INFO    pi_worker            ] received genome 482
+[INFO    pi_worker            ] returned genome 482 validation MSE 0.018316588417115726 parameter fingerprint 13087105312079865255
+[INFO    pi_worker            ] received genome 483
+[INFO    pi_worker            ] returned genome 483 validation MSE 0.98508246259642862 parameter fingerprint 1141118905306388350
+[INFO    pi_worker            ] received genome 484
+[INFO    pi_worker            ] returned genome 484 validation MSE 0.040755649636380849 parameter fingerprint 1041716540322929323
+[INFO    pi_worker            ] received genome 485
+[INFO    pi_worker            ] returned genome 485 validation MSE 0.027479040300976684 parameter fingerprint 9760529194651043132
+[INFO    pi_worker            ] received genome 486
+[INFO    pi_worker            ] returned genome 486 validation MSE 0.010971589059049861 parameter fingerprint 179024875716755668
+[INFO    pi_worker            ] received genome 487
+[INFO    pi_worker            ] returned genome 487 validation MSE 0.03694952938216612 parameter fingerprint 9131264248658360257
+[INFO    pi_worker            ] received genome 488
+[INFO    pi_worker            ] returned genome 488 validation MSE 0.027862579960690588 parameter fingerprint 5466616315067311667
+[INFO    pi_worker            ] received genome 489
+[INFO    pi_worker            ] returned genome 489 validation MSE 0.02800823572485199 parameter fingerprint 15980526547827540410
+[INFO    pi_worker            ] received genome 490
+[INFO    pi_worker            ] returned genome 490 validation MSE 0.0073827315860894244 parameter fingerprint 14968907460557204175
+[INFO    pi_worker            ] received genome 491
+[INFO    pi_worker            ] returned genome 491 validation MSE 0.020616459476203594 parameter fingerprint 16279858584053833618
+[INFO    pi_worker            ] received genome 492
+[INFO    pi_worker            ] returned genome 492 validation MSE 0.035003994564660336 parameter fingerprint 1380216335634720101
+[INFO    pi_worker            ] received genome 493
+[INFO    pi_worker            ] returned genome 493 validation MSE 0.01719995981179152 parameter fingerprint 251013721606433527
+[INFO    pi_worker            ] received genome 494
+[INFO    pi_worker            ] returned genome 494 validation MSE 0.0058105686597826334 parameter fingerprint 17542489006416479679
+[INFO    pi_worker            ] received genome 495
+[INFO    pi_worker            ] returned genome 495 validation MSE 0.0062194539980177377 parameter fingerprint 7916498199986872611
+[INFO    pi_worker            ] received genome 496
+[INFO    pi_worker            ] returned genome 496 validation MSE 0.3427269013492884 parameter fingerprint 15159625510375609452
+[INFO    pi_worker            ] received genome 497
+[INFO    pi_worker            ] returned genome 497 validation MSE 0.52227241231860277 parameter fingerprint 6564444546516857846
+[INFO    pi_worker            ] received genome 498
+[INFO    pi_worker            ] returned genome 498 validation MSE 0.041126619791657271 parameter fingerprint 7536477886946011327
+[INFO    pi_worker            ] received genome 499
+[INFO    pi_worker            ] returned genome 499 validation MSE 3.2926673953002696 parameter fingerprint 17354002911884505790
+[INFO    pi_worker            ] received genome 500
+[INFO    pi_worker            ] returned genome 500 validation MSE 0.011906909096354314 parameter fingerprint 1155009230629999017
+[INFO    pi_worker            ] received genome 501
+[INFO    pi_worker            ] returned genome 501 validation MSE 0.062954991528599832 parameter fingerprint 6935354667503317161
+[INFO    pi_worker            ] received genome 502
+[INFO    pi_worker            ] returned genome 502 validation MSE 0.013433173705476394 parameter fingerprint 10602331825901002763
+[INFO    pi_worker            ] received genome 503
+[INFO    pi_worker            ] returned genome 503 validation MSE 0.17798979524192649 parameter fingerprint 4532406099152281098
+[INFO    pi_worker            ] received genome 504
+[INFO    pi_worker            ] returned genome 504 validation MSE 3.2936399856990288 parameter fingerprint 13884400869219611328
+[INFO    pi_worker            ] received genome 505
+[INFO    pi_worker            ] returned genome 505 validation MSE 0.041460417791319079 parameter fingerprint 4959059629006967762
+[INFO    pi_worker            ] received genome 506
+[INFO    pi_worker            ] returned genome 506 validation MSE 1.1260431967759752 parameter fingerprint 9619744487218703086
+[INFO    pi_worker            ] received genome 507
+[INFO    pi_worker            ] returned genome 507 validation MSE 0.010832886656498158 parameter fingerprint 2777422738432833655
+[INFO    pi_worker            ] received genome 508
+[INFO    pi_worker            ] returned genome 508 validation MSE 0.0042397812499748314 parameter fingerprint 17404206449323794194
+[INFO    pi_worker            ] received genome 509
+[INFO    pi_worker            ] returned genome 509 validation MSE 0.013982531204968238 parameter fingerprint 7836976550687214404
+[INFO    pi_worker            ] received genome 510
+[INFO    pi_worker            ] returned genome 510 validation MSE 0.99036624326952583 parameter fingerprint 1150461971475116160
+[INFO    pi_worker            ] received genome 511
+[INFO    pi_worker            ] returned genome 511 validation MSE 0.00488987773979344 parameter fingerprint 2204298885881616958
+[INFO    pi_worker            ] received genome 512
+[INFO    pi_worker            ] returned genome 512 validation MSE 0.0093581853130975945 parameter fingerprint 11648956281929773909
+[INFO    pi_worker            ] received genome 513
+[INFO    pi_worker            ] returned genome 513 validation MSE 0.038949425413998345 parameter fingerprint 6282261232590942023
+[INFO    pi_worker            ] received genome 514
+[INFO    pi_worker            ] returned genome 514 validation MSE 0.04099719082327246 parameter fingerprint 7804457123065937652
+[INFO    pi_worker            ] received genome 515
+[INFO    pi_worker            ] returned genome 515 validation MSE 0.45441181856491941 parameter fingerprint 5258074409464850152
+[INFO    pi_worker            ] received genome 516
+[INFO    pi_worker            ] returned genome 516 validation MSE 0.0078034902805453749 parameter fingerprint 8092776829988331013
+[INFO    pi_worker            ] received genome 517
+[INFO    pi_worker            ] returned genome 517 validation MSE 0.011481029379757134 parameter fingerprint 10920022948538369607
+[INFO    pi_worker            ] received genome 518
+[INFO    pi_worker            ] returned genome 518 validation MSE 0.040813980194333938 parameter fingerprint 12332944094680032130
+[INFO    pi_worker            ] received genome 519
+[INFO    pi_worker            ] returned genome 519 validation MSE 3.3007226607948836 parameter fingerprint 11090535655158081400
+[INFO    pi_worker            ] received genome 520
+[INFO    pi_worker            ] returned genome 520 validation MSE 0.037432650812469916 parameter fingerprint 17236427162710085433
+[INFO    pi_worker            ] received genome 521
+[INFO    pi_worker            ] returned genome 521 validation MSE 0.033442177568135195 parameter fingerprint 15402905897058225102
+[INFO    pi_worker            ] received genome 522
+[INFO    pi_worker            ] returned genome 522 validation MSE 0.011481634273800896 parameter fingerprint 4759797343699069740
+[INFO    pi_worker            ] received genome 523
+[INFO    pi_worker            ] returned genome 523 validation MSE 0.020569478767672733 parameter fingerprint 805384486090835094
+[INFO    pi_worker            ] received genome 524
+[INFO    pi_worker            ] returned genome 524 validation MSE 1.0657169158505395 parameter fingerprint 16164034811641671456
+[INFO    pi_worker            ] received genome 525
+[INFO    pi_worker            ] returned genome 525 validation MSE 0.010101830478413789 parameter fingerprint 4461402097937579658
+[INFO    pi_worker            ] received genome 526
+[INFO    pi_worker            ] returned genome 526 validation MSE 0.016006647105986475 parameter fingerprint 8928151821340687738
+[INFO    pi_worker            ] received genome 527
+[INFO    pi_worker            ] returned genome 527 validation MSE 0.011481029379757134 parameter fingerprint 16315067247851759666
+[INFO    pi_worker            ] received genome 528
+[INFO    pi_worker            ] returned genome 528 validation MSE 0.041266979926790286 parameter fingerprint 4745808313273138490
+[INFO    pi_worker            ] received genome 529
+[INFO    pi_worker            ] returned genome 529 validation MSE 0.0051037948104936896 parameter fingerprint 2105980003380832356
+[INFO    pi_worker            ] received genome 530
+[INFO    pi_worker            ] returned genome 530 validation MSE 0.011625225043475705 parameter fingerprint 10681983047646453365
+[INFO    pi_worker            ] received genome 531
+[INFO    pi_worker            ] returned genome 531 validation MSE 0.078314808901136346 parameter fingerprint 137371581017111475
+[INFO    pi_worker            ] received genome 532
+[INFO    pi_worker            ] returned genome 532 validation MSE 0.0097399823313474229 parameter fingerprint 14941109485768386558
+[INFO    pi_worker            ] received genome 533
+[INFO    pi_worker            ] returned genome 533 validation MSE 0.021583776829424701 parameter fingerprint 2813701435386455354
+[INFO    pi_worker            ] received genome 534
+[INFO    pi_worker            ] returned genome 534 validation MSE 0.040602113865084707 parameter fingerprint 7904879974115311796
+[INFO    pi_worker            ] received genome 535
+[INFO    pi_worker            ] returned genome 535 validation MSE 0.35955344806361034 parameter fingerprint 7816789177727521343
+[INFO    pi_worker            ] received genome 536
+[INFO    pi_worker            ] returned genome 536 validation MSE 0.0063622597429038794 parameter fingerprint 7615791803375537866
+[INFO    pi_worker            ] received genome 537
+[INFO    pi_worker            ] returned genome 537 validation MSE 0.016449312290830621 parameter fingerprint 9352151087633935756
+[INFO    pi_worker            ] received genome 538
+[INFO    pi_worker            ] returned genome 538 validation MSE 0.038689993711551657 parameter fingerprint 4798166454325354532
+[INFO    pi_worker            ] received genome 539
+[INFO    pi_worker            ] returned genome 539 validation MSE 0.0052283709378731155 parameter fingerprint 15510868618513292438
+[INFO    pi_worker            ] received genome 540
+[INFO    pi_worker            ] returned genome 540 validation MSE 0.058713669807249833 parameter fingerprint 8920243324622743112
+[INFO    pi_worker            ] received genome 541
+[INFO    pi_worker            ] returned genome 541 validation MSE 0.0060860434620127156 parameter fingerprint 13096852693730697146
+[INFO    pi_worker            ] received genome 542
+[INFO    pi_worker            ] returned genome 542 validation MSE 0.010094482656614419 parameter fingerprint 12653364196044516225
+[INFO    pi_worker            ] received genome 543
+[INFO    pi_worker            ] returned genome 543 validation MSE 0.037584693394400369 parameter fingerprint 13701944485689134893
+[INFO    pi_worker            ] received genome 544
+[INFO    pi_worker            ] returned genome 544 validation MSE 0.0043581857759493661 parameter fingerprint 16805206326610756039
+[INFO    pi_worker            ] received genome 545
+[INFO    pi_worker            ] returned genome 545 validation MSE 0.037664338619240678 parameter fingerprint 15335054114952027341
+[INFO    pi_worker            ] received genome 546
+[INFO    pi_worker            ] returned genome 546 validation MSE 0.0065964590049425991 parameter fingerprint 9776502200391269836
+[INFO    pi_worker            ] received genome 547
+[INFO    pi_worker            ] returned genome 547 validation MSE 0.011474112108017116 parameter fingerprint 15047942040913683293
+[INFO    pi_worker            ] received genome 548
+[INFO    pi_worker            ] returned genome 548 validation MSE 0.031388378802770657 parameter fingerprint 6069958921995467658
+[INFO    pi_worker            ] received genome 549
+[INFO    pi_worker            ] returned genome 549 validation MSE 0.057543022720214845 parameter fingerprint 18067052551492228708
+[INFO    pi_worker            ] received genome 550
+[INFO    pi_worker            ] returned genome 550 validation MSE 0.041721875991399454 parameter fingerprint 11308217121553144643
+[INFO    pi_worker            ] received genome 551
+[INFO    pi_worker            ] returned genome 551 validation MSE 0.030670357264315159 parameter fingerprint 9037620474777225757
+[INFO    pi_worker            ] received genome 552
+[INFO    pi_worker            ] returned genome 552 validation MSE 0.010094482656614419 parameter fingerprint 12653364196044516225
+[INFO    pi_worker            ] received genome 553
+[INFO    pi_worker            ] returned genome 553 validation MSE 0.037045329768383352 parameter fingerprint 14102566628140811078
+[INFO    pi_worker            ] received genome 554
+[INFO    pi_worker            ] returned genome 554 validation MSE 0.039160847033800669 parameter fingerprint 2501894478425409921
+[INFO    pi_worker            ] received genome 555
+[INFO    pi_worker            ] returned genome 555 validation MSE 0.01845309549741591 parameter fingerprint 505280311460540143
+[INFO    pi_worker            ] received genome 556
+[INFO    pi_worker            ] returned genome 556 validation MSE 0.037654468389904737 parameter fingerprint 10303291991592900934
+[INFO    pi_worker            ] received genome 557
+[INFO    pi_worker            ] returned genome 557 validation MSE 0.011354192557922957 parameter fingerprint 7765119963080200625
+[INFO    pi_worker            ] received genome 558
+[INFO    pi_worker            ] returned genome 558 validation MSE 0.041302585132195646 parameter fingerprint 4331097810716638188
+[INFO    pi_worker            ] received genome 559
+[INFO    pi_worker            ] returned genome 559 validation MSE 0.15391255757613467 parameter fingerprint 3173461145631262441
+[INFO    pi_worker            ] received genome 560
+[INFO    pi_worker            ] returned genome 560 validation MSE 0.012812777161346378 parameter fingerprint 3816130636865815769
+[INFO    pi_worker            ] received genome 561
+[INFO    pi_worker            ] returned genome 561 validation MSE 0.041433381456037505 parameter fingerprint 17240848948652659021
+[INFO    pi_worker            ] received genome 562
+[INFO    pi_worker            ] returned genome 562 validation MSE 0.10335549778506636 parameter fingerprint 14656646947273843758
+[INFO    pi_worker            ] received genome 563
+[INFO    pi_worker            ] returned genome 563 validation MSE 0.0047166567966496339 parameter fingerprint 12999034744009984864
+[INFO    pi_worker            ] received genome 564
+[INFO    pi_worker            ] returned genome 564 validation MSE 0.0095289264103135297 parameter fingerprint 8596901861810994842
+[INFO    pi_worker            ] received genome 565
+[INFO    pi_worker            ] returned genome 565 validation MSE 0.0076750259804632907 parameter fingerprint 16702528600400663937
+[INFO    pi_worker            ] received genome 566
+[INFO    pi_worker            ] returned genome 566 validation MSE 0.0061443490082369132 parameter fingerprint 7110868178999253972
+[INFO    pi_worker            ] received genome 567
+[INFO    pi_worker            ] returned genome 567 validation MSE 0.011445397637453083 parameter fingerprint 1683872044896368858
+[INFO    pi_worker            ] received genome 568
+[INFO    pi_worker            ] returned genome 568 validation MSE 0.040816485235412023 parameter fingerprint 15484952771246601899
+[INFO    pi_worker            ] received genome 569
+[INFO    pi_worker            ] returned genome 569 validation MSE 3.3030200310945808 parameter fingerprint 7557256836465245551
+[INFO    pi_worker            ] received genome 570
+[INFO    pi_worker            ] returned genome 570 validation MSE 0.017988272782235814 parameter fingerprint 16623606682235732364
+[INFO    pi_worker            ] received genome 571
+[INFO    pi_worker            ] returned genome 571 validation MSE 0.039559288649439341 parameter fingerprint 195963827186486823
+[INFO    pi_worker            ] received genome 572
+[INFO    pi_worker            ] returned genome 572 validation MSE 0.013413537548658372 parameter fingerprint 16610546369668091261
+[INFO    pi_worker            ] received genome 573
+[INFO    pi_worker            ] returned genome 573 validation MSE 0.0023140573867644026 parameter fingerprint 12247006187226008654
+[INFO    pi_worker            ] received genome 574
+[INFO    pi_worker            ] returned genome 574 validation MSE 0.034773948271737805 parameter fingerprint 10079274271595051177
+[INFO    pi_worker            ] received genome 575
+[INFO    pi_worker            ] returned genome 575 validation MSE 0.021540505995869673 parameter fingerprint 15875112537162341644
+[INFO    pi_worker            ] received genome 576
+[INFO    pi_worker            ] returned genome 576 validation MSE 0.0061154713925051941 parameter fingerprint 578200376510364582
+[INFO    pi_worker            ] received genome 577
+[INFO    pi_worker            ] returned genome 577 validation MSE 0.018131956798672428 parameter fingerprint 17063812105755246532
+[INFO    pi_worker            ] received genome 578
+[INFO    pi_worker            ] returned genome 578 validation MSE 0.040718953093099752 parameter fingerprint 5767944953631791028
+[INFO    pi_worker            ] received genome 579
+[INFO    pi_worker            ] returned genome 579 validation MSE 0.016260800790922639 parameter fingerprint 16799902132545032290
+[INFO    pi_worker            ] received genome 580
+[INFO    pi_worker            ] returned genome 580 validation MSE 0.0094054442694457008 parameter fingerprint 5636475888434828954
+[INFO    pi_worker            ] received genome 581
+[INFO    pi_worker            ] returned genome 581 validation MSE 0.04146846027632542 parameter fingerprint 13779789342175002063
+[INFO    pi_worker            ] received genome 582
+[INFO    pi_worker            ] returned genome 582 validation MSE 0.0097353006526698423 parameter fingerprint 18435436890825900670
+[INFO    pi_worker            ] received genome 583
+[INFO    pi_worker            ] returned genome 583 validation MSE 0.033190829571851724 parameter fingerprint 2077204501800589796
+[INFO    pi_worker            ] received genome 584
+[INFO    pi_worker            ] returned genome 584 validation MSE 0.061003864987438476 parameter fingerprint 5474428750822327403
+[INFO    pi_worker            ] received genome 585
+[INFO    pi_worker            ] returned genome 585 validation MSE 0.012979120279224337 parameter fingerprint 10443522968021479725
+[INFO    pi_worker            ] received genome 586
+[INFO    pi_worker            ] returned genome 586 validation MSE 0.0075528467640917319 parameter fingerprint 1583695138157921310
+[INFO    pi_worker            ] received genome 587
+[INFO    pi_worker            ] returned genome 587 validation MSE 0.020203192315192839 parameter fingerprint 15917932679833532479
+[INFO    pi_worker            ] received genome 588
+[INFO    pi_worker            ] returned genome 588 validation MSE 0.037419840380649529 parameter fingerprint 16609008543328301409
+[INFO    pi_worker            ] received genome 589
+[INFO    pi_worker            ] returned genome 589 validation MSE 0.005849871171791898 parameter fingerprint 12829633496591912576
+[INFO    pi_worker            ] received genome 590
+[INFO    pi_worker            ] returned genome 590 validation MSE 0.024098102751457025 parameter fingerprint 7837366857660203675
+[INFO    pi_worker            ] received genome 591
+[INFO    pi_worker            ] returned genome 591 validation MSE 0.067855945979139215 parameter fingerprint 16814481644829265506
+[INFO    pi_worker            ] received genome 592
+[INFO    pi_worker            ] returned genome 592 validation MSE 0.036937260779767264 parameter fingerprint 325993590254137020
+[INFO    pi_worker            ] received genome 593
+[INFO    pi_worker            ] returned genome 593 validation MSE 0.033905746295770318 parameter fingerprint 2895908799941667981
+[INFO    pi_worker            ] received genome 594
+[INFO    pi_worker            ] returned genome 594 validation MSE 0.032059826075938783 parameter fingerprint 6224354253845713586
+[INFO    pi_worker            ] received genome 595
+[INFO    pi_worker            ] returned genome 595 validation MSE 0.011913513132710262 parameter fingerprint 4677801684916447908
+[INFO    pi_worker            ] received genome 596
+[INFO    pi_worker            ] returned genome 596 validation MSE 0.19728064740409426 parameter fingerprint 211929707429644276
+[INFO    pi_worker            ] received genome 597
+[INFO    pi_worker            ] returned genome 597 validation MSE 0.011305519400415335 parameter fingerprint 14751605488447361795
+[INFO    pi_worker            ] received genome 598
+[INFO    pi_worker            ] returned genome 598 validation MSE 0.027512138197539761 parameter fingerprint 15971641464707249025
+[INFO    pi_worker            ] received genome 599
+[INFO    pi_worker            ] returned genome 599 validation MSE 0.012776193637203909 parameter fingerprint 10698538544039938506
+[INFO    pi_worker            ] received genome 600
+[INFO    pi_worker            ] returned genome 600 validation MSE 0.012697409067749167 parameter fingerprint 3108434316832899209
+[INFO    pi_worker            ] received genome 601
+[INFO    pi_worker            ] returned genome 601 validation MSE 0.014408811793137726 parameter fingerprint 10396108338446041273
+[INFO    pi_worker            ] received genome 602
+[INFO    pi_worker            ] returned genome 602 validation MSE 0.010093236590611477 parameter fingerprint 15404076782188154707
+[INFO    pi_worker            ] received genome 603
+[INFO    pi_worker            ] returned genome 603 validation MSE 0.0029453509835990492 parameter fingerprint 4801416995740718252
+[INFO    pi_worker            ] received genome 604
+[INFO    pi_worker            ] returned genome 604 validation MSE 0.038476873999123598 parameter fingerprint 16806532031805071830
+[INFO    pi_worker            ] received genome 605
+[INFO    pi_worker            ] returned genome 605 validation MSE 0.007732210808673633 parameter fingerprint 13553511948670742184
+[INFO    pi_worker            ] received genome 606
+[INFO    pi_worker            ] returned genome 606 validation MSE 0.0065189233568206419 parameter fingerprint 6586233240272632412
+[INFO    pi_worker            ] received genome 607
+[INFO    pi_worker            ] returned genome 607 validation MSE 0.010172572355643478 parameter fingerprint 3843565520346666662
+[INFO    pi_worker            ] received genome 608
+[INFO    pi_worker            ] returned genome 608 validation MSE 0.034061339865483896 parameter fingerprint 8129363592435353898
+[INFO    pi_worker            ] received genome 609
+[INFO    pi_worker            ] returned genome 609 validation MSE 0.0041848202143883843 parameter fingerprint 5746725610866394164
+[INFO    pi_worker            ] received genome 610
+[INFO    pi_worker            ] returned genome 610 validation MSE 0.01197994885027796 parameter fingerprint 3365283033266516026
+[INFO    pi_worker            ] received genome 611
+[INFO    pi_worker            ] returned genome 611 validation MSE 0.0050439887424696978 parameter fingerprint 8693751811436463816
+[INFO    pi_worker            ] received genome 612
+[INFO    pi_worker            ] returned genome 612 validation MSE 0.022329376923757624 parameter fingerprint 8956149511254236793
+[INFO    pi_worker            ] received genome 613
+[INFO    pi_worker            ] returned genome 613 validation MSE 0.0035411278791592036 parameter fingerprint 12999034744009984864
+[INFO    pi_worker            ] received genome 614
+[INFO    pi_worker            ] returned genome 614 validation MSE 2.5196558853054363 parameter fingerprint 5902177773895084325
+[INFO    pi_worker            ] received genome 615
+[INFO    pi_worker            ] returned genome 615 validation MSE 0.007037842517390239 parameter fingerprint 3730413481768675603
+[INFO    pi_worker            ] received genome 616
+[INFO    pi_worker            ] returned genome 616 validation MSE 0.006284243309475258 parameter fingerprint 14883012154770563739
+[INFO    pi_worker            ] received genome 617
+[INFO    pi_worker            ] returned genome 617 validation MSE 0.019962961213022878 parameter fingerprint 7021304580557500003
+[INFO    pi_worker            ] received genome 618
+[INFO    pi_worker            ] returned genome 618 validation MSE 0.038681264200141216 parameter fingerprint 2468170717683785078
+[INFO    pi_worker            ] received genome 619
+[INFO    pi_worker            ] returned genome 619 validation MSE 0.0057162120322249363 parameter fingerprint 2437659708236884469
+[INFO    pi_worker            ] received genome 620
+[INFO    pi_worker            ] returned genome 620 validation MSE 0.012418207235200485 parameter fingerprint 15108056051648038133
+[INFO    pi_worker            ] received genome 621
+[INFO    pi_worker            ] returned genome 621 validation MSE 0.045314763337819919 parameter fingerprint 2789534506515103924
+[INFO    pi_worker            ] received genome 622
+[INFO    pi_worker            ] returned genome 622 validation MSE 3.217044290112109 parameter fingerprint 8162417315736115984
+[INFO    pi_worker            ] received genome 623
+[INFO    pi_worker            ] returned genome 623 validation MSE 0.03334235284241794 parameter fingerprint 6038323012271625020
+[INFO    pi_worker            ] received genome 624
+[INFO    pi_worker            ] returned genome 624 validation MSE 0.03990643027602421 parameter fingerprint 6934242693869556910
+[INFO    pi_worker            ] received genome 625
+[INFO    pi_worker            ] returned genome 625 validation MSE 0.99615850517396332 parameter fingerprint 13494102032631295839
+[INFO    pi_worker            ] received genome 626
+[INFO    pi_worker            ] returned genome 626 validation MSE 0.013966788596667331 parameter fingerprint 16803906298328565468
+[INFO    pi_worker            ] received genome 627
+[INFO    pi_worker            ] returned genome 627 validation MSE 0.013719298373565787 parameter fingerprint 13224786585558206410
+[INFO    pi_worker            ] received genome 628
+[INFO    pi_worker            ] returned genome 628 validation MSE 0.040230940905286748 parameter fingerprint 13389774207224182979
+[INFO    pi_worker            ] received genome 629
+[INFO    pi_worker            ] returned genome 629 validation MSE 0.030200580059872792 parameter fingerprint 5597291672817446724
+[INFO    pi_worker            ] received genome 630
+[INFO    pi_worker            ] returned genome 630 validation MSE 0.0076511801473348184 parameter fingerprint 13215860265840547745
+[INFO    pi_worker            ] received genome 631
+[INFO    pi_worker            ] returned genome 631 validation MSE 0.0044949004935640165 parameter fingerprint 7645791579732155146
+[INFO    pi_worker            ] received genome 632
+[INFO    pi_worker            ] returned genome 632 validation MSE 0.033117871692158199 parameter fingerprint 140928838800019310
+[INFO    pi_worker            ] received genome 633
+[INFO    pi_worker            ] returned genome 633 validation MSE 0.083267349767301491 parameter fingerprint 10784576947062951824
+[INFO    pi_worker            ] received genome 634
+[INFO    pi_worker            ] returned genome 634 validation MSE 0.032722901549668726 parameter fingerprint 12277274174646101743
+[INFO    pi_worker            ] received genome 635
+[INFO    pi_worker            ] returned genome 635 validation MSE 0.066181433513776297 parameter fingerprint 15458218933389948112
+[INFO    pi_worker            ] received genome 636
+[INFO    pi_worker            ] returned genome 636 validation MSE 0.038452755527923245 parameter fingerprint 17715515956318292666
+[INFO    pi_worker            ] received genome 637
+[INFO    pi_worker            ] returned genome 637 validation MSE 0.035446274170952093 parameter fingerprint 5592193679198029606
+[INFO    pi_worker            ] received genome 638
+[INFO    pi_worker            ] returned genome 638 validation MSE 0.022424623671181282 parameter fingerprint 4017895296332486161
+[INFO    pi_worker            ] received genome 639
+[INFO    pi_worker            ] returned genome 639 validation MSE 0.0059491077271720556 parameter fingerprint 1200588861342690288
+[INFO    pi_worker            ] received genome 640
+[INFO    pi_worker            ] returned genome 640 validation MSE 0.011015016594256265 parameter fingerprint 4542446559770261252
+[INFO    pi_worker            ] received genome 641
+[INFO    pi_worker            ] returned genome 641 validation MSE 0.0044312532328087632 parameter fingerprint 11864599653449074264
+[INFO    pi_worker            ] received genome 642
+[INFO    pi_worker            ] returned genome 642 validation MSE 2.9456998771164891 parameter fingerprint 16781702312331321351
+[INFO    pi_worker            ] received genome 643
+[INFO    pi_worker            ] returned genome 643 validation MSE 0.035769873324565341 parameter fingerprint 9793659269238436980
+[INFO    pi_worker            ] received genome 644
+[INFO    pi_worker            ] returned genome 644 validation MSE 0.041300142472390666 parameter fingerprint 4314005342374321239
+[INFO    pi_worker            ] received genome 645
+[INFO    pi_worker            ] returned genome 645 validation MSE 3.3056364726131355 parameter fingerprint 16995316288514337361
+[INFO    pi_worker            ] received genome 646
+[INFO    pi_worker            ] returned genome 646 validation MSE 0.023697616534035154 parameter fingerprint 12376257804778361418
+[INFO    pi_worker            ] received genome 647
+[INFO    pi_worker            ] returned genome 647 validation MSE 0.018268290225565226 parameter fingerprint 16416816212588911060
+[INFO    pi_worker            ] received genome 648
+[INFO    pi_worker            ] returned genome 648 validation MSE 0.010340183246558733 parameter fingerprint 10382146942847022724
+[INFO    pi_worker            ] received genome 649
+[INFO    pi_worker            ] returned genome 649 validation MSE 0.20931209222522623 parameter fingerprint 16270070905538022711
+[INFO    pi_worker            ] received genome 650
+[INFO    pi_worker            ] returned genome 650 validation MSE 0.040353787140818803 parameter fingerprint 17446853290895066771
+[INFO    pi_worker            ] received genome 651
+[INFO    pi_worker            ] returned genome 651 validation MSE 0.63885570970425198 parameter fingerprint 353051443312104910
+[INFO    pi_worker            ] received genome 652
+[INFO    pi_worker            ] returned genome 652 validation MSE 0.010080259110175009 parameter fingerprint 13115615339258084858
+[INFO    pi_worker            ] received genome 653
+[INFO    pi_worker            ] returned genome 653 validation MSE 3.3051720169241356 parameter fingerprint 2711421451927525176
+[INFO    pi_worker            ] received genome 654
+[INFO    pi_worker            ] returned genome 654 validation MSE 0.036405548849535535 parameter fingerprint 1145784660305710288
+[INFO    pi_worker            ] received genome 655
+[INFO    pi_worker            ] returned genome 655 validation MSE 0.037609058328915215 parameter fingerprint 10971060432197598438
+[INFO    pi_worker            ] received genome 656
+[INFO    pi_worker            ] returned genome 656 validation MSE 1.9691696279214661 parameter fingerprint 13096129721746916247
+[INFO    pi_worker            ] received genome 657
+[INFO    pi_worker            ] returned genome 657 validation MSE 0.0098442776647014001 parameter fingerprint 14370465956791618460
+[INFO    pi_worker            ] received genome 658
+[INFO    pi_worker            ] returned genome 658 validation MSE 3.2722631397548314 parameter fingerprint 6991140934462381907
+[INFO    pi_worker            ] received genome 659
+[INFO    pi_worker            ] returned genome 659 validation MSE 0.040062539906761174 parameter fingerprint 7345634427806887408
+[INFO    pi_worker            ] received genome 660
+[INFO    pi_worker            ] returned genome 660 validation MSE 0.30488772742221815 parameter fingerprint 229846589169320500
+[INFO    pi_worker            ] received genome 661
+[INFO    pi_worker            ] returned genome 661 validation MSE 0.041568764066475417 parameter fingerprint 13712486626322470722
+[INFO    pi_worker            ] received genome 662
+[INFO    pi_worker            ] returned genome 662 validation MSE 0.061289166172447597 parameter fingerprint 14941109485768386558
+[INFO    pi_worker            ] received genome 663
+[INFO    pi_worker            ] returned genome 663 validation MSE 0.0019620940491085533 parameter fingerprint 2258304198010594227
+[INFO    pi_worker            ] received genome 664
+[INFO    pi_worker            ] returned genome 664 validation MSE 0.034773948271737805 parameter fingerprint 10079274271595051177
+[INFO    pi_worker            ] received genome 665
+[INFO    pi_worker            ] returned genome 665 validation MSE 0.041234921641951222 parameter fingerprint 13742418143958297968
+[INFO    pi_worker            ] received genome 666
+[INFO    pi_worker            ] returned genome 666 validation MSE 2.6679436032045651 parameter fingerprint 6937603815972126773
+[INFO    pi_worker            ] received genome 667
+[INFO    pi_worker            ] returned genome 667 validation MSE 0.83053872872655565 parameter fingerprint 1515155724844031817
+[INFO    pi_worker            ] received genome 668
+[INFO    pi_worker            ] returned genome 668 validation MSE 0.011012908947695051 parameter fingerprint 1381325764671410480
+[INFO    pi_worker            ] received genome 669
+[INFO    pi_worker            ] returned genome 669 validation MSE 0.03895341076445509 parameter fingerprint 14781104694926011984
+[INFO    pi_worker            ] received genome 670
+[INFO    pi_worker            ] returned genome 670 validation MSE 0.011818041497227136 parameter fingerprint 9816506150125371785
+[INFO    pi_worker            ] received genome 671
+[INFO    pi_worker            ] returned genome 671 validation MSE 0.040038923324743195 parameter fingerprint 190449740769108604
+[INFO    pi_worker            ] received genome 672
+[INFO    pi_worker            ] returned genome 672 validation MSE 0.96133743029857555 parameter fingerprint 14460628513471451984
+[INFO    pi_worker            ] received genome 673
+[INFO    pi_worker            ] returned genome 673 validation MSE 0.0026185257924887201 parameter fingerprint 638499354077038158
+[INFO    pi_worker            ] received genome 674
+[INFO    pi_worker            ] returned genome 674 validation MSE 0.031772918293040395 parameter fingerprint 6745432307744190690
+[INFO    pi_worker            ] received genome 675
+[INFO    pi_worker            ] returned genome 675 validation MSE 0.021924481722494296 parameter fingerprint 16680054731449220864
+[INFO    pi_worker            ] received genome 676
+[INFO    pi_worker            ] returned genome 676 validation MSE 0.015627943705575416 parameter fingerprint 15020067506525268054
+[INFO    pi_worker            ] received genome 677
+[INFO    pi_worker            ] returned genome 677 validation MSE 0.40234809608659794 parameter fingerprint 1540575951608856526
+[INFO    pi_worker            ] received genome 678
+[INFO    pi_worker            ] returned genome 678 validation MSE 0.041208822426475639 parameter fingerprint 6906232388480485088
+[INFO    pi_worker            ] received genome 679
+[INFO    pi_worker            ] returned genome 679 validation MSE 0.014677560854622032 parameter fingerprint 15156934366810133269
+[INFO    pi_worker            ] received genome 680
+[INFO    pi_worker            ] returned genome 680 validation MSE 0.038634487627559513 parameter fingerprint 2416084068219628085
+[INFO    pi_worker            ] received genome 681
+[INFO    pi_worker            ] returned genome 681 validation MSE 0.0053320173368669628 parameter fingerprint 7937255470018228941
+[INFO    pi_worker            ] received genome 682
+[INFO    pi_worker            ] returned genome 682 validation MSE 0.041353816980811003 parameter fingerprint 11841029198162217515
+[INFO    pi_worker            ] received genome 683
+[INFO    pi_worker            ] returned genome 683 validation MSE 0.013575186507355739 parameter fingerprint 6573729825043839510
+[INFO    pi_worker            ] received genome 684
+[INFO    pi_worker            ] returned genome 684 validation MSE 0.02874944519449156 parameter fingerprint 16399909687997496615
+[INFO    pi_worker            ] received genome 685
+[INFO    pi_worker            ] returned genome 685 validation MSE 0.041468899221983151 parameter fingerprint 15936355961684014710
+[INFO    pi_worker            ] received genome 686
+[INFO    pi_worker            ] returned genome 686 validation MSE 0.0068541226775650985 parameter fingerprint 14295431591415760444
+[INFO    pi_worker            ] received genome 687
+[INFO    pi_worker            ] returned genome 687 validation MSE 0.058557300232539605 parameter fingerprint 8969415498919439772
+[INFO    pi_worker            ] received genome 688
+[INFO    pi_worker            ] returned genome 688 validation MSE 0.040276049022360982 parameter fingerprint 15363085182083699154
+[INFO    pi_worker            ] received genome 689
+[INFO    pi_worker            ] returned genome 689 validation MSE 0.0037232617617564113 parameter fingerprint 6234405157546282665
+[INFO    pi_worker            ] received genome 690
+[INFO    pi_worker            ] returned genome 690 validation MSE 0.041472133994606419 parameter fingerprint 13349739271132525807
+[INFO    pi_worker            ] received genome 691
+[INFO    pi_worker            ] returned genome 691 validation MSE 0.02383585353125291 parameter fingerprint 8570301098515278030
+[INFO    pi_worker            ] received genome 692
+[INFO    pi_worker            ] returned genome 692 validation MSE 0.0099875831194486259 parameter fingerprint 13342495293833325848
+[INFO    pi_worker            ] received genome 693
+[INFO    pi_worker            ] returned genome 693 validation MSE 0.041472520360608368 parameter fingerprint 10776262019703395814
+[INFO    pi_worker            ] received genome 694
+[INFO    pi_worker            ] returned genome 694 validation MSE 0.013312902598534838 parameter fingerprint 3117492862008037979
+[INFO    pi_worker            ] received genome 695
+[INFO    pi_worker            ] returned genome 695 validation MSE 0.007639034961570243 parameter fingerprint 5643933145136200520
+[INFO    pi_worker            ] received genome 696
+[INFO    pi_worker            ] returned genome 696 validation MSE 0.0062347023744012634 parameter fingerprint 9403603459120679000
+[INFO    pi_worker            ] received genome 697
+[INFO    pi_worker            ] returned genome 697 validation MSE 0.018365982810471269 parameter fingerprint 14092521282417225114
+[INFO    pi_worker            ] received genome 698
+[INFO    pi_worker            ] returned genome 698 validation MSE 0.041036897407651124 parameter fingerprint 3030111662725031795
+[INFO    pi_worker            ] received genome 699
+[INFO    pi_worker            ] returned genome 699 validation MSE 0.1322762014115989 parameter fingerprint 3457600793009831033
+[INFO    pi_worker            ] received genome 700
+[INFO    pi_worker            ] returned genome 700 validation MSE 0.022675148144913265 parameter fingerprint 10433737002986464898
+[INFO    pi_worker            ] received genome 701
+[INFO    pi_worker            ] returned genome 701 validation MSE 0.0091977531410628744 parameter fingerprint 299693597164972020
+[INFO    pi_worker            ] received genome 702
+[INFO    pi_worker            ] returned genome 702 validation MSE 0.020824161446696493 parameter fingerprint 7596139277865880458
+[INFO    pi_worker            ] received genome 703
+[INFO    pi_worker            ] returned genome 703 validation MSE 0.22164699826118631 parameter fingerprint 16860946042142096376
+[INFO    pi_worker            ] received genome 704
+[INFO    pi_worker            ] returned genome 704 validation MSE 0.037233477536147079 parameter fingerprint 11119377420442283724
+[INFO    pi_worker            ] received genome 705
+[INFO    pi_worker            ] returned genome 705 validation MSE 0.011038475586067867 parameter fingerprint 6359385594999028180
+[INFO    pi_worker            ] received genome 706
+[INFO    pi_worker            ] returned genome 706 validation MSE 0.011364608702936044 parameter fingerprint 16115806012379654543
+[INFO    pi_worker            ] received genome 707
+[INFO    pi_worker            ] returned genome 707 validation MSE 0.056074378587927513 parameter fingerprint 2670992241451386373
+[INFO    pi_worker            ] received genome 708
+[INFO    pi_worker            ] returned genome 708 validation MSE 0.031715424816966271 parameter fingerprint 8129363592435353898
+[INFO    pi_worker            ] received genome 709
+[INFO    pi_worker            ] returned genome 709 validation MSE 0.0055626678471433271 parameter fingerprint 14892145000681926514
+[INFO    pi_worker            ] received genome 710
+[INFO    pi_worker            ] returned genome 710 validation MSE 0.039350810959397582 parameter fingerprint 654822201551298054
+[INFO    pi_worker            ] received genome 711
+[INFO    pi_worker            ] returned genome 711 validation MSE 0.040905083678623153 parameter fingerprint 12851922954087504111
+[INFO    pi_worker            ] received genome 712
+[INFO    pi_worker            ] returned genome 712 validation MSE 0.04147024730879327 parameter fingerprint 8276160786300967371
+[INFO    pi_worker            ] received genome 713
+[INFO    pi_worker            ] returned genome 713 validation MSE 0.028866656505037155 parameter fingerprint 12215030049747536745
+[INFO    pi_worker            ] received genome 714
+[INFO    pi_worker            ] returned genome 714 validation MSE 0.031614569690570388 parameter fingerprint 14290127927843404828
+[INFO    pi_worker            ] received genome 715
+[INFO    pi_worker            ] returned genome 715 validation MSE 0.0046435651972124015 parameter fingerprint 1581289890700963712
+[INFO    pi_worker            ] received genome 716
+[INFO    pi_worker            ] returned genome 716 validation MSE 0.0063277142513121542 parameter fingerprint 10442430155444894873
+[INFO    pi_worker            ] received genome 717
+[INFO    pi_worker            ] returned genome 717 validation MSE 0.012418802770050273 parameter fingerprint 2275263525783721385
+[INFO    pi_worker            ] received genome 718
+[INFO    pi_worker            ] returned genome 718 validation MSE 3.2915481898740784 parameter fingerprint 7098439372603571677
+[INFO    pi_worker            ] received genome 719
+[INFO    pi_worker            ] returned genome 719 validation MSE 0.0072730409438001124 parameter fingerprint 12220978866146599386
+[INFO    pi_worker            ] received genome 720
+[INFO    pi_worker            ] returned genome 720 validation MSE 0.030504073030165793 parameter fingerprint 9372050523144029218
+[INFO    pi_worker            ] received genome 721
+[INFO    pi_worker            ] returned genome 721 validation MSE 0.0069727313979669556 parameter fingerprint 9856861006645771902
+[INFO    pi_worker            ] received genome 722
+[INFO    pi_worker            ] returned genome 722 validation MSE 0.0075332721390734799 parameter fingerprint 9395328708361851397
+[INFO    pi_worker            ] received genome 723
+[INFO    pi_worker            ] returned genome 723 validation MSE 0.041377749259540457 parameter fingerprint 2367117959637776823
+[INFO    pi_worker            ] received genome 724
+[INFO    pi_worker            ] returned genome 724 validation MSE 0.015148126739840307 parameter fingerprint 3620552704843708761
+[INFO    pi_worker            ] received genome 725
+[INFO    pi_worker            ] returned genome 725 validation MSE 0.0060380956240612882 parameter fingerprint 9981976715184019925
+[INFO    pi_worker            ] received genome 726
+[INFO    pi_worker            ] returned genome 726 validation MSE 0.0088629330872640275 parameter fingerprint 685113934974715542
+[INFO    pi_worker            ] received genome 727
+[INFO    pi_worker            ] returned genome 727 validation MSE 0.017517845042828592 parameter fingerprint 17452988644787706231
+[INFO    pi_worker            ] received genome 728
+[INFO    pi_worker            ] returned genome 728 validation MSE 0.9160290541268129 parameter fingerprint 7870116338525385270
+[INFO    pi_worker            ] received genome 729
+[INFO    pi_worker            ] returned genome 729 validation MSE 0.015506153018292697 parameter fingerprint 5567773024583995218
+[INFO    pi_worker            ] received genome 730
+[INFO    pi_worker            ] returned genome 730 validation MSE 0.031161375397069098 parameter fingerprint 18042096238408198353
+[INFO    pi_worker            ] received genome 731
+[INFO    pi_worker            ] returned genome 731 validation MSE 0.0086138314376474068 parameter fingerprint 13090031874834058878
+[INFO    pi_worker            ] received genome 732
+[INFO    pi_worker            ] returned genome 732 validation MSE 3.1448737011159129 parameter fingerprint 12860185790707360163
+[INFO    pi_worker            ] received genome 733
+[INFO    pi_worker            ] returned genome 733 validation MSE 0.26479713825836626 parameter fingerprint 15516577215361918191
+[INFO    pi_worker            ] received genome 734
+[INFO    pi_worker            ] returned genome 734 validation MSE 0.038997874274722746 parameter fingerprint 2455802635584324572
+[INFO    pi_worker            ] received genome 735
+[INFO    pi_worker            ] returned genome 735 validation MSE 0.0047539742978768267 parameter fingerprint 13385660251435188001
+[INFO    pi_worker            ] received genome 736
+[INFO    pi_worker            ] returned genome 736 validation MSE 0.27746686383965219 parameter fingerprint 17243247281551619825
+[INFO    pi_worker            ] received genome 737
+[INFO    pi_worker            ] returned genome 737 validation MSE 0.027044790872576413 parameter fingerprint 7591008376876541842
+[INFO    pi_worker            ] received genome 738
+[INFO    pi_worker            ] returned genome 738 validation MSE 0.093190423621447888 parameter fingerprint 16853707813033645686
+[INFO    pi_worker            ] received genome 739
+[INFO    pi_worker            ] returned genome 739 validation MSE 0.018645667894073483 parameter fingerprint 17182316363518302804
+[INFO    pi_worker            ] received genome 740
+[INFO    pi_worker            ] returned genome 740 validation MSE 0.11381057688284306 parameter fingerprint 3242336724272150978
+[INFO    pi_worker            ] received genome 741
+[INFO    pi_worker            ] returned genome 741 validation MSE 0.040316436314576959 parameter fingerprint 5721950002154806362
+[INFO    pi_worker            ] received genome 742
+[INFO    pi_worker            ] returned genome 742 validation MSE 0.0097935158222476164 parameter fingerprint 18121720706871596061
+[INFO    pi_worker            ] received genome 743
+[INFO    pi_worker            ] returned genome 743 validation MSE 0.022743304837730318 parameter fingerprint 273406941113526611
+[INFO    pi_worker            ] received genome 744
+[INFO    pi_worker            ] returned genome 744 validation MSE 0.027660743529772165 parameter fingerprint 15996799060826526353
+[INFO    pi_worker            ] received genome 745
+[INFO    pi_worker            ] returned genome 745 validation MSE 0.02145336178171842 parameter fingerprint 5422759688532377830
+[INFO    pi_worker            ] received genome 746
+[INFO    pi_worker            ] returned genome 746 validation MSE 0.035608695600251011 parameter fingerprint 1820617760635714025
+[INFO    pi_worker            ] received genome 747
+[INFO    pi_worker            ] returned genome 747 validation MSE 0.020332769395965709 parameter fingerprint 7301956924676457679
+[INFO    pi_worker            ] received genome 748
+[INFO    pi_worker            ] returned genome 748 validation MSE 0.016006296838899408 parameter fingerprint 7379435937027721856
+[INFO    pi_worker            ] received genome 749
+[INFO    pi_worker            ] returned genome 749 validation MSE 0.011072956837751734 parameter fingerprint 14494398683068294337
+[INFO    pi_worker            ] received genome 750
+[INFO    pi_worker            ] returned genome 750 validation MSE 3.0312639162081414 parameter fingerprint 17432961938710222040
+[INFO    pi_worker            ] received genome 751
+[INFO    pi_worker            ] returned genome 751 validation MSE 0.040092284323546938 parameter fingerprint 8020340386723244025
+[INFO    pi_worker            ] received genome 752
+[INFO    pi_worker            ] returned genome 752 validation MSE 0.041449576685292831 parameter fingerprint 10991530975676203212
+[INFO    pi_worker            ] received genome 753
+[INFO    pi_worker            ] returned genome 753 validation MSE 0.004515540249649343 parameter fingerprint 9549004392732817266
+[INFO    pi_worker            ] received genome 754
+[INFO    pi_worker            ] returned genome 754 validation MSE 3.2538479029623124 parameter fingerprint 1723565833944153512
+[INFO    pi_worker            ] received genome 755
+[INFO    pi_worker            ] returned genome 755 validation MSE 0.011651710860826977 parameter fingerprint 8533068735471467159
+[INFO    pi_worker            ] received genome 756
+[INFO    pi_worker            ] returned genome 756 validation MSE 0.025467165364083989 parameter fingerprint 14425534897852902452
+[INFO    pi_worker            ] received genome 757
+[INFO    pi_worker            ] returned genome 757 validation MSE 0.0081968498857949469 parameter fingerprint 12637295628997400349
+[INFO    pi_worker            ] received genome 758
+[INFO    pi_worker            ] returned genome 758 validation MSE 0.01071376339424461 parameter fingerprint 13342576407139693345
+[INFO    pi_worker            ] received genome 759
+[INFO    pi_worker            ] returned genome 759 validation MSE 0.0064282929011771238 parameter fingerprint 13090789340644250848
+[INFO    pi_worker            ] received genome 760
+[INFO    pi_worker            ] returned genome 760 validation MSE 0.030960826860009102 parameter fingerprint 755051350755884995
+[INFO    pi_worker            ] received genome 761
+[INFO    pi_worker            ] returned genome 761 validation MSE 0.004715787161310275 parameter fingerprint 17176004359358395907
+[INFO    pi_worker            ] received genome 762
+[INFO    pi_worker            ] returned genome 762 validation MSE 0.03917260705592579 parameter fingerprint 8457736407250684701
+[INFO    pi_worker            ] received genome 763
+[INFO    pi_worker            ] returned genome 763 validation MSE 0.0056700330276689996 parameter fingerprint 15750785812395925383
+[INFO    pi_worker            ] received genome 764
+[INFO    pi_worker            ] returned genome 764 validation MSE 0.040088337972754962 parameter fingerprint 1570605710978075688
+[INFO    pi_worker            ] received genome 765
+[INFO    pi_worker            ] returned genome 765 validation MSE 0.9995113046169557 parameter fingerprint 4022986819028514147
+[INFO    pi_worker            ] received genome 766
+[INFO    pi_worker            ] returned genome 766 validation MSE 2.2627467389694282 parameter fingerprint 16452131891424980123
+[INFO    pi_worker            ] received genome 767
+[INFO    pi_worker            ] returned genome 767 validation MSE 0.014436767090091117 parameter fingerprint 10770670515538866886
+[INFO    pi_worker            ] received genome 768
+[INFO    pi_worker            ] returned genome 768 validation MSE 0.031663227071514907 parameter fingerprint 9388015472040703212
+[INFO    pi_worker            ] received genome 769
+[INFO    pi_worker            ] returned genome 769 validation MSE 0.035633797713026077 parameter fingerprint 12090899876530509614
+[INFO    pi_worker            ] received genome 770
+[INFO    pi_worker            ] returned genome 770 validation MSE 0.011209344527828076 parameter fingerprint 6728729549837461081
+[INFO    pi_worker            ] received genome 771
+[INFO    pi_worker            ] returned genome 771 validation MSE 0.031810663524112361 parameter fingerprint 9983434508960831518
+[INFO    pi_worker            ] received genome 772
+[INFO    pi_worker            ] returned genome 772 validation MSE 0.0075498757693072995 parameter fingerprint 4972205007030303455
+[INFO    pi_worker            ] received genome 773
+[INFO    pi_worker            ] returned genome 773 validation MSE 0.0028362501229372743 parameter fingerprint 6900251523163381157
+[INFO    pi_worker            ] received genome 774
+[INFO    pi_worker            ] returned genome 774 validation MSE 0.027106367480398678 parameter fingerprint 13434296127928144914
+[INFO    pi_worker            ] received genome 775
+[INFO    pi_worker            ] returned genome 775 validation MSE 0.0063319419419091286 parameter fingerprint 9394659833644515916
+[INFO    pi_worker            ] received genome 776
+[INFO    pi_worker            ] returned genome 776 validation MSE 2.0169391943256669 parameter fingerprint 12967484590495683594
+[INFO    pi_worker            ] received genome 777
+[INFO    pi_worker            ] returned genome 777 validation MSE 0.044506946848408023 parameter fingerprint 4056654028904262069
+[INFO    pi_worker            ] received genome 778
+[INFO    pi_worker            ] returned genome 778 validation MSE 0.0076765557260094347 parameter fingerprint 12619462357772723658
+[INFO    pi_worker            ] received genome 779
+[INFO    pi_worker            ] returned genome 779 validation MSE 0.010073010218575902 parameter fingerprint 10713439949527641090
+[INFO    pi_worker            ] received genome 780
+[INFO    pi_worker            ] returned genome 780 validation MSE 3.3056425139719829 parameter fingerprint 3654940757218290195
+[INFO    pi_worker            ] received genome 781
+[INFO    pi_worker            ] returned genome 781 validation MSE 0.0059493317180029839 parameter fingerprint 172872377599569171
+[INFO    pi_worker            ] received genome 782
+[INFO    pi_worker            ] returned genome 782 validation MSE 0.0097420926461087333 parameter fingerprint 5460425793901675960
+[INFO    pi_worker            ] received genome 783
+[INFO    pi_worker            ] returned genome 783 validation MSE 0.0030541369736062128 parameter fingerprint 3288532138346550300
+[INFO    pi_worker            ] received genome 784
+[INFO    pi_worker            ] returned genome 784 validation MSE 1.0769253887864627 parameter fingerprint 8787028753145787577
+[INFO    pi_worker            ] received genome 785
+[INFO    pi_worker            ] returned genome 785 validation MSE 0.0148184722521091 parameter fingerprint 315817533736035278
+[INFO    pi_worker            ] received genome 786
+[INFO    pi_worker            ] returned genome 786 validation MSE 0.0064012649823446833 parameter fingerprint 16391245967428421593
+[INFO    pi_worker            ] received genome 787
+[INFO    pi_worker            ] returned genome 787 validation MSE 0.010555135333341214 parameter fingerprint 3759182270759042911
+[INFO    pi_worker            ] received genome 788
+[INFO    pi_worker            ] returned genome 788 validation MSE 3.2687886359972254 parameter fingerprint 16818989983677340819
+[INFO    pi_worker            ] received genome 789
+[INFO    pi_worker            ] returned genome 789 validation MSE 0.010571904592953632 parameter fingerprint 1750873684454454445
+[INFO    pi_worker            ] received genome 790
+[INFO    pi_worker            ] returned genome 790 validation MSE 0.011080549344572248 parameter fingerprint 506575319609508884
+[INFO    pi_worker            ] received genome 791
+[INFO    pi_worker            ] returned genome 791 validation MSE 0.50249268864266394 parameter fingerprint 15521193542042586338
+[INFO    pi_worker            ] received genome 792
+[INFO    pi_worker            ] returned genome 792 validation MSE 0.17159418867601642 parameter fingerprint 2294692489863940348
+[INFO    pi_worker            ] received genome 793
+[INFO    pi_worker            ] returned genome 793 validation MSE 0.04130651192345073 parameter fingerprint 5678287799761296922
+[INFO    pi_worker            ] received genome 794
+[INFO    pi_worker            ] returned genome 794 validation MSE 0.027005434618628699 parameter fingerprint 8886226406318616096
+[INFO    pi_worker            ] received genome 795
+[INFO    pi_worker            ] returned genome 795 validation MSE 0.0047798811205911453 parameter fingerprint 15880270765761122369
+[INFO    pi_worker            ] received genome 796
+[INFO    pi_worker            ] returned genome 796 validation MSE 0.0064505191953165529 parameter fingerprint 702501076799339022
+[INFO    pi_worker            ] received genome 797
+[INFO    pi_worker            ] returned genome 797 validation MSE 0.0099552592773624014 parameter fingerprint 4426818457112406181
+[INFO    pi_worker            ] received genome 798
+[INFO    pi_worker            ] returned genome 798 validation MSE 0.041281733104681272 parameter fingerprint 18394089427913611510
+[INFO    pi_worker            ] received genome 799
+[INFO    pi_worker            ] returned genome 799 validation MSE 0.015193994285063895 parameter fingerprint 3996569567971724782
+[INFO    pi_worker            ] received genome 800
+[INFO    pi_worker            ] returned genome 800 validation MSE 0.04145388762990726 parameter fingerprint 6317874838327789601
+[INFO    pi_worker            ] received genome 801
+[INFO    pi_worker            ] returned genome 801 validation MSE 0.0048422746399864967 parameter fingerprint 10786340238953290626
+[INFO    pi_worker            ] received genome 802
+[INFO    pi_worker            ] returned genome 802 validation MSE 0.030802513158140289 parameter fingerprint 4475204672663059073
+[INFO    pi_worker            ] received genome 803
+[INFO    pi_worker            ] returned genome 803 validation MSE 0.037307399575095879 parameter fingerprint 17332027171994651265
+[INFO    pi_worker            ] received genome 804
+[INFO    pi_worker            ] returned genome 804 validation MSE 0.84628625628279652 parameter fingerprint 1196735797720954441
+[INFO    pi_worker            ] received genome 805
+[INFO    pi_worker            ] returned genome 805 validation MSE 0.022346952497518939 parameter fingerprint 11252159597931222401
+[INFO    pi_worker            ] received genome 806
+[INFO    pi_worker            ] returned genome 806 validation MSE 0.0065819922002711539 parameter fingerprint 12838804142586317705
+[INFO    pi_worker            ] received genome 807
+[INFO    pi_worker            ] returned genome 807 validation MSE 0.0090750834678800484 parameter fingerprint 3161771153937205696
+[INFO    pi_worker            ] received genome 808
+[INFO    pi_worker            ] returned genome 808 validation MSE 0.032871231317174163 parameter fingerprint 4195827110672632172
+[INFO    pi_worker            ] received genome 809
+[INFO    pi_worker            ] returned genome 809 validation MSE 0.016041654964839797 parameter fingerprint 18336566530646876603
+[INFO    pi_worker            ] received genome 810
+[INFO    pi_worker            ] returned genome 810 validation MSE 0.044639040326647596 parameter fingerprint 4052006735541972254
+[INFO    pi_worker            ] received genome 811
+[INFO    pi_worker            ] returned genome 811 validation MSE 0.007672726293086015 parameter fingerprint 2915302965204548260
+[INFO    pi_worker            ] received genome 812
+[INFO    pi_worker            ] returned genome 812 validation MSE 0.022811808605757357 parameter fingerprint 172362780569725765
+[INFO    pi_worker            ] received genome 813
+[INFO    pi_worker            ] returned genome 813 validation MSE 0.004867148972584532 parameter fingerprint 4194428123419264550
+[INFO    pi_worker            ] received genome 814
+[INFO    pi_worker            ] returned genome 814 validation MSE 0.040693375138302276 parameter fingerprint 9494208589253545776
+[INFO    pi_worker            ] received genome 815
+[INFO    pi_worker            ] returned genome 815 validation MSE 0.024788005975451756 parameter fingerprint 8382806991599882598
+[INFO    pi_worker            ] received genome 816
+[INFO    pi_worker            ] returned genome 816 validation MSE 0.0062741167190765012 parameter fingerprint 13183162185192391312
+[INFO    pi_worker            ] received genome 817
+[INFO    pi_worker            ] returned genome 817 validation MSE 0.016750993269201528 parameter fingerprint 8651537239999745817
+[INFO    pi_worker            ] received genome 818
+[INFO    pi_worker            ] returned genome 818 validation MSE 0.027407490777860151 parameter fingerprint 3990685657332301431
+[INFO    pi_worker            ] received genome 819
+[INFO    pi_worker            ] returned genome 819 validation MSE 0.0038956575281697209 parameter fingerprint 12798582562698700276
+[INFO    pi_worker            ] received genome 820
+[INFO    pi_worker            ] returned genome 820 validation MSE 0.040890631142077513 parameter fingerprint 18371755980158032974
+[INFO    pi_worker            ] received genome 821
+[INFO    pi_worker            ] returned genome 821 validation MSE 0.040693978607775655 parameter fingerprint 15647931535010150535
+[INFO    pi_worker            ] received genome 822
+[INFO    pi_worker            ] returned genome 822 validation MSE 0.014021859409395135 parameter fingerprint 14159138080715205900
+[INFO    pi_worker            ] received genome 823
+[INFO    pi_worker            ] returned genome 823 validation MSE 0.0023008899981482138 parameter fingerprint 7205821770075978199
+[INFO    pi_worker            ] received genome 824
+[INFO    pi_worker            ] returned genome 824 validation MSE 0.023678172047566604 parameter fingerprint 7078976442415047175
+[INFO    pi_worker            ] received genome 825
+[INFO    pi_worker            ] returned genome 825 validation MSE 0.022092688276499479 parameter fingerprint 14952607544964323894
+[INFO    pi_worker            ] received genome 826
+[INFO    pi_worker            ] returned genome 826 validation MSE 1.0157982364390867 parameter fingerprint 9515869539740992118
+[INFO    pi_worker            ] received genome 827
+[INFO    pi_worker            ] returned genome 827 validation MSE 0.010355126905650908 parameter fingerprint 10417960478745916075
+[INFO    pi_worker            ] received genome 828
+[INFO    pi_worker            ] returned genome 828 validation MSE nan parameter fingerprint 17574297728331626389
+[INFO    pi_worker            ] received genome 829
+[INFO    pi_worker            ] returned genome 829 validation MSE 0.019512838797552872 parameter fingerprint 16890350220608947379
+[INFO    pi_worker            ] received genome 830
+[INFO    pi_worker            ] returned genome 830 validation MSE 0.043582467912976729 parameter fingerprint 16810255633745784171
+[INFO    pi_worker            ] received genome 831
+[INFO    pi_worker            ] returned genome 831 validation MSE 0.86000388744880285 parameter fingerprint 16693717924877938404
+[INFO    pi_worker            ] received genome 832
+[INFO    pi_worker            ] returned genome 832 validation MSE 0.014580447058765846 parameter fingerprint 8289178498251327598
+[INFO    pi_worker            ] received genome 833
+[INFO    pi_worker            ] returned genome 833 validation MSE 0.29316936020224227 parameter fingerprint 2511862068075093096
+[INFO    pi_worker            ] received genome 834
+[INFO    pi_worker            ] returned genome 834 validation MSE 2.6428768457554308 parameter fingerprint 6063722023008210735
+[INFO    pi_worker            ] received genome 835
+[INFO    pi_worker            ] returned genome 835 validation MSE 0.016498866315185389 parameter fingerprint 2071039284325887106
+[INFO    pi_worker            ] received genome 836
+[INFO    pi_worker            ] returned genome 836 validation MSE 0.041484046123338315 parameter fingerprint 4198428015007173320
+[INFO    pi_worker            ] received genome 837
+[INFO    pi_worker            ] returned genome 837 validation MSE 0.0086928615396843645 parameter fingerprint 3647611993456067960
+[INFO    pi_worker            ] received genome 838
+[INFO    pi_worker            ] returned genome 838 validation MSE 0.0099807413851329616 parameter fingerprint 7797974055983228145
+[INFO    pi_worker            ] received genome 839
+[INFO    pi_worker            ] returned genome 839 validation MSE 0.01094973148595918 parameter fingerprint 17140243686374939776
+[INFO    pi_worker            ] received genome 840
+[INFO    pi_worker            ] returned genome 840 validation MSE 0.0076511801473348184 parameter fingerprint 17211929546451342249
+[INFO    pi_worker            ] received genome 841
+[INFO    pi_worker            ] returned genome 841 validation MSE 0.0044634092665405689 parameter fingerprint 15857377941021554885
+[INFO    pi_worker            ] received genome 842
+[INFO    pi_worker            ] returned genome 842 validation MSE 0.0075090292247507202 parameter fingerprint 13309516841017778945
+[INFO    pi_worker            ] received genome 843
+[INFO    pi_worker            ] returned genome 843 validation MSE 0.13984108377830379 parameter fingerprint 2603631272478197697
+[INFO    pi_worker            ] received genome 844
+[INFO    pi_worker            ] returned genome 844 validation MSE 2.4696422260953526 parameter fingerprint 18069999796196196249
+[INFO    pi_worker            ] received genome 845
+[INFO    pi_worker            ] returned genome 845 validation MSE 0.029508729059655264 parameter fingerprint 13250400529696025020
+[INFO    pi_worker            ] received genome 846
+[INFO    pi_worker            ] returned genome 846 validation MSE 0.0065630622745041813 parameter fingerprint 2193335206883632187
+[INFO    pi_worker            ] received genome 847
+[INFO    pi_worker            ] returned genome 847 validation MSE 0.008346332082221233 parameter fingerprint 489814825628143113
+[INFO    pi_worker            ] received genome 848
+[INFO    pi_worker            ] returned genome 848 validation MSE 0.041453208968434019 parameter fingerprint 4013848189877633121
+[INFO    pi_worker            ] received genome 849
+[INFO    pi_worker            ] returned genome 849 validation MSE 0.0041840097107376916 parameter fingerprint 11337109829483573424
+[INFO    pi_worker            ] received genome 850
+[INFO    pi_worker            ] returned genome 850 validation MSE 0.011005477926558586 parameter fingerprint 3971397425274759753
+[INFO    pi_worker            ] received genome 851
+[INFO    pi_worker            ] returned genome 851 validation MSE 0.025984905028005767 parameter fingerprint 15884195333587020594
+[INFO    pi_worker            ] received genome 852
+[INFO    pi_worker            ] returned genome 852 validation MSE 0.0096954154948522102 parameter fingerprint 11484251668496692965
