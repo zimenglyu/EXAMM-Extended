@@ -12,6 +12,7 @@ present. Writes results/core7_main.xlsx:
                  traded); leakage cells (if run with --all) marked
   Rule compared  the paper's rule (trade only when the predicted signs agree) vs trading every day
   Per set        V1-V4 separately, then averaged (paper's Table 7 style), if the per-set file exists
+  Table 5        every panel (V1-V4) and test year next to the paper's Table 5 (B&H, EW, EXAMM), with a bar chart
   Notes          method and caveats
 Run on the Mac after core7_main_results.py (add --per-set there for the Per set sheet):
     cd ~/Financial_toolbox && python3 make_core7_main_workbook.py
@@ -30,6 +31,11 @@ YEARS = [2022, 2023, 2024]
 # the paper's EXAMM column (Table 7: average net return across V1-V4; Table 8: model summary)
 PAPER = {"2022": 15.46, "2023": 9.07, "2024": 8.52, "mean": 11.02, "ic": 0.0106, "sharpe": 0.74, "mdd": -10.76}
 PAPER_EW = {"2022": -17.39, "2023": 3.99, "2024": -0.93, "mean": -4.78}
+# the paper's Table 5 (net return % per panel and test year): B&H, EW, EXAMM
+PAPER_T5 = {("V1", 2022): (-7.16, -14.26, -4.63), ("V1", 2023): (5.18, -1.67, 21.34), ("V1", 2024): (-4.73, -9.92, 17.19),
+            ("V2", 2022): (-11.42, -18.91, 35.22), ("V2", 2023): (15.37, 7.40, 16.92), ("V2", 2024): (12.13, 3.46, 13.80),
+            ("V3", 2022): (-11.39, -19.08, 36.68), ("V3", 2023): (14.77, 7.05, -3.82), ("V3", 2024): (13.11, 3.89, -2.88),
+            ("V4", 2022): (-10.25, -17.33, -5.43), ("V4", 2023): (9.41, 3.16, 1.84), ("V4", 2024): (6.69, -1.14, 5.96)}
 
 F = "Arial"
 HDR_FILL, HDR_FONT = PatternFill("solid", fgColor="1F3864"), Font(name=F, bold=True, color="FFFFFF")
@@ -142,6 +148,28 @@ if per_set is not None:
                                  + [{"Design": "Paper: EXAMM", "Test year": "Mean", "Average V1-V4": PAPER["mean"]}])
         set_table = pd.concat(blocks + [paper_row], ignore_index=True)
 
+# ---------------------------------------------------------------- Table 5 (per panel and year) ----
+table5 = None
+if per_set is not None:
+    sets_sorted = sorted(per_set["set"].unique())
+
+    def mine(fold, v, year):
+        s = sets_sorted[int(v[1]) - 1]
+        r = per_set[(per_set["set"] == s) & (per_set["test_year"] == year) & (per_set["genomes_from_fold"] == fold)]
+        return float(r["ann_return_%"].iloc[0]) if len(r) else None
+
+    t5 = []
+    for v in ["V1", "V2", "V3", "V4"]:
+        for y in YEARS:
+            bh, ew, ex = PAPER_T5[(v, y)]
+            mine_r = mine(y, v, y)
+            t5.append({"Panel": v, "Test yr": y, "Paper B&H": bh, "Paper EW": ew, "Paper EXAMM": ex,
+                       "Yours: retrain every year": mine_r, "Yours: never retrain": mine(YEARS[0], v, y),
+                       "Retrain minus paper EXAMM": (mine_r - ex) if mine_r is not None else None})
+    table5 = pd.DataFrame(t5)
+    means = table5.drop(columns=["Panel", "Test yr"]).mean(numeric_only=True)
+    table5 = pd.concat([table5, pd.DataFrame([{"Panel": "Mean", "Test yr": "", **means.to_dict()}])], ignore_index=True)
+
 notes = [
     "Model: Pooled EXAMM, RET target, the 7 core7 inputs; per test year Y the fold train <= Y-2 / validation Y-1; each "
     "panel set's genome = the best of 10 runs by validation MSE (no Pareto frontier).",
@@ -167,6 +195,9 @@ if compare is not None:
     sheets.append(("Rule compared", compare, "Paper rule (trade only when signs agree) vs trading every day"))
 if set_table is not None:
     sheets.append(("Per set", set_table, "Net return (%) per panel set V1-V4 and their average (paper's Table 7 style)"))
+
+if table5 is not None:
+    sheets.append(("Table 5", table5, "Net return (%) per panel (V1-V4) and test year: the paper's Table 5 vs yours"))
 
 RESULTS.mkdir(exist_ok=True)
 with pd.ExcelWriter(OUT, engine="openpyxl") as xw:
@@ -216,6 +247,23 @@ for ws in wb.worksheets:
         ws.column_dimensions[get_column_letter(i)].width = 140 if ws.title == "Notes" else min(max(width + 2, 10), 48)
     if ws.title != "Notes":
         ws.freeze_panes = ws.cell(row=hdr + 1, column=2)
+if "Table 5" in wb.sheetnames:                    # bar chart: paper EXAMM, yours (both designs), paper EW
+    from openpyxl.chart import BarChart, Reference
+    ws = wb["Table 5"]
+    n = len(table5) - 1                            # without the Mean row
+    chart = BarChart()
+    chart.type, chart.grouping = "col", "clustered"
+    chart.title = "Net return (%) per panel and test year"
+    chart.y_axis.title = "Net return (%)"
+    for col in (5, 6, 7, 4):
+        chart.add_data(Reference(ws, min_col=col, min_row=2, max_row=2 + n), titles_from_data=True)
+    chart.set_categories(Reference(ws, min_col=1, max_col=2, min_row=3, max_row=2 + n))
+    chart.height, chart.width = 11, 30
+    ws.add_chart(chart, f"A{n + 6}")
+    for row in ws.iter_rows(min_row=3):
+        for c in row[2:]:
+            if isinstance(c.value, float):
+                c.fill = GOOD if c.value > 0 else BAD
 wb.save(OUT)
 print(f"Saved {OUT}")
 print("Blue rows: the paper's numbers. Green: Sharpe interval above zero. Yellow (Grid): leakage cells.")
