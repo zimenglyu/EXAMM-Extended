@@ -55,6 +55,13 @@ cells = need("core7_main.csv")
 head = need("core7_main_headline.csv").set_index("book")
 per_set_path = RESULTS / "core7_main_per_set.csv"
 per_set = pd.read_csv(per_set_path) if per_set_path.exists() else None
+bench = pd.read_csv(RESULTS / "core7_main_benchmarks.csv") if (RESULTS / "core7_main_benchmarks.csv").exists() else None
+table8 = pd.read_csv(RESULTS / "core7_main_table8.csv") if (RESULTS / "core7_main_table8.csv").exists() else None
+sizes = pd.read_csv(RESULTS / "core7_main_model_size.csv") if (RESULTS / "core7_main_model_size.csv").exists() else None
+# yearly returns as the paper reports them: total return over the test year ((C - C0) / C0); older result
+# files only have the annualized return
+RET_COL = "total_return_%" if "total_return_%" in cells else "ann_return_%"
+SET_RET_COL = "total_return_%" if per_set is not None and "total_return_%" in per_set else "ann_return_%"
 old_cells = pd.read_csv(RESULTS / "core7_main_everyday.csv") if (RESULTS / "core7_main_everyday.csv").exists() else None
 old_head = (pd.read_csv(RESULTS / "core7_main_everyday_headline.csv").set_index("book")
             if (RESULTS / "core7_main_everyday_headline.csv").exists() else None)
@@ -79,8 +86,11 @@ for name, label, pairs in ((RETRAIN, "Yours: retrain every year (paper's design)
     if name is None or name not in head.index:
         continue
     ics = [cell(cells, f, y, "test_rank_ic") for f, y in pairs]
-    rows.append({"Strategy": label, **{f"{y} return (%)": cell(cells, f, y, "ann_return_%") for f, y in pairs},
-                 "Mean / joined return (%)": head.loc[name, "ann_return_%"], "Sharpe": head.loc[name, "sharpe"],
+    yearly = [cell(cells, f, y, RET_COL) for f, y in pairs]
+    rows.append({"Strategy": label, **{f"{y} return (%)": v for (f, y), v in zip(pairs, yearly)},
+                 "Mean / joined return (%)": (sum(yearly) / len(yearly) if all(v is not None for v in yearly)
+                                              else head.loc[name, "ann_return_%"]),
+                 "2022-2024 annualized (%)": head.loc[name, "ann_return_%"], "Sharpe": head.loc[name, "sharpe"],
                  "Max drawdown (%)": -head.loc[name, "max_dd_%"],
                  "Rank IC": sum(ics) / len(ics) if all(v is not None for v in ics) else None})
 summary = pd.DataFrame(rows)
@@ -94,7 +104,8 @@ joined.columns = ["Book (fixed in advance)", "Annual return (%)", "Return 95% lo
 
 # ---------------------------------------------------------------- Grid ----
 grid_rows = []
-for col, label in (("sharpe", "Sharpe"), ("ann_return_%", "Return (%)"), ("test_rank_ic", "Rank IC"),
+for col, label in (("sharpe", "Sharpe"), (RET_COL, "Net return (%)"), ("ann_return_%", "Annualized return (%)"),
+                   ("test_rank_ic", "Rank IC"),
                    ("test_mse", "MSE (raw daily returns)"), ("days_traded_%", "Days traded (%)")):
     if col not in cells:
         continue
@@ -112,9 +123,9 @@ if old_cells is not None:
     crow = []
     for f, y in [(y, y) for y in YEARS] + [(YEARS[0], y) for y in YEARS[1:]]:
         crow.append({"Genomes from fold": f, "Test year": y,
-                     "Trade every day: return (%)": cell(old_cells, f, y, "ann_return_%"),
+                     "Trade every day: return (%)": cell(old_cells, f, y, RET_COL if RET_COL in old_cells else "ann_return_%"),
                      "Trade every day: Sharpe": cell(old_cells, f, y, "sharpe"),
-                     "Paper rule: return (%)": cell(cells, f, y, "ann_return_%"),
+                     "Paper rule: return (%)": cell(cells, f, y, RET_COL),
                      "Paper rule: Sharpe": cell(cells, f, y, "sharpe"),
                      "Paper rule: days traded (%)": cell(cells, f, y, "days_traded_%") if "days_traded_%" in cells else None})
     for name in (RETRAIN, NEVER):
@@ -136,7 +147,7 @@ if per_set is not None:
         sel = per_set[[(f, y) in pairs for f, y in zip(per_set["genomes_from_fold"], per_set["test_year"])]]
         if sel.empty:
             continue
-        g = sel.pivot(index="test_year", columns="set", values="ann_return_%")
+        g = sel.pivot(index="test_year", columns="set", values=SET_RET_COL)
         g.columns = [vname[c] for c in g.columns]
         g["Average V1-V4"] = g.mean(axis=1)
         g.loc["Mean"] = g.mean(axis=0)
@@ -156,7 +167,14 @@ if per_set is not None:
     def mine(fold, v, year):
         s = sets_sorted[int(v[1]) - 1]
         r = per_set[(per_set["set"] == s) & (per_set["test_year"] == year) & (per_set["genomes_from_fold"] == fold)]
-        return float(r["ann_return_%"].iloc[0]) if len(r) else None
+        return float(r[SET_RET_COL].iloc[0]) if len(r) else None
+
+    def own_bench(v, year, col):
+        if bench is None:
+            return None
+        s = sets_sorted[int(v[1]) - 1]
+        r = bench[(bench["set"] == s) & (bench["test_year"] == year)]
+        return float(r[col].iloc[0]) if len(r) else None
 
     t5 = []
     for v in ["V1", "V2", "V3", "V4"]:
@@ -165,10 +183,28 @@ if per_set is not None:
             mine_r = mine(y, v, y)
             t5.append({"Panel": v, "Test yr": y, "Paper B&H": bh, "Paper EW": ew, "Paper EXAMM": ex,
                        "Yours: retrain every year": mine_r, "Yours: never retrain": mine(YEARS[0], v, y),
-                       "Retrain minus paper EXAMM": (mine_r - ex) if mine_r is not None else None})
+                       "Retrain minus paper EXAMM": (mine_r - ex) if mine_r is not None else None,
+                       "Yours: B&H": own_bench(v, y, "bh_total_%"), "Yours: EW": own_bench(v, y, "ew_total_%")})
     table5 = pd.DataFrame(t5)
     means = table5.drop(columns=["Panel", "Test yr"]).mean(numeric_only=True)
     table5 = pd.concat([table5, pd.DataFrame([{"Panel": "Mean", "Test yr": "", **means.to_dict()}])], ignore_index=True)
+
+# ---------------------------------------------------------------- Table 8 / model size ----
+table8_sheet = None
+if table8 is not None:
+    t8 = table8.rename(columns={"portfolio": "Portfolio", "design": "Design"})
+    paper8 = pd.DataFrame([{"Design": "Paper: EXAMM (Table 8)", "Portfolio": "Average V1-V4", "Rank IC (Spearman)": PAPER["ic"],
+                            "Net (%) mean of years": PAPER["mean"], "Sharpe (2022-24)": PAPER["sharpe"], "MDD (%)": PAPER["mdd"]}])
+    cols8 = [c for c in ["Design", "Portfolio", "Rank IC (Spearman)", "IC (Pearson)", "Net (%) mean of years",
+                         "Sharpe (2022-24)", "MDD (%)"] if c in t8]
+    table8_sheet = pd.concat([paper8, t8[cols8]], ignore_index=True)[cols8]
+size_sheet = None
+if sizes is not None:
+    size_sheet = sizes.rename(columns={"fold": "Test year (fold)", "set": "Set", "repeat": "Repeat",
+                                       "enabled_nodes": "Enabled nodes", "enabled_edges": "Enabled edges",
+                                       "enabled_recurrent_edges": "Enabled recurrent edges"})
+    avg = size_sheet.drop(columns=["Test year (fold)", "Repeat"], errors="ignore").mean(numeric_only=True)
+    size_sheet = pd.concat([size_sheet, pd.DataFrame([{"Test year (fold)": "Average", **avg.to_dict()}])], ignore_index=True)
 
 notes = [
     "Model: Pooled EXAMM, RET target, the 7 core7 inputs; per test year Y the fold train <= Y-2 / validation Y-1; each "
@@ -182,7 +218,13 @@ notes = [
     "<= 2020, validated on 2021) for 2022-2024. Both are free of leakage.",
     "Grid: cells where a fold's models are scored on an EARLIER year are leakage (only computed with --all) and are "
     "highlighted; they are not test results.",
-    "Intervals: 95% stationary block bootstrap; PSR = P(true Sharpe > 0). Paper numbers are from its Tables 7-8.",
+    "Intervals: 95% stationary block bootstrap; PSR = P(true Sharpe > 0). Paper numbers are from its Tables 5, 7 and 8.",
+    "Net return per test year = total return over the test year, (C - C0) / C0, as the paper reports it; the "
+    "'2022-2024 annualized' columns are the compound annual return of the joined years. Your B&H: equal dollars in every "
+    "stock at the first price + cost, held to the last price - cost; your EW: portfolio.py's equal-weight rule.",
+    "Table 8: Rank IC = mean daily cross-sectional Spearman correlation of forecast and next-day return (Pearson shown "
+    "too); Sharpe and MDD per panel over 2022-2024, then averaged over V1-V4. Model size: enabled nodes / edges / "
+    "recurrent edges of the chosen genomes (gated nodes add internal weights, so the paper's 66 parameters can be higher).",
     "Caveats: three test years only; wide intervals; the remaining 2024 gap to the paper is most likely the genome "
     "(the paper's own EXAMM runs); short-sale costs follow this repository's stock.py (the paper's version may differ).",
     "Source: core7_main*.csv (core7_main_results.py) and core7_main_everyday*.csv.",
@@ -198,6 +240,10 @@ if set_table is not None:
 
 if table5 is not None:
     sheets.append(("Table 5", table5, "Net return (%) per panel (V1-V4) and test year: the paper's Table 5 vs yours"))
+if table8_sheet is not None:
+    sheets.append(("Table 8", table8_sheet, "Model summary per panel and averaged over V1-V4 (paper's Table 8 style)"))
+if size_sheet is not None:
+    sheets.append(("Model size", size_sheet, "The chosen genomes' size (paper's EXAMM: 66 parameters on average)"))
 
 RESULTS.mkdir(exist_ok=True)
 with pd.ExcelWriter(OUT, engine="openpyxl") as xw:
