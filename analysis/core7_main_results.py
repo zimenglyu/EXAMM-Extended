@@ -1,9 +1,26 @@
 #!/usr/bin/env python3
 """MAIN WORKFLOW, step 2 (backtest and report). Renamed from the stale-model script.
+BOOK SIZE: long K / short K with K = 10 by default, the paper's setting (Sec. 5.2: "the top 10 stocks ... the bottom
+10"); --k 5 gives the earlier 5/5 results (outputs then end in _k5, trades cached apart). The paper's IC in its
+Tables 4 and 8 (+0.0106) is the PEARSON IC, so compare it with the "IC (Pearson)" columns.
 PAPER-STYLE REPORTING: per test year the TOTAL return over the test period ((C - C0) / C0, the paper's "net
 return", Algorithm 1 line 17) besides the annualized one; your own buy-and-hold and equal weight per panel and year;
 a Table 8 style summary (per panel, then averaged) with Rank IC as Spearman and as Pearson; the chosen models' sizes.
 Extra outputs: core7_main_benchmarks.csv, core7_main_table8.csv, core7_main_model_size.csv.
+--pareto: also chooses each panel set's model by a validation Pareto frontier (Option A): per test year Y and set,
+its 10 EXAMM repeats scored on the VALIDATION year Y-1 by MSE (raw daily returns) and net return of the same
+trading rule; frontier = repeats no other repeat beats on both; choice fixed in advance = lowest MSE rank + return
+rank (ties -> lower MSE); traded on the test year exactly like the main result (retrain every year). Reported next
+to the lowest-validation-MSE choice (the main result) and the highest-validation-return end. Outputs
+core7_main[_everyday]_pareto.csv (every repeat) and _pareto_summary.csv, and core7_main_pareto.png.
+Also the NEVER-RETRAIN version (the fold-2022 choice kept for 2022-2024): _pareto_never_retrain.csv. It needs the
+other repeats' later-year forecasts: ALL_REPEATS=1 sh scripts/rnn_examples/evaluate_rnn_core7_main.sh
+MEAN OVER THE 10 SEEDS (on by default, --no-mean-repeats to skip): the PAPER'S REPORTING ("every configuration is repeated 10 times with independent seeds, and we
+report the mean over the repeats"): every one of the 10 repeats per panel set is traded on its own (no choice by
+validation MSE), each year's metrics are computed per repeat, then averaged over the 10 repeats (Tables 5, 7, 8 style),
+for retrain every year and never retrain. Needs every repeat's forecasts: evaluation_test/ (standard evaluation) and,
+for never retrain, ALL_REPEATS=1 sh scripts/rnn_examples/evaluate_rnn_core7_main.sh. Outputs core7_main_repeats.csv
+(every repeat x year), _repeats_table7.csv and _repeats_table8.csv.
 DEFAULTS: the paper's rule (--trade-every-day to switch it off) and the per-set tables (--no-per-set);
 the --paper-rule and --per-set descriptions below are now always on.
 
@@ -53,17 +70,21 @@ market every day. Trades cached separately; outputs end in _paper (e.g. core7_ma
 import sys
 
 ALL = "--all" in sys.argv
+PARETO = "--pareto" in sys.argv
+MEAN_REPEATS = "--no-mean-repeats" not in sys.argv   # mean over the 10 seeds, on by default
+K = int(sys.argv[sys.argv.index("--k") + 1]) if "--k" in sys.argv[:-1] else 10   # long K / short K (paper: 10)
 PER_SET = "--no-per-set" not in sys.argv
 PAPER = "--trade-every-day" not in sys.argv
-OUT_TAG = "" if PAPER else "_everyday"
+OUT_TAG = ("" if PAPER else "_everyday") + ("" if K == 10 else f"_k{K}")
 _argv, sys.argv = sys.argv, [sys.argv[0], "--rule", "ls55"]   # core7_genome_frontier reads --rule at import
 import numpy as np
 import pandas as pd
 
-from core7_genome_frontier import (EXAMM, RESULTS, RULE, SETS, WORK, YEARS, bootstrap_ci, combine, daily_returns,
+from core7_genome_frontier import (EXAMM, RESULTS, SETS, WORK, YEARS, bootstrap_ci, combine, daily_returns,
                                    final_genome, forecast_scores, metrics, prediction_dir, price_dir, psr,
-                                   read_predictions, ret_stats, scored_mask)
+                                   pareto, read_predictions, ret_stats, scored_mask)
 sys.argv = _argv
+RULE = (f"daily L/S {K}/{K}", "daily_long_short_return", dict(long_company_number=K, short_company_number=K))
 
 REPEATS = [str(r) for r in range(15, 25)]
 TRADE_DAYS = {}                      # (fold, year, set) -> (days traded, days) under --paper-rule
@@ -93,7 +114,7 @@ def paper_returns(pred_d, price_d):
             c.set_logger(logger)
         portfolio.set_use_TC(True)
         portfolio.set_trade_with_bid_ask(False)
-        values, trades = paper_long_short_daily_values(portfolio, 5, 5, sign_check=True)
+        values, trades = paper_long_short_daily_values(portfolio, K, K, sign_check=True)
     return values[1:] / values[:-1] - 1, trades
 
 
@@ -146,7 +167,7 @@ def pred_dir(fold, s, r, year):
 
 
 WORK.mkdir(parents=True, exist_ok=True)
-cache_path = WORK / ("stale_trades_paper.npz" if PAPER else "stale_trades.npz")   # reuse the saved trades
+cache_path = WORK / ((("stale_trades_paper" if PAPER else "stale_trades") + ("" if K == 5 else f"_k{K}")) + ".npz")   # per book size
 cache = dict(np.load(cache_path)) if cache_path.exists() else {}
 
 cells, books, missing, set_rows, set_books = [], {}, [], [], {}
@@ -157,7 +178,7 @@ for fold in YEARS:
         if chosen[s] is not None:
             sizes.append({"fold": fold, "set": s, "repeat": chosen[s][0], **model_size(fold, s, chosen[s][0])})
     for year in [y for y in YEARS if ALL or y >= fold]:
-        per, mses, ics, used = [], [], [], []
+        per, mses, ics, ics_p, used = [], [], [], [], []
         for s in SETS:
             if chosen[s] is None:
                 missing.append(f"fold {fold} {s}: no fitness_log.csv")
@@ -171,6 +192,7 @@ for fold in YEARS:
             ic_p = pearson_ic(P, year, s)
             mses.append(mse)
             ics.append(ic)
+            ics_p.append(ic_p)
             key = f"{fold}|{s}|{r}|{year}"
             if PAPER:
                 st = ret_stats(s)                      # robust z -> raw daily return, for the sign check
@@ -207,7 +229,7 @@ for fold in YEARS:
                       "leakage": year < fold,
                       "total_return_%": total_return(book),
                       "ann_return_%": m["ann_return_%"], "sharpe": m["sharpe"], "max_dd_%": m["max_dd_%"],
-                      "test_mse": float(np.mean(mses)), "test_rank_ic": float(np.mean(ics)),
+                      "test_mse": float(np.mean(mses)), "test_rank_ic": float(np.mean(ics)), "test_ic_pearson": float(np.mean(ics_p)),
                       "days_traded_%": (float(np.mean([TRADE_DAYS[(fold, year, s)][0] / TRADE_DAYS[(fold, year, s)][1]
                                                        for s in SETS])) * 100 if PAPER else np.nan),
                       "genomes": ", ".join(used)})
@@ -224,7 +246,7 @@ table.to_csv(RESULTS / f"core7_main{OUT_TAG}.csv", index=False)
 pd.set_option("display.width", 200)
 print("=" * 96)
 print(f"STALE MODELS -- Pooled RET, per-set best genome (lowest val MSE), "
-      f"{'PAPER Algorithm 1 (L/S 5/5, trade only if signs agree)' if PAPER else RULE[0]}, costs on, 4 sets combined")
+      f"{f'PAPER Algorithm 1 (L/S {K}/{K}, trade only if signs agree)' if PAPER else RULE[0]}, costs on, 4 sets combined")
 print("rows: which fold's genomes; columns: test year; " + ("cells marked * contain LEAKAGE (the genomes trained or "
       "were chosen on that year)" if ALL else "blank = not computed (the genomes saw that year; --all to include)"))
 print("=" * 96)
@@ -304,7 +326,7 @@ if PER_SET:
     print(f"\nSaved {RESULTS / f'core7_main{OUT_TAG}_per_set.csv'}")
     if table8_parts:
         pd.concat(table8_parts, ignore_index=True).to_csv(RESULTS / f"core7_main{OUT_TAG}_table8.csv", index=False)
-        print("\nPaper (Table 8): Rank IC +0.0106, Net +11.02 %, Sharpe 0.74, MDD -10.76 %")
+        print("\nPaper (Table 8, L/S 10/10): IC (Pearson) +0.0106, Net +11.02 %, Sharpe 0.74, MDD -10.76 %")
 
 # ---------------------------------------------------------------- your own benchmarks and model sizes ----
 np.savez(cache_path, **cache)
@@ -326,3 +348,287 @@ if sizes:
     print(f"average: {sz['enabled_nodes'].mean():.1f} nodes, {sz['connections (edges + recurrent)'].mean():.1f} connections "
           "(weights on connections; gated nodes such as LSTM/GRU add internal weights, so the paper's parameter count "
           "can be higher)")
+
+# ---------------------------------------------------------------- --pareto: validation Pareto choice per set ----
+if PARETO:
+    def rule_returns(fold, s, r, year, split, P, tag):
+        """Daily returns of the trading rule (paper's rule or trade every day) for one repeat, set and split."""
+        key = f"{tag}|{fold}|{s}|{r}|{year}" if split == "val" else f"{fold}|{s}|{r}|{year}"
+        if key not in cache:
+            if PAPER:
+                st = ret_stats(s)
+                ret, _ = paper_returns(prediction_dir(year, f"{tag}{fold}_{s}", r, s, split, P * st["iqr"] + st["median"]),
+                                       price_dir(year, s, split))
+            else:
+                ret = daily_returns(prediction_dir(year, f"{tag}e{fold}_{s}", r, s, split, P), price_dir(year, s, split),
+                                    RULE[1], RULE[2])
+            cache[key] = ret
+        return cache[key]
+
+    prow, pmiss = [], []
+    for fold in YEARS:
+        for s in SETS:
+            for r in REPEATS:
+                d = EXAMM / "test_output" / f"core7_examm_ret_{fold}" / s / r
+                Pv = read_predictions(d / "evaluation_val", "val")
+                Pt = read_predictions(d / "evaluation_test", "test")
+                if Pv is None or Pt is None or not (np.isfinite(Pv.to_numpy()).all() and np.isfinite(Pt.to_numpy()).all()):
+                    pmiss.append(f"{fold} {s}/{r}")
+                    continue
+                val_mse, val_ic = forecast_scores(Pv, fold, s, "val")
+                vr = rule_returns(fold, s, r, fold, "val", Pv, "pval")
+                tr = rule_returns(fold, s, r, fold, "test", Pt, "")
+                test_mse, test_ic = forecast_scores(Pt, fold, s, "test")
+                mv, mt = metrics(vr), metrics(tr)
+                prow.append({"test_year": fold, "set": s, "repeat": r, "val_mse": val_mse, "val_rank_ic": val_ic,
+                             "val_return_%": total_return(vr), "val_sharpe": mv["sharpe"],
+                             "test_return_%": total_return(tr), "test_sharpe": mt["sharpe"], "test_max_dd_%": mt["max_dd_%"],
+                             "test_mse": test_mse, "test_rank_ic": test_ic})
+    np.savez(cache_path, **cache)
+    if pmiss:
+        print(f"\n!! --pareto: {len(pmiss)} repeat(s) left out (no complete evaluation_val / evaluation_test predictions): "
+              + ", ".join(pmiss[:12]) + (" ..." if len(pmiss) > 12 else ""))
+    pt = pd.DataFrame(prow)
+    if pt.empty:
+        print("\n!! --pareto: no repeat has both validation and test predictions -- run the cross-set evaluation first")
+    else:
+        pt["val_frontier"] = False
+        pt["choice"] = ""
+        for (fold, s), g in pt.groupby(["test_year", "set"]):
+            pt.loc[g.index, "val_frontier"] = pareto(g["val_mse"].to_numpy(), g["val_return_%"].to_numpy())
+            g = pt.loc[g.index]
+            score = (g["val_mse"].rank(method="min") + g["val_return_%"].rank(method="min", ascending=False)).where(g["val_frontier"])
+            labels = [(g.loc[score[score == score.min()].index, "val_mse"].idxmin(), "Pareto choice"),
+                      (g["val_mse"].idxmin(), "lowest val MSE"), (g["val_return_%"].idxmax(), "highest val return")]
+            for idx in g.index:                     # one repeat can carry several labels
+                pt.loc[idx, "choice"] = "; ".join(lab for i, lab in labels if i == idx)
+        pt.to_csv(RESULTS / f"core7_main{OUT_TAG}_pareto.csv", index=False)
+
+        choices = ["lowest val MSE", "Pareto choice", "highest val return"]
+        summ = []
+        for ch in choices:
+            per_year = []
+            for fold in YEARS:
+                sel = pt[(pt["test_year"] == fold) & pt["choice"].str.contains(ch, regex=False)]
+                if sel["set"].nunique() < len(SETS):
+                    break
+                book = combine([cache[f"{fold}|{row.set}|{row.repeat}|{fold}"] for row in sel.itertuples()])
+                per_year.append(book)
+                summ.append({"choice": ch, "period": str(fold), "net_return_%": total_return(book),
+                             "sharpe": metrics(book)["sharpe"], "max_dd_%": metrics(book)["max_dd_%"],
+                             "repeats": ", ".join(f"{row.set}/{row.repeat}" for row in sel.itertuples())})
+            if len(per_year) == len(YEARS):
+                joined = np.concatenate(per_year)
+                m = metrics(joined)
+                summ.append({"choice": ch, "period": f"{YEARS[0]}-{YEARS[-1]}",
+                             "net_return_%": float(np.mean([x["net_return_%"] for x in summ[-len(YEARS):]])),
+                             "ann_return_%": m["ann_return_%"], "sharpe": m["sharpe"], "max_dd_%": m["max_dd_%"],
+                             **bootstrap_ci(joined), "psr": psr(joined)})
+        summ = pd.DataFrame(summ)
+        summ.to_csv(RESULTS / f"core7_main{OUT_TAG}_pareto_summary.csv", index=False)
+        print("\n" + "=" * 96)
+        print("PARETO CHOICE PER SET (validation MSE vs validation net return of the same rule; retrain every year)")
+        print("=" * 96)
+        for col, name in (("net_return_%", "Net return (%) -- per year; 2022-2024 = mean of the years"), ("sharpe", "Sharpe")):
+            print(f"\n{name}:")
+            print(summ.pivot(index="choice", columns="period", values=col).reindex(index=choices,
+                  columns=[str(y) for y in YEARS] + [f"{YEARS[0]}-{YEARS[-1]}"]).round(2).to_string())
+        print("\nFrontier size per test year and set (repeats on the validation frontier):")
+        print(pt.groupby(["test_year", "set"])["val_frontier"].sum().unstack().to_string())
+        rho = pt.groupby("test_year")[["val_return_%", "test_return_%"]].apply(lambda g: g.corr(method="spearman").iloc[0, 1])
+        print("\nSpearman correlation of validation and test net return across the 40 repeats, per test year:")
+        print(rho.round(2).to_string())
+
+        # never retrain: the fold-2022 choice (validation 2021) kept for every test year
+        F0 = YEARS[0]
+        nev, nmiss = [], []
+        for ch in choices:
+            sel = pt[(pt["test_year"] == F0) & pt["choice"].str.contains(ch, regex=False)]
+            if sel["set"].nunique() < len(SETS):
+                continue
+            per_year = []
+            for year in YEARS:
+                per = []
+                for row in sel.itertuples():
+                    P = read_predictions(pred_dir(F0, row.set, row.repeat, year), "test")
+                    if P is None or not np.isfinite(P.to_numpy()).all():
+                        nmiss.append(f"{row.set}/{row.repeat} on {year}")
+                        continue
+                    per.append(rule_returns(F0, row.set, row.repeat, year, "test", P, ""))
+                if len(per) < len(SETS):
+                    break
+                book = combine(per)
+                per_year.append(book)
+                nev.append({"choice": ch, "period": str(year), "net_return_%": total_return(book),
+                            "sharpe": metrics(book)["sharpe"], "max_dd_%": metrics(book)["max_dd_%"],
+                            "repeats": ", ".join(f"{row.set}/{row.repeat}" for row in sel.itertuples())})
+            if len(per_year) == len(YEARS):
+                joined = np.concatenate(per_year)
+                m = metrics(joined)
+                nev.append({"choice": ch, "period": f"{YEARS[0]}-{YEARS[-1]}",
+                            "net_return_%": float(np.mean([x["net_return_%"] for x in nev[-len(YEARS):]])),
+                            "ann_return_%": m["ann_return_%"], "sharpe": m["sharpe"], "max_dd_%": m["max_dd_%"],
+                            **bootstrap_ci(joined), "psr": psr(joined)})
+        np.savez(cache_path, **cache)
+        print("\n" + "=" * 96)
+        print(f"PARETO CHOICE PER SET -- NEVER RETRAIN (fold {F0} choice, validation {F0 - 1}, kept for {YEARS[0]}-{YEARS[-1]})")
+        print("=" * 96)
+        if nmiss:
+            print(f"!! no forecasts for {len(set(nmiss))} repeat/year(s): " + ", ".join(sorted(set(nmiss))[:12])
+                  + "\n   make them with:  ALL_REPEATS=1 sh scripts/rnn_examples/evaluate_rnn_core7_main.sh  (in EXAMM-Extended)")
+        if nev:
+            nev = pd.DataFrame(nev)
+            nev.to_csv(RESULTS / f"core7_main{OUT_TAG}_pareto_never_retrain.csv", index=False)
+            for col, name in (("net_return_%", "Net return (%) -- per year; 2022-2024 = mean of the years"),
+                              ("sharpe", "Sharpe"), ("max_dd_%", "Max drawdown (%)")):
+                print(f"\n{name}:")
+                print(nev.pivot(index="choice", columns="period", values=col).reindex(
+                      index=[c for c in choices if c in set(nev["choice"])],
+                      columns=[str(y) for y in YEARS] + [f"{YEARS[0]}-{YEARS[-1]}"]).round(2).to_string())
+            print("\nRepeats chosen (fold 2022):")
+            print(nev[nev["period"] == str(F0)].set_index("choice")["repeats"].to_string())
+            print(f"Saved {RESULTS / f'core7_main{OUT_TAG}_pareto_never_retrain.csv'}")
+        try:
+            import matplotlib
+            matplotlib.use("Agg")
+            import matplotlib.pyplot as plt
+            fig, axes = plt.subplots(len(YEARS), len(SETS), figsize=(16, 3.6 * len(YEARS)), squeeze=False)
+            for i, fold in enumerate(YEARS):
+                for j, s in enumerate(SETS):
+                    ax = axes[i][j]
+                    g = pt[(pt["test_year"] == fold) & (pt["set"] == s)].copy()
+                    if g.empty:
+                        ax.set_visible(False)
+                        continue
+                    g["mse_pct"] = g["val_mse"].rank(ascending=False, pct=True) * 100
+                    ax.scatter(g["mse_pct"], g["val_return_%"], c="#b0b0b0", s=28, zorder=2)
+                    f = g[g["val_frontier"] == True].sort_values("mse_pct")
+                    ax.plot(f["mse_pct"], f["val_return_%"], "-o", c="#1f3864", ms=5, zorder=3)
+                    for lab, mk, col in (("lowest val MSE", "s", "#2e7d32"), ("Pareto choice", "*", "#c0392b")):
+                        h = g[g["choice"].str.contains(lab, regex=False)]
+                        ax.scatter(h["mse_pct"], h["val_return_%"], marker=mk, s=160 if mk == "*" else 70,
+                                   c=col if mk == "*" else "white", edgecolor=col, lw=1.5, zorder=4, label=lab)
+                    ax.axhline(0, c="#888888", lw=0.8)
+                    ax.set_xlim(0, 105)
+                    ax.grid(color="#e6e6e6")
+                    if i == 0:
+                        ax.set_title(f"V{j + 1} ({s})", fontweight="bold")
+                    if j == 0:
+                        ax.set_ylabel(f"test {fold}: val {fold - 1} net return (%)")
+                    if i == len(YEARS) - 1:
+                        ax.set_xlabel("val MSE percentile rank (100 = lowest)")
+            axes[0][0].legend(fontsize=8, loc="lower left")
+            fig.suptitle("Validation Pareto frontier per panel set: MSE vs net return of the trading rule (10 repeats each)",
+                         fontweight="bold")
+            fig.tight_layout(rect=(0, 0, 1, 0.97))
+            fig.savefig(RESULTS / f"core7_main{OUT_TAG}_pareto.png", dpi=150)
+            print(f"\nSaved {RESULTS / f'core7_main{OUT_TAG}_pareto.png'}")
+        except ImportError:
+            print("\nmatplotlib not installed -- no figure")
+        print(f"Saved {RESULTS / f'core7_main{OUT_TAG}_pareto.csv'} and _pareto_summary.csv")
+
+# ---------------------------------------------------------------- mean over the 10 seeds (default; --no-mean-repeats skips it) ----
+if MEAN_REPEATS:
+    # the paper's Table 5 EXAMM column (net return %, per panel and test year)
+    PAPER_T5 = {("V1", 2022): -4.63, ("V1", 2023): 21.34, ("V1", 2024): 17.19, ("V2", 2022): 35.22, ("V2", 2023): 16.92,
+                ("V2", 2024): 13.80, ("V3", 2022): 36.68, ("V3", 2023): -3.82, ("V3", 2024): -2.88, ("V4", 2022): -5.43,
+                ("V4", 2023): 1.84, ("V4", 2024): 5.96}
+    vname = {s: f"V{i + 1}" for i, s in enumerate(SETS)}
+    designs = (("retrain every year", lambda y: y), (f"never retrain (fold {YEARS[0]} models)", lambda y: YEARS[0]))
+    rrows, rbooks, rmiss = [], {}, []
+    for fold_of_name, fold_of in designs:
+        for s in SETS:
+            for r in REPEATS:
+                for year in YEARS:
+                    fold = fold_of(year)
+                    key = f"{fold}|{s}|{r}|{year}"
+                    P = read_predictions(pred_dir(fold, s, r, year), "test")
+                    if P is None or not np.isfinite(P.to_numpy()).all():
+                        rmiss.append(f"fold {fold} {s}/{r} on {year}")
+                        continue
+                    if key not in cache:
+                        if PAPER:
+                            st = ret_stats(s)
+                            ret, n_trades = paper_returns(prediction_dir(year, f"paper{fold}_{s}", r, s, "test",
+                                                                         P * st["iqr"] + st["median"]),
+                                                          price_dir(year, s, "test"))
+                            cache[key], cache[f"{key}|trades"] = ret, np.array([n_trades, len(ret)])
+                        else:
+                            cache[key] = daily_returns(prediction_dir(year, f"stale{fold}_{s}", r, s, "test", P),
+                                                       price_dir(year, s, "test"), RULE[1], RULE[2])
+                    mse, ic = forecast_scores(P, year, s, "test")
+                    m = metrics(cache[key])
+                    rbooks[(fold_of_name, s, r, year)] = cache[key]
+                    rrows.append({"design": fold_of_name, "fold": fold, "test_year": year, "set": s, "panel": vname[s],
+                                  "repeat": r, "total_return_%": total_return(cache[key]), "sharpe": m["sharpe"],
+                                  "max_dd_%": m["max_dd_%"], "test_mse": mse, "test_rank_ic": ic,
+                                  "test_ic_pearson": pearson_ic(P, year, s)})
+        np.savez(cache_path, **cache)
+    rep = pd.DataFrame(rrows).drop_duplicates(["design", "set", "repeat", "test_year"])
+    print("\n" + "=" * 96)
+    print(f"MEAN OVER THE 10 REPEATS, L/S {K}/{K} (the paper's reporting: every seed traded, metrics averaged over "
+          "the seeds; no choice by validation)")
+    print("=" * 96)
+    if rmiss:
+        print(f"!! {len(rmiss)} repeat/year(s) without forecasts left out: " + ", ".join(rmiss[:10])
+              + (" ..." if len(rmiss) > 10 else "") + "\n   never-retrain forecasts: ALL_REPEATS=1 sh "
+              "scripts/rnn_examples/evaluate_rnn_core7_main.sh (in EXAMM-Extended)")
+    if rep.empty:
+        print("nothing to report")
+    else:
+        rep.to_csv(RESULTS / f"core7_main{OUT_TAG}_repeats.csv", index=False)
+        t7_parts, t8_parts = [], []
+        for name, _ in designs:
+            d = rep[rep["design"] == name]
+            if d.empty:
+                continue
+            n_rep = d.groupby(["test_year", "set"])["repeat"].nunique()
+            mean = d.pivot_table(index="test_year", columns="panel", values="total_return_%", aggfunc="mean")
+            sd = d.pivot_table(index="test_year", columns="panel", values="total_return_%", aggfunc="std")
+            pos = d.assign(p=d["total_return_%"] > 0).pivot_table(index="test_year", columns="panel", values="p", aggfunc="sum")
+            mean["Average V1-V4"] = mean.mean(axis=1)
+            mean.loc["Mean"] = mean.mean(axis=0)
+            print(f"\n{name} -- Table 5/7 style, net return (%), MEAN over the repeats "
+                  f"({n_rep.min()}-{n_rep.max()} repeats per panel and year):")
+            print(mean.round(2).to_string())
+            print("\n  standard deviation over the repeats (%):")
+            print(sd.round(2).to_string())
+            print(f"\n  repeats with a positive net return (of {n_rep.max()}):")
+            print(pos.astype(int).to_string())
+            if name == "retrain every year":
+                cmp = mean.drop(index="Mean").drop(columns="Average V1-V4").stack().rename("yours (mean of repeats)").reset_index()
+                cmp["paper EXAMM"] = [PAPER_T5.get((v, y)) for y, v in zip(cmp["test_year"], cmp["panel"])]
+                cmp["yours - paper"] = cmp["yours (mean of repeats)"] - cmp["paper EXAMM"]
+                print("\n  next to the paper's Table 5 EXAMM column:")
+                print(cmp.round(2).to_string(index=False))
+                print(f"  mean: yours {cmp['yours (mean of repeats)'].mean():.2f} %, paper {cmp['paper EXAMM'].mean():.2f} %")
+            t7 = mean.reset_index().rename(columns={"index": "test_year"})
+            t7.insert(0, "design", name)
+            t7_parts.append(t7)
+            per_rep = []                      # per panel and repeat: 2022-2024 joined Sharpe / MDD, mean of the years
+            for (s, r), g in d.groupby(["set", "repeat"]):
+                if g["test_year"].nunique() < len(YEARS):
+                    continue
+                joined = np.concatenate([rbooks[(name, s, r, y)] for y in YEARS])
+                m = metrics(joined)
+                per_rep.append({"panel": vname[s], "repeat": r, "Rank IC (Spearman)": g["test_rank_ic"].mean(),
+                                "IC (Pearson)": g["test_ic_pearson"].mean(), "Net (%) mean of years": g["total_return_%"].mean(),
+                                "Sharpe (2022-24)": m["sharpe"], "MDD (%)": -m["max_dd_%"]})
+            if per_rep:
+                pr = pd.DataFrame(per_rep)
+                t8 = pr.drop(columns="repeat").groupby("panel").mean()
+                t8["Sharpe sd over repeats"] = pr.groupby("panel")["Sharpe (2022-24)"].std()
+                t8.loc["Average V1-V4"] = t8.mean(axis=0)
+                print(f"\n{name} -- Table 8 style (per repeat, mean over the repeats, then averaged over V1-V4):")
+                print(t8.round({"Rank IC (Spearman)": 4, "IC (Pearson)": 4, "Net (%) mean of years": 2, "Sharpe (2022-24)": 2,
+                                "MDD (%)": 2, "Sharpe sd over repeats": 2}).to_string())
+                t8 = t8.reset_index().rename(columns={"index": "panel"})
+                t8.insert(0, "design", name)
+                t8_parts.append(t8)
+        print("\nPaper (Table 8, L/S 10/10, mean over its repeats): IC (Pearson) +0.0106, Net +11.02 %, Sharpe 0.74, "
+              "MDD -10.76 %")
+        if t7_parts:
+            pd.concat(t7_parts, ignore_index=True).to_csv(RESULTS / f"core7_main{OUT_TAG}_repeats_table7.csv", index=False)
+        if t8_parts:
+            pd.concat(t8_parts, ignore_index=True).to_csv(RESULTS / f"core7_main{OUT_TAG}_repeats_table8.csv", index=False)
+        print(f"Saved {RESULTS / f'core7_main{OUT_TAG}_repeats.csv'}, _repeats_table7.csv and _repeats_table8.csv")

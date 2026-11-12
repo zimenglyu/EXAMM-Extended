@@ -23,6 +23,8 @@
 # Usage:
 #   sh scripts/rnn_examples/evaluate_rnn_core7_main.sh            # later years only (no leakage)
 #   ALL=1 sh scripts/rnn_examples/evaluate_rnn_core7_main.sh      # every fold on every test year
+#   ALL_REPEATS=1 sh scripts/rnn_examples/evaluate_rnn_core7_main.sh   # also the other 9 repeats of every
+#       fold on the later years (needed by core7_main_results.py --pareto for its never-retrain table)
 # Then the backtest:  cd ~/Financial_toolbox && python3 core7_main_results.py
 SETS="set1 set2 set3 set4"
 E=$(cd "$(dirname "$0")/../.." && pwd)
@@ -45,30 +47,35 @@ for F in 2022 2023 2024; do
                 echo "!! fold $F $s: no fitness_log.csv in $base/<repeat> -- download the runs first"
                 missing_n=$((missing_n + 1)); continue
             fi
-            genome=$(ls "$base/$best"/global_best_genome_*.bin 2>/dev/null \
-                     | sed 's/.*global_best_genome_\([0-9]*\)\.bin$/\1/' | sort -n | tail -1)
-            if [ -z "$genome" ]; then
-                echo "!! fold $F $s/$best: no global_best_genome_*.bin"; missing_n=$((missing_n + 1)); continue
-            fi
-            if [ "$Y" -eq "$F" ]; then out=$base/$best/evaluation_test; else out=$base/$best/evaluation_test_y$Y; fi
-            n=$(ls "$out"/*_test_predictions.csv 2>/dev/null | wc -l | tr -d ' ')
-            if [ "$n" = "50" ]; then skip_n=$((skip_n + 1)); continue; fi
-            if ! ls $E/datasets/panels_core7_examm_$Y/$s/*_test.csv >/dev/null 2>&1; then
-                echo "!! no test files in datasets/panels_core7_examm_$Y/$s -- download them first"
-                missing_n=$((missing_n + 1)); continue
-            fi
-            mkdir -p "$out"
-            echo "== fold $F $s/$best/global_best_genome_$genome (val MSE $best_mse) on test year $Y"
-            $E/build/rnn_examples/evaluate_rnn \
-            --testing_filenames $E/datasets/panels_core7_examm_$Y/$s/*_test.csv \
-            --time_offset 1 \
-            --genome_file "$base/$best/global_best_genome_$genome.bin" \
-            --output_directory "$out" \
-            --std_message_level INFO \
-            --file_message_level INFO 2>&1 | grep -E "MSE:" | tail -1
-            n=$(ls "$out"/*_test_predictions.csv 2>/dev/null | wc -l | tr -d ' ')
-            if [ "$n" = "50" ]; then done_n=$((done_n + 1)); else
-                echo "!! fold $F $s on $Y: only $n of 50 prediction files written"; fail_n=$((fail_n + 1)); fi
+            list=$best   # the lowest-val-MSE repeat; with ALL_REPEATS=1 every repeat on the later years
+            if [ "${ALL_REPEATS:-0}" = "1" ] && [ "$Y" -ne "$F" ]; then list="15 16 17 18 19 20 21 22 23 24"; fi
+            for r in $list; do
+                [ -f "$base/$r/fitness_log.csv" ] || continue
+                genome=$(ls "$base/$r"/global_best_genome_*.bin 2>/dev/null \
+                         | sed 's/.*global_best_genome_\([0-9]*\)\.bin$/\1/' | sort -n | tail -1)
+                if [ -z "$genome" ]; then
+                    echo "!! fold $F $s/$r: no global_best_genome_*.bin"; missing_n=$((missing_n + 1)); continue
+                fi
+                if [ "$Y" -eq "$F" ]; then out=$base/$r/evaluation_test; else out=$base/$r/evaluation_test_y$Y; fi
+                n=$(ls "$out"/*_test_predictions.csv 2>/dev/null | wc -l | tr -d ' ')
+                if [ "$n" = "50" ]; then skip_n=$((skip_n + 1)); continue; fi
+                if ! ls $E/datasets/panels_core7_examm_$Y/$s/*_test.csv >/dev/null 2>&1; then
+                    echo "!! no test files in datasets/panels_core7_examm_$Y/$s -- download them first"
+                    missing_n=$((missing_n + 1)); continue
+                fi
+                mkdir -p "$out"
+                echo "== fold $F $s/$r/global_best_genome_$genome on test year $Y"
+                $E/build/rnn_examples/evaluate_rnn \
+                --testing_filenames $E/datasets/panels_core7_examm_$Y/$s/*_test.csv \
+                --time_offset 1 \
+                --genome_file "$base/$r/global_best_genome_$genome.bin" \
+                --output_directory "$out" \
+                --std_message_level INFO \
+                --file_message_level INFO 2>&1 | grep -E "MSE:" | tail -1
+                n=$(ls "$out"/*_test_predictions.csv 2>/dev/null | wc -l | tr -d ' ')
+                if [ "$n" = "50" ]; then done_n=$((done_n + 1)); else
+                    echo "!! fold $F $s on $Y: only $n of 50 prediction files written"; fail_n=$((fail_n + 1)); fi
+            done
         done
     done
 done
