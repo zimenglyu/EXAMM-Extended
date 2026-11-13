@@ -279,7 +279,7 @@ for design, path in _pdesigns:
     if not path.exists():
         continue
     ps = pd.read_csv(path)
-    for ch in ["lowest val MSE", "Pareto choice", "highest val return"]:
+    for ch in ["lowest val MSE", "Pareto choice", "highest val return", "average over the 10 runs"]:
         g = ps[ps["choice"] == ch].set_index("period")
         if g.empty:
             continue
@@ -381,7 +381,7 @@ if size_sheet is not None:
     sheets.append(("Model size", size_sheet, f"[L/S {K}/{K}] The chosen genomes' size (paper's EXAMM: 66 parameters on average)"))
 if pareto_sheet is not None:
     sheets.append(("Pareto", pareto_sheet, f"[L/S {K}/{K}] Choosing each set's genome: lowest validation MSE vs Pareto choice vs highest "
-                                           "validation return (paper rule, costs on, 4 sets combined)"))
+                                           "validation return vs the average over the 10 runs (paper rule, costs on, 4 sets combined)"))
 if pareto_rep is not None:
     sheets.append(("Pareto repeats", pareto_rep, f"[L/S {K}/{K}] Every repeat: validation and test scores, frontier membership, labels"))
 if rep7_sheet is not None:

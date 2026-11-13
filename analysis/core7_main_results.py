@@ -11,7 +11,8 @@ Extra outputs: core7_main_benchmarks.csv, core7_main_table8.csv, core7_main_mode
 its 10 EXAMM repeats scored on the VALIDATION year Y-1 by MSE (raw daily returns) and net return of the same
 trading rule; frontier = repeats no other repeat beats on both; choice fixed in advance = lowest MSE rank + return
 rank (ties -> lower MSE); traded on the test year exactly like the main result (retrain every year). Reported next
-to the lowest-validation-MSE choice (the main result) and the highest-validation-return end. Outputs
+to the lowest-validation-MSE choice (the main result), the highest-validation-return end and the AVERAGE OVER
+THE 10 RUNS (no choice; the expected result of an arbitrary run). Outputs
 core7_main[_everyday]_pareto.csv (every repeat) and _pareto_summary.csv, and core7_main_pareto.png.
 Also the NEVER-RETRAIN version (the fold-2022 choice kept for 2022-2024): _pareto_never_retrain.csv. It needs the
 other repeats' later-year forecasts: ALL_REPEATS=1 sh scripts/rnn_examples/evaluate_rnn_core7_main.sh
@@ -405,6 +406,40 @@ if PARETO:
         pt.to_csv(RESULTS / f"core7_main{OUT_TAG}_pareto.csv", index=False)
 
         choices = ["lowest val MSE", "Pareto choice", "highest val return"]
+        AVG = "average over the 10 runs"      # no choice: the 4-set book of each run number, averaged over the 10
+
+        def average_rows(returns_of):
+            """Rows of the 'average over the 10 runs' reference: for every repeat number r the 4-set book (set1-4 run r,
+            like the chosen rows), its yearly net return / Sharpe / max drawdown and 2022-2024 joined metrics, then the
+            mean over the runs. returns_of(s, r, year) -> daily returns or None."""
+            per_run = []
+            for r in REPEATS:
+                books = []
+                for year in YEARS:
+                    per = [returns_of(s, r, year) for s in SETS]
+                    if any(x is None for x in per):
+                        break
+                    books.append(combine(per))
+                if len(books) < len(YEARS):
+                    continue
+                m = metrics(np.concatenate(books))
+                per_run.append({**{str(y): (total_return(b), metrics(b)["sharpe"], metrics(b)["max_dd_%"])
+                                   for y, b in zip(YEARS, books)},
+                                "joined": (m["ann_return_%"], m["sharpe"], m["max_dd_%"])})
+            if not per_run:
+                return []
+            out = [{"choice": AVG, "period": str(y),
+                    "net_return_%": float(np.mean([x[str(y)][0] for x in per_run])),
+                    "sharpe": float(np.mean([x[str(y)][1] for x in per_run])),
+                    "max_dd_%": float(np.mean([x[str(y)][2] for x in per_run])),
+                    "repeats": f"{len(per_run)} runs (run r of every set, r = {REPEATS[0]}..{REPEATS[-1]})"} for y in YEARS]
+            out.append({"choice": AVG, "period": f"{YEARS[0]}-{YEARS[-1]}",
+                        "net_return_%": float(np.mean([o["net_return_%"] for o in out])),
+                        "ann_return_%": float(np.mean([x["joined"][0] for x in per_run])),
+                        "sharpe": float(np.mean([x["joined"][1] for x in per_run])),
+                        "max_dd_%": float(np.mean([x["joined"][2] for x in per_run]))})
+            return out
+
         summ = []
         for ch in choices:
             per_year = []
@@ -424,6 +459,10 @@ if PARETO:
                              "net_return_%": float(np.mean([x["net_return_%"] for x in summ[-len(YEARS):]])),
                              "ann_return_%": m["ann_return_%"], "sharpe": m["sharpe"], "max_dd_%": m["max_dd_%"],
                              **bootstrap_ci(joined), "psr": psr(joined)})
+        def _retrain_returns(s, r, year):
+            key = f"{year}|{s}|{r}|{year}"
+            return cache[key] if key in cache else None
+        summ += average_rows(_retrain_returns)
         summ = pd.DataFrame(summ)
         summ.to_csv(RESULTS / f"core7_main{OUT_TAG}_pareto_summary.csv", index=False)
         print("\n" + "=" * 96)
@@ -431,7 +470,7 @@ if PARETO:
         print("=" * 96)
         for col, name in (("net_return_%", "Net return (%) -- per year; 2022-2024 = mean of the years"), ("sharpe", "Sharpe")):
             print(f"\n{name}:")
-            print(summ.pivot(index="choice", columns="period", values=col).reindex(index=choices,
+            print(summ.pivot(index="choice", columns="period", values=col).reindex(index=choices + [AVG],
                   columns=[str(y) for y in YEARS] + [f"{YEARS[0]}-{YEARS[-1]}"]).round(2).to_string())
         print("\nFrontier size per test year and set (repeats on the validation frontier):")
         print(pt.groupby(["test_year", "set"])["val_frontier"].sum().unstack().to_string())
@@ -469,6 +508,13 @@ if PARETO:
                             "net_return_%": float(np.mean([x["net_return_%"] for x in nev[-len(YEARS):]])),
                             "ann_return_%": m["ann_return_%"], "sharpe": m["sharpe"], "max_dd_%": m["max_dd_%"],
                             **bootstrap_ci(joined), "psr": psr(joined)})
+        def _never_returns(s, r, year):
+            P = read_predictions(pred_dir(F0, s, r, year), "test")
+            if P is None or not np.isfinite(P.to_numpy()).all():
+                nmiss.append(f"{s}/{r} on {year}")
+                return None
+            return rule_returns(F0, s, r, year, "test", P, "")
+        nev += average_rows(_never_returns)
         np.savez(cache_path, **cache)
         print("\n" + "=" * 96)
         print(f"PARETO CHOICE PER SET -- NEVER RETRAIN (fold {F0} choice, validation {F0 - 1}, kept for {YEARS[0]}-{YEARS[-1]})")
@@ -483,10 +529,10 @@ if PARETO:
                               ("sharpe", "Sharpe"), ("max_dd_%", "Max drawdown (%)")):
                 print(f"\n{name}:")
                 print(nev.pivot(index="choice", columns="period", values=col).reindex(
-                      index=[c for c in choices if c in set(nev["choice"])],
+                      index=[c for c in choices + [AVG] if c in set(nev["choice"])],
                       columns=[str(y) for y in YEARS] + [f"{YEARS[0]}-{YEARS[-1]}"]).round(2).to_string())
             print("\nRepeats chosen (fold 2022):")
-            print(nev[nev["period"] == str(F0)].set_index("choice")["repeats"].to_string())
+            print(nev[(nev["period"] == str(F0)) & (nev["choice"] != AVG)].set_index("choice")["repeats"].to_string())
             print(f"Saved {RESULTS / f'core7_main{OUT_TAG}_pareto_never_retrain.csv'}")
         try:
             import matplotlib
