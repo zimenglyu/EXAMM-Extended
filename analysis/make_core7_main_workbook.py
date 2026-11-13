@@ -279,7 +279,7 @@ for design, path in _pdesigns:
     if not path.exists():
         continue
     ps = pd.read_csv(path)
-    for ch in ["lowest val MSE", "Pareto choice", "highest val return", "average over the 10 runs"]:
+    for ch in ["lowest val MSE", "Pareto choice", "highest val return", "average over the frontier runs", "average over the 10 runs"]:
         g = ps[ps["choice"] == ch].set_index("period")
         if g.empty:
             continue

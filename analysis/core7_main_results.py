@@ -12,7 +12,8 @@ its 10 EXAMM repeats scored on the VALIDATION year Y-1 by MSE (raw daily returns
 trading rule; frontier = repeats no other repeat beats on both; choice fixed in advance = lowest MSE rank + return
 rank (ties -> lower MSE); traded on the test year exactly like the main result (retrain every year). Reported next
 to the lowest-validation-MSE choice (the main result), the highest-validation-return end and the AVERAGE OVER
-THE 10 RUNS (no choice; the expected result of an arbitrary run). Outputs
+THE 10 RUNS (no choice; the expected result of an arbitrary run) and the AVERAGE OVER THE FRONTIER RUNS (every
+combination of one validation-frontier run per set). Outputs
 core7_main[_everyday]_pareto.csv (every repeat) and _pareto_summary.csv, and core7_main_pareto.png.
 Also the NEVER-RETRAIN version (the fold-2022 choice kept for 2022-2024): _pareto_never_retrain.csv. It needs the
 other repeats' later-year forecasts: ALL_REPEATS=1 sh scripts/rnn_examples/evaluate_rnn_core7_main.sh
@@ -440,6 +441,48 @@ if PARETO:
                         "max_dd_%": float(np.mean([x["joined"][2] for x in per_run]))})
             return out
 
+        FAVG = "average over the frontier runs"   # every combination of one frontier run per set, averaged
+
+        def frontier_rows(combos_of, returns_of, same_runs_every_year, draws=1000):
+            """Rows of the 'average over the frontier runs' reference. combos_of(year) -> list of tuples, one frontier
+            run per set (every combination); returns_of(s, r, year) -> daily returns or None. Yearly rows average every
+            combination exactly. 2022-2024 joined: with the same runs every year (never retrain) every combination is
+            joined; otherwise (retrain, the frontier changes each year) `draws` random draws of one combination per year."""
+            books = {}
+            for year in YEARS:
+                for combo in combos_of(year):
+                    per = [returns_of(s, r, year) for s, r in zip(SETS, combo)]
+                    if all(x is not None for x in per):
+                        books[(year, combo)] = combine(per)
+            by_year = {y: [c for (yy, c) in books if yy == y] for y in YEARS}
+            if any(not by_year[y] for y in YEARS):
+                return []
+            out = []
+            for y in YEARS:
+                ms = [(total_return(books[(y, c)]), metrics(books[(y, c)])) for c in by_year[y]]
+                out.append({"choice": FAVG, "period": str(y), "net_return_%": float(np.mean([a for a, _ in ms])),
+                            "sharpe": float(np.mean([m["sharpe"] for _, m in ms])),
+                            "max_dd_%": float(np.mean([m["max_dd_%"] for _, m in ms])),
+                            "repeats": f"{len(ms)} combinations of the frontier runs"})
+            if same_runs_every_year:
+                paths = [[(y, c) for y in YEARS] for c in by_year[YEARS[0]] if all((y, c) in books for y in YEARS)]
+            else:
+                rng = np.random.default_rng(0)
+                paths = [[(y, by_year[y][rng.integers(len(by_year[y]))]) for y in YEARS] for _ in range(draws)]
+            js = [metrics(np.concatenate([books[k] for k in path])) for path in paths]
+            out.append({"choice": FAVG, "period": f"{YEARS[0]}-{YEARS[-1]}",
+                        "net_return_%": float(np.mean([o["net_return_%"] for o in out])),
+                        "ann_return_%": float(np.nanmean([m["ann_return_%"] for m in js])),
+                        "sharpe": float(np.mean([m["sharpe"] for m in js])),
+                        "max_dd_%": float(np.mean([m["max_dd_%"] for m in js]))})
+            return out
+
+        def frontier_combos(fold):
+            import itertools
+            runs = [pt[(pt["test_year"] == fold) & (pt["set"] == s) & (pt["val_frontier"] == True)]["repeat"].tolist()
+                    for s in SETS]
+            return list(itertools.product(*runs))
+
         summ = []
         for ch in choices:
             per_year = []
@@ -463,6 +506,7 @@ if PARETO:
             key = f"{year}|{s}|{r}|{year}"
             return cache[key] if key in cache else None
         summ += average_rows(_retrain_returns)
+        summ += frontier_rows(frontier_combos, _retrain_returns, same_runs_every_year=False)
         summ = pd.DataFrame(summ)
         summ.to_csv(RESULTS / f"core7_main{OUT_TAG}_pareto_summary.csv", index=False)
         print("\n" + "=" * 96)
@@ -470,7 +514,7 @@ if PARETO:
         print("=" * 96)
         for col, name in (("net_return_%", "Net return (%) -- per year; 2022-2024 = mean of the years"), ("sharpe", "Sharpe")):
             print(f"\n{name}:")
-            print(summ.pivot(index="choice", columns="period", values=col).reindex(index=choices + [AVG],
+            print(summ.pivot(index="choice", columns="period", values=col).reindex(index=choices + [FAVG, AVG],
                   columns=[str(y) for y in YEARS] + [f"{YEARS[0]}-{YEARS[-1]}"]).round(2).to_string())
         print("\nFrontier size per test year and set (repeats on the validation frontier):")
         print(pt.groupby(["test_year", "set"])["val_frontier"].sum().unstack().to_string())
@@ -515,6 +559,7 @@ if PARETO:
                 return None
             return rule_returns(F0, s, r, year, "test", P, "")
         nev += average_rows(_never_returns)
+        nev += frontier_rows(lambda year: frontier_combos(F0), _never_returns, same_runs_every_year=True)
         np.savez(cache_path, **cache)
         print("\n" + "=" * 96)
         print(f"PARETO CHOICE PER SET -- NEVER RETRAIN (fold {F0} choice, validation {F0 - 1}, kept for {YEARS[0]}-{YEARS[-1]})")
@@ -529,10 +574,10 @@ if PARETO:
                               ("sharpe", "Sharpe"), ("max_dd_%", "Max drawdown (%)")):
                 print(f"\n{name}:")
                 print(nev.pivot(index="choice", columns="period", values=col).reindex(
-                      index=[c for c in choices + [AVG] if c in set(nev["choice"])],
+                      index=[c for c in choices + [FAVG, AVG] if c in set(nev["choice"])],
                       columns=[str(y) for y in YEARS] + [f"{YEARS[0]}-{YEARS[-1]}"]).round(2).to_string())
             print("\nRepeats chosen (fold 2022):")
-            print(nev[(nev["period"] == str(F0)) & (nev["choice"] != AVG)].set_index("choice")["repeats"].to_string())
+            print(nev[(nev["period"] == str(F0)) & (~nev["choice"].isin([AVG, FAVG]))].set_index("choice")["repeats"].to_string())
             print(f"Saved {RESULTS / f'core7_main{OUT_TAG}_pareto_never_retrain.csv'}")
         try:
             import matplotlib
