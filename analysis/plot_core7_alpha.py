@@ -244,3 +244,105 @@ fig.tight_layout(rect=(0, 0, 1, 0.90))
 out = RESULTS / f"core7_main{TAG}_alpha.png"
 fig.savefig(out, dpi=160)
 print(f"\nSaved {out} and {RESULTS / f'core7_main{TAG}_alpha.csv'}")
+
+# ---------------------------------------------------------------- alpha of every genome choice ----
+# The Pareto comparison's five choices (core7_main_results.py --pareto): lowest val MSE, Pareto choice, highest val
+# return (one run per set), the average over the frontier runs and the average over all 10 runs. Alpha is linear in the
+# returns, so the averages are regressed on the AVERAGE daily return of their runs in each set: the alpha is then exactly
+# the mean of the runs' alphas (for the frontier, every frontier run of a set is weighted equally, as in the mean over
+# all combinations), and its interval is that of the averaged return series. Stacked 4-set panel, Driscoll-Kraay errors.
+PARETO_CSV = RESULTS / f"core7_main{TAG}_pareto.csv"
+if PARETO_CSV.exists():
+    pt = pd.read_csv(PARETO_CSV, dtype={"repeat": str})
+    pt["choice"] = pt["choice"].fillna("")
+    CHOICES = ["lowest val MSE", "Pareto choice", "highest val return", "average over the frontier runs",
+               "average over the 10 runs"]
+
+    def runs_for(choice, fold, s):
+        g = pt[(pt["test_year"] == fold) & (pt["set"] == s)]
+        if choice == "average over the 10 runs":
+            return g["repeat"].tolist()
+        if choice == "average over the frontier runs":
+            return g[g["val_frontier"] == True]["repeat"].tolist()
+        return g[g["choice"].str.contains(choice, regex=False)]["repeat"].tolist()
+
+    crow, cmiss = [], []
+    for name, fold_of in designs.items():
+        for choice in CHOICES:
+            blocks, ok = {spec: [] for spec in SPECS}, True
+            for s in SETS:
+                ys, Xs, ds = {spec: [] for spec in SPECS}, {spec: [] for spec in SPECS}, []
+                for y in YEARS:
+                    fold = fold_of(y)
+                    runs = runs_for(choice, fold, s)
+                    keys = [f"{fold}|{s}|{r}|{y}" for r in runs]
+                    have = [k for k in keys if k in cache]
+                    if not runs or len(have) < len(keys):
+                        cmiss.append(f"{name} / {choice} / {s} {y}: {len(have)} of {len(keys)} runs traded")
+                        ok = False
+                        break
+                    f = factors(y, s)
+                    n = min([len(cache[k]) for k in have] + [len(f["MKT"])])
+                    r_avg = np.mean([np.asarray(cache[k][:n], float) for k in have], axis=0)[WARMUP:]
+                    m = len(r_avg)
+                    for spec, cols in SPECS.items():
+                        ys[spec].append(r_avg)
+                        Xs[spec].append(np.column_stack([np.ones(m)] + [f[c][:n][WARMUP:] for c in cols]))
+                    ds.append(y * 1000 + np.arange(m))
+                if not ok:
+                    break
+                for spec in SPECS:
+                    blocks[spec].append((np.concatenate(ys[spec]), np.vstack(Xs[spec]), np.concatenate(ds)))
+            if not ok:
+                continue
+            for spec, cols in SPECS.items():
+                crow.append({"design": name, "choice": choice, "spec": SPEC_NAME[spec], **regress(blocks[spec], cols)})
+    if cmiss:
+        print("\n!! choices left out (runs not traded yet -- run core7_main_results.py --pareto" +
+              ("" if K == 10 else f" --k {K}") + "): " + "; ".join(cmiss[:6]))
+    if crow:
+        cres = pd.DataFrame(crow)
+        cres.to_csv(RESULTS / f"core7_main{TAG}_alpha_choices.csv", index=False)
+        print("\n" + "=" * 96)
+        print(f"ALPHA OF EVERY GENOME CHOICE -- 4 sets stacked, 2022-2024, Driscoll-Kraay (L/S {K}/{K})")
+        print("=" * 96)
+        for spec in SPECS:
+            t = cres[cres["spec"] == SPEC_NAME[spec]].pivot(index="choice", columns="design", values="alpha_%")
+            tt = cres[cres["spec"] == SPEC_NAME[spec]].pivot(index="choice", columns="design", values="t_stat")
+            shown = t.round(2).astype(str) + "  (t " + tt.round(2).astype(str) + ")"
+            print(f"\n{SPEC_NAME[spec]}: annualized net alpha % (t-statistic):")
+            print(shown.reindex(index=[c for c in CHOICES if c in shown.index],
+                                columns=[d for d in designs if d in shown.columns]).to_string())
+        full = cres[cres["spec"] == SPEC_NAME[SPEC]]
+        print(f"\n95% intervals, {SPEC_NAME[SPEC]}:")
+        print(full[["design", "choice", "alpha_%", "ci_lo_%", "ci_hi_%", "t_stat", "beta_MKT"]].round(2).to_string(index=False))
+
+        fig2, ax = plt.subplots(figsize=(13, 5.6))
+        x = np.arange(len(CHOICES))
+        width = 0.36
+        for k, name in enumerate(designs):
+            d = full[full["design"] == name].set_index("choice").reindex(CHOICES)
+            pos = x + (k - 0.5) * width
+            ax.bar(pos, d["alpha_%"], width, color=COL[name], label=name, zorder=3)
+            ax.errorbar(pos, d["alpha_%"], yerr=[d["alpha_%"] - d["ci_lo_%"], d["ci_hi_%"] - d["alpha_%"]],
+                        fmt="none", ecolor="black", capsize=4, lw=1.2, zorder=4)
+            for xp, (a, hi, lo, tv) in zip(pos, d[["alpha_%", "ci_hi_%", "ci_lo_%", "t_stat"]].to_numpy()):
+                if np.isfinite(tv):
+                    ax.annotate(f"t={tv:+.2f}", (xp, hi if a >= 0 else lo), xytext=(0, 4 if a >= 0 else -12),
+                                textcoords="offset points", ha="center", fontsize=8,
+                                fontweight="bold" if abs(tv) >= 1.96 else "normal")
+        ax.axhline(0, color="#555555", lw=0.9, zorder=2)
+        ax.set_xticks(x)
+        ax.set_xticklabels([c.replace("average over the ", "average over\nthe ") for c in CHOICES])
+        ax.set_ylabel("Annualized net alpha (%)")
+        ax.grid(axis="y", color="#e6e6e6", zorder=0)
+        ax.spines[["top", "right"]].set_visible(False)
+        ax.legend(frameon=False, loc="upper right")
+        ax.set_title(f"Annualized net alpha of each genome choice, 2022-2024, 95% intervals\n"
+                     f"{SPEC_NAME[SPEC]}; L/S {K}/{K}, costs on; 4 sets stacked, Driscoll-Kraay errors", fontweight="bold")
+        fig2.tight_layout()
+        out2 = RESULTS / f"core7_main{TAG}_alpha_choices.png"
+        fig2.savefig(out2, dpi=160)
+        print(f"\nSaved {out2} and {RESULTS / f'core7_main{TAG}_alpha_choices.csv'}")
+else:
+    print(f"\n(no {PARETO_CSV.name}: run core7_main_results.py --pareto for the alpha of every genome choice)")
